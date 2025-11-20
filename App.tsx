@@ -9,13 +9,19 @@ import JournalEntryForm from './components/JournalEntryForm';
 import ResultCard from './components/ResultCard';
 import BattleScene from './components/BattleScene';
 import RankingScreen from './components/RankingScreen';
+import QuestionTypeSelector from './components/QuestionTypeSelector';
 import { Sword, Shield, Trophy, AlertTriangle, BookOpen, Flag, BarChart3, History, Crown, Settings, Volume2, VolumeX, Music, Zap } from 'lucide-react';
 
 const App: React.FC = () => {
   // Game Flow State
-  const [screen, setScreen] = useState<'title' | 'settings' | 'battle' | 'result' | 'gameover' | 'clear' | 'ranking'>('title');
+  const [screen, setScreen] = useState<'title' | 'settings' | 'question-type-select' | 'battle' | 'result' | 'gameover' | 'clear' | 'ranking'>('title');
   const [soundSettings, setSoundSettings] = useState({ bgm: true, sfx: true });
   const [difficulty, setDifficulty] = useState<Difficulty>('Easy');
+  const [selectedQuestionTypes, setSelectedQuestionTypes] = useState<QuestionType[]>([
+    QuestionType.JOURNAL,
+    QuestionType.SELECTION,
+    QuestionType.NUMERIC
+  ]);
   
   // Data State
   const [problem, setProblem] = useState<GeneratedProblem | null>(null);
@@ -179,17 +185,24 @@ const App: React.FC = () => {
     }
   }, [screen]);
 
-  // --- Start Game ---
+  // --- Start Game (show question type selector) ---
   const selectDifficulty = (selectedDiff: Difficulty) => {
     audioService.init();
     audioService.playSfx(SoundType.SFX_DECISION);
     setDifficulty(selectedDiff);
+    setScreen('question-type-select');
+  };
+
+  // --- Confirm Question Types and Start Battle ---
+  const confirmQuestionTypes = (types: QuestionType[]) => {
+    audioService.playSfx(SoundType.SFX_DECISION);
+    setSelectedQuestionTypes(types);
     
     // Load best score for this difficulty
-    const best = getPersonalBest(selectedDiff);
+    const best = getPersonalBest(difficulty);
     setCurrentHighScore(best);
 
-    const settings = GAME_SETTINGS[selectedDiff];
+    const settings = GAME_SETTINGS[difficulty];
     setPlayerState({
       maxHp: settings.playerHp,
       currentHp: settings.playerHp,
@@ -202,8 +215,8 @@ const App: React.FC = () => {
     setAttackInterval(settings.startInterval);
     setScreen('battle');
     
-    // Load first problem with all question types
-    loadNextProblem(selectedDiff, 0, [QuestionType.JOURNAL, QuestionType.SELECTION, QuestionType.NUMERIC]);
+    // Load first problem with selected question types
+    loadNextProblem(difficulty, 0, types);
   };
 
   const loadNextProblem = async (diff: Difficulty, qIndex: number, types: QuestionType[]) => {
@@ -363,10 +376,22 @@ const App: React.FC = () => {
     }
     setQuestionsAnswered(nextQIndex);
     setScreen('battle');
-    loadNextProblem(difficulty, nextQIndex, [QuestionType.JOURNAL, QuestionType.SELECTION, QuestionType.NUMERIC]);
+    loadNextProblem(difficulty, nextQIndex, selectedQuestionTypes);
   };
 
   // --- RENDER ---
+
+  if (screen === 'question-type-select') {
+    return (
+      <QuestionTypeSelector
+        onConfirm={confirmQuestionTypes}
+        onBack={() => {
+          audioService.playSfx(SoundType.SFX_CANCEL);
+          setScreen('title');
+        }}
+      />
+    );
+  }
 
   if (screen === 'ranking') {
     return <RankingScreen onBack={() => {

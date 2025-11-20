@@ -56,13 +56,6 @@ export interface GeneratedProblem {
   difficulty: Difficulty;
 }
 
-export interface GeminiResponseSchema {
-  questionText: string;
-  debits: { accountName: string; amount: number }[];
-  credits: { accountName: string; amount: number }[];
-  explanation: string;
-}
-
 export interface Monster {
   id: string;
   name: string;

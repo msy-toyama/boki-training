@@ -186,7 +186,10 @@ class AudioService {
         osc.connect(gain);
         gain.connect(this.ctx.destination);
         const t = this.ctx.currentTime;
-        gain.gain.setValueAtTime(0.03, t); // BGMは少し控えめに
+        // 初回のプチッという音を防ぐため、0からフェードイン
+        gain.gain.setValueAtTime(0, t);
+        gain.gain.linearRampToValueAtTime(0.03, t + 0.01); // 10msでフェードイン
+        gain.gain.setValueAtTime(0.03, t + 0.01);
         gain.gain.linearRampToValueAtTime(0.0, t + duration - 0.05);
         osc.start(t);
         osc.stop(t + duration);

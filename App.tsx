@@ -427,6 +427,16 @@ const App: React.FC = () => {
 
           <div className="grid md:grid-cols-3 gap-6">
             <button 
+              onClick={() => selectDifficulty('Practice')}
+              aria-label="練習モードでゲームを開始"
+              className="group relative bg-slate-800 hover:bg-blue-900 border-4 border-slate-600 hover:border-blue-400 p-8 rounded-xl transition-all hover:-translate-y-2 shadow-xl"
+            >
+              <BookOpen className="w-12 h-12 mx-auto mb-4 text-blue-400 group-hover:scale-110 transition-transform" />
+              <h3 className="text-2xl font-bold text-white mb-2">Practice</h3>
+              <p className="text-slate-400 text-sm">練習用<br/>時間制限なし</p>
+            </button>
+
+            <button 
               onClick={() => selectDifficulty('Easy')}
               aria-label="イージーモードでゲームを開始"
               className="group relative bg-slate-800 hover:bg-green-900 border-4 border-slate-600 hover:border-green-400 p-8 rounded-xl transition-all hover:-translate-y-2 shadow-xl"
@@ -444,16 +454,6 @@ const App: React.FC = () => {
               <Sword className="w-12 h-12 mx-auto mb-4 text-red-400 group-hover:scale-110 transition-transform" />
               <h3 className="text-2xl font-bold text-white mb-2">Hard</h3>
               <p className="text-slate-400 text-sm">上級者向け<br/>素早い判断が必要です</p>
-            </button>
-
-            <button 
-              onClick={() => selectDifficulty('Practice')}
-              aria-label="練習モードでゲームを開始"
-              className="group relative bg-slate-800 hover:bg-blue-900 border-4 border-slate-600 hover:border-blue-400 p-8 rounded-xl transition-all hover:-translate-y-2 shadow-xl"
-            >
-              <BookOpen className="w-12 h-12 mx-auto mb-4 text-blue-400 group-hover:scale-110 transition-transform" />
-              <h3 className="text-2xl font-bold text-white mb-2">Practice</h3>
-              <p className="text-slate-400 text-sm">練習用<br/>時間制限なし</p>
             </button>
           </div>
 

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { generateProblem } from './services/problemService';
 import { saveScore, getUserProfile, getPersonalBest } from './services/scoreService';
@@ -11,7 +10,7 @@ import BattleScene from './components/BattleScene';
 import RankingScreen from './components/RankingScreen';
 import QuestionTypeSelector from './components/QuestionTypeSelector';
 import PrivacyPolicy from './components/PrivacyPolicy';
-import { Sword, Shield, Trophy, AlertTriangle, BookOpen, Flag, BarChart3, History, Crown, Settings, Volume2, VolumeX, Music, Zap } from 'lucide-react';
+import { Sword, Shield, Trophy, AlertTriangle, BookOpen, Flag, BarChart3, History, Crown, Settings, Volume2, VolumeX, Music, Zap, Share2 } from 'lucide-react';
 
 const App: React.FC = () => {
   // Game Flow State
@@ -57,6 +56,28 @@ const App: React.FC = () => {
   const [showSurrenderConfirm, setShowSurrenderConfirm] = useState(false);
 
   const timerRef = useRef<number | null>(null);
+
+  // --- Share Function ---
+  const handleShare = async (text: string) => {
+    const url = 'https://boki-training.com/';
+    const shareData = {
+      title: '簿記トレーニング大戦',
+      text: text,
+      url: url,
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        console.log('Share canceled');
+      }
+    } else {
+      // Fallback to X (Twitter)
+      const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}&hashtags=簿記トレ大戦,簿記3級`;
+      window.open(twitterUrl, '_blank');
+    }
+  };
 
   // --- Initialize Audio Settings ---
   useEffect(() => {
@@ -486,6 +507,15 @@ const App: React.FC = () => {
             >
               <History size={20} /> プレイ履歴
             </button>
+            <button 
+              onClick={() => {
+                audioService.playSfx(SoundType.SFX_SELECT);
+                handleShare('RPG風簿記学習ゲーム「簿記トレーニング大戦」で遊ぼう！日商簿記3級を完全攻略！');
+              }}
+              className="text-indigo-300 hover:text-white flex items-center justify-center gap-2 transition-colors px-4 py-2"
+            >
+              <Share2 size={20} /> シェア
+            </button>
           </div>
         </div>
         
@@ -624,6 +654,15 @@ const App: React.FC = () => {
              </div>
 
              <div className="space-y-4">
+               <button onClick={() => {
+                 audioService.playSfx(SoundType.SFX_SELECT);
+                 const text = isClear 
+                   ? `【${difficulty}モード完全制覇！】スコア: ${playerState.score.toLocaleString()}点 / 簿記トレーニング大戦をクリアしました！`
+                   : `【${difficulty}モード】スコア: ${playerState.score.toLocaleString()}点 / 討伐数: ${monsterIndex}体 / 到達: ${questionsAnswered}問 - 簿記トレーニング大戦で学習中！`;
+                 handleShare(text);
+               }} className="w-full px-8 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-full transition-colors flex items-center justify-center gap-2 shadow-lg shadow-indigo-900/50">
+                 <Share2 size={20} /> 結果をシェアする
+               </button>
                <button onClick={() => {
                  audioService.playSfx(SoundType.SFX_CANCEL);
                  setScreen('title');

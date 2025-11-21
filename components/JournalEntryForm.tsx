@@ -78,6 +78,13 @@ const JournalEntryForm: React.FC<JournalEntryFormProps> = ({ problem, onSubmit, 
 
   // 1. SELECTION TYPE
   if (problem.type === QuestionType.SELECTION) {
+    const handleSelectionSubmit = () => {
+      if (selectedOption) {
+        audioService.playSfx(SoundType.SFX_DECISION);
+        onSubmit(selectedOption);
+      }
+    };
+
     return (
       <div className="space-y-4">
         <div className="grid grid-cols-2 gap-3">
@@ -87,6 +94,11 @@ const JournalEntryForm: React.FC<JournalEntryFormProps> = ({ problem, onSubmit, 
               onClick={() => {
                 audioService.playSfx(SoundType.SFX_SELECT);
                 setSelectedOption(option);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && selectedOption === option) {
+                  handleSelectionSubmit();
+                }
               }}
               disabled={isSubmitting}
               className={`p-3 rounded-xl border-2 font-bold transition-all shadow-sm flex items-center justify-center min-h-[80px] relative ${
@@ -107,12 +119,7 @@ const JournalEntryForm: React.FC<JournalEntryFormProps> = ({ problem, onSubmit, 
         
         <div className="flex justify-end">
           <button
-            onClick={() => {
-              if (selectedOption) {
-                audioService.playSfx(SoundType.SFX_DECISION);
-                onSubmit(selectedOption);
-              }
-            }}
+            onClick={handleSelectionSubmit}
             disabled={!selectedOption || isSubmitting}
             className={`w-full md:w-auto px-8 py-3 rounded-full font-black text-base md:text-lg flex items-center justify-center gap-2 transition-all shadow-xl hover:scale-105 active:scale-95 ${
               !selectedOption
@@ -129,6 +136,13 @@ const JournalEntryForm: React.FC<JournalEntryFormProps> = ({ problem, onSubmit, 
 
   // 2. NUMERIC TYPE
   if (problem.type === QuestionType.NUMERIC) {
+    const handleNumericSubmit = () => {
+      if (numericInput !== '') {
+        audioService.playSfx(SoundType.SFX_DECISION);
+        onSubmit(Number(numericInput));
+      }
+    };
+
     return (
       <div className="flex flex-col items-center justify-center py-2">
         <div className="bg-slate-900/80 backdrop-blur-sm p-4 md:p-5 rounded-2xl shadow-lg border-2 border-indigo-500/50 w-full max-w-md">
@@ -143,6 +157,11 @@ const JournalEntryForm: React.FC<JournalEntryFormProps> = ({ problem, onSubmit, 
                     audioService.playSfx(SoundType.SFX_SELECT);
                     setNumericInput(Number(e.target.value));
                 }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && numericInput !== '') {
+                    handleNumericSubmit();
+                  }
+                }}
                 className="w-full pl-12 pr-10 py-3 text-lg md:text-xl font-bold text-right bg-slate-800/80 border-2 border-slate-600 rounded-xl focus:border-indigo-400 focus:ring-4 focus:ring-indigo-500/20 outline-none text-slate-100 appearance-none"
               >
                 <option value="" disabled>答えを選択</option>
@@ -155,6 +174,11 @@ const JournalEntryForm: React.FC<JournalEntryFormProps> = ({ problem, onSubmit, 
                  type="number"
                  value={numericInput}
                  onChange={(e) => setNumericInput(e.target.value)}
+                 onKeyDown={(e) => {
+                   if (e.key === 'Enter' && numericInput !== '') {
+                     handleNumericSubmit();
+                   }
+                 }}
                  className="w-full pl-12 pr-4 py-3 text-xl md:text-2xl font-bold text-right bg-slate-800/80 border-2 border-slate-600 rounded-xl focus:border-indigo-400 outline-none text-slate-100"
                  placeholder="金額入力"
               />
@@ -166,12 +190,7 @@ const JournalEntryForm: React.FC<JournalEntryFormProps> = ({ problem, onSubmit, 
             )}
           </div>
           <button
-            onClick={() => {
-              if (numericInput !== '') {
-                audioService.playSfx(SoundType.SFX_DECISION);
-                onSubmit(Number(numericInput));
-              }
-            }}
+            onClick={handleNumericSubmit}
             disabled={numericInput === '' || isSubmitting}
             className="w-full mt-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-indigo-500/30 flex items-center justify-center gap-2 transition-transform hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
           >

@@ -715,7 +715,17 @@ const App: React.FC = () => {
 
       {/* Surrender Confirmation Modal */}
       {showSurrenderConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 animate-in fade-in duration-200"
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              cancelSurrender();
+            } else if (e.key === 'Enter') {
+              confirmSurrender();
+            }
+          }}
+          tabIndex={-1}
+        >
           <div className="bg-slate-800 border-2 border-slate-600 rounded-2xl p-8 max-w-sm w-full text-center shadow-2xl">
             <div className="w-16 h-16 bg-yellow-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
                <AlertTriangle className="text-yellow-500" size={32} />
@@ -728,13 +738,14 @@ const App: React.FC = () => {
             <div className="flex gap-4">
                <button 
                  onClick={cancelSurrender}
-                 className="flex-1 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-bold"
+                 className="flex-1 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-bold focus:ring-2 focus:ring-slate-500 outline-none"
                >
                  続ける
                </button>
                <button 
                  onClick={confirmSurrender}
-                 className="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold"
+                 autoFocus
+                 className="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold focus:ring-2 focus:ring-red-500 outline-none"
                >
                  降参する
                </button>

@@ -73,7 +73,7 @@ const App: React.FC = () => {
       audioService.playBgm(SoundType.BGM_TITLE);
     } else if (screen === 'battle') {
       // Difficulty based BGM
-      audioService.playBgm(difficulty === 'Easy' ? SoundType.BGM_BATTLE_EASY : SoundType.BGM_BATTLE_HARD);
+      audioService.playBgm(difficulty === 'Hard' ? SoundType.BGM_BATTLE_HARD : SoundType.BGM_BATTLE_EASY);
     } else if (screen === 'gameover' || screen === 'clear' || screen === 'ranking') {
       audioService.stopBgm();
       if (screen === 'gameover') audioService.playSfx(SoundType.SFX_GAMEOVER);
@@ -141,6 +141,15 @@ const App: React.FC = () => {
 
   // --- Timer Loop ---
   useEffect(() => {
+    // Practiceモードではタイマーを進行させない
+    if (difficulty === 'Practice') {
+      if (timerRef.current !== null) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+      return;
+    }
+
     if (screen === 'battle' && !loading && problem && !showSurrenderConfirm) {
       timerRef.current = window.setInterval(() => {
         setTimer(prev => {
@@ -164,7 +173,7 @@ const App: React.FC = () => {
         timerRef.current = null;
       }
     };
-  }, [screen, loading, problem, attackInterval, showSurrenderConfirm, handleTimeDamage]);
+  }, [screen, loading, problem, attackInterval, showSurrenderConfirm, handleTimeDamage, difficulty]);
 
   // --- Save Score Effect on Game End ---
   useEffect(() => {
@@ -416,7 +425,7 @@ const App: React.FC = () => {
             <p className="text-indigo-300 text-xl font-bold tracking-widest">3級 100本ノック</p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-3 gap-6">
             <button 
               onClick={() => selectDifficulty('Easy')}
               aria-label="イージーモードでゲームを開始"
@@ -435,6 +444,16 @@ const App: React.FC = () => {
               <Sword className="w-12 h-12 mx-auto mb-4 text-red-400 group-hover:scale-110 transition-transform" />
               <h3 className="text-2xl font-bold text-white mb-2">Hard</h3>
               <p className="text-slate-400 text-sm">上級者向け<br/>素早い判断が必要です</p>
+            </button>
+
+            <button 
+              onClick={() => selectDifficulty('Practice')}
+              aria-label="練習モードでゲームを開始"
+              className="group relative bg-slate-800 hover:bg-blue-900 border-4 border-slate-600 hover:border-blue-400 p-8 rounded-xl transition-all hover:-translate-y-2 shadow-xl"
+            >
+              <BookOpen className="w-12 h-12 mx-auto mb-4 text-blue-400 group-hover:scale-110 transition-transform" />
+              <h3 className="text-2xl font-bold text-white mb-2">Practice</h3>
+              <p className="text-slate-400 text-sm">練習用<br/>時間制限なし</p>
             </button>
           </div>
 

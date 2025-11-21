@@ -87,6 +87,11 @@ export const GAME_SETTINGS = {
     playerHp: 100,
     startInterval: 20,
     minInterval: 5,
+  },
+  Practice: {
+    playerHp: 999999, // 実質無限
+    startInterval: 999999, // タイマー進行しない
+    minInterval: 999999,
   }
 };
 

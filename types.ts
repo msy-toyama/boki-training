@@ -5,7 +5,7 @@ export enum QuestionType {
   NUMERIC = '計算問題',
 }
 
-export type Difficulty = 'Easy' | 'Hard';
+export type Difficulty = 'Easy' | 'Hard' | 'Practice';
 export type BookkeepingLevel = 'Level3' | 'Level2';
 
 // 勘定科目の分類（第2問対策用）

@@ -10,11 +10,12 @@ import ResultCard from './components/ResultCard';
 import BattleScene from './components/BattleScene';
 import RankingScreen from './components/RankingScreen';
 import QuestionTypeSelector from './components/QuestionTypeSelector';
+import PrivacyPolicy from './components/PrivacyPolicy';
 import { Sword, Shield, Trophy, AlertTriangle, BookOpen, Flag, BarChart3, History, Crown, Settings, Volume2, VolumeX, Music, Zap } from 'lucide-react';
 
 const App: React.FC = () => {
   // Game Flow State
-  const [screen, setScreen] = useState<'title' | 'settings' | 'question-type-select' | 'battle' | 'result' | 'gameover' | 'clear' | 'ranking'>('title');
+  const [screen, setScreen] = useState<'title' | 'settings' | 'question-type-select' | 'battle' | 'result' | 'gameover' | 'clear' | 'ranking' | 'privacy'>('title');
   const [soundSettings, setSoundSettings] = useState({ bgm: true, sfx: true });
   const [difficulty, setDifficulty] = useState<Difficulty>('Easy');
   const [selectedQuestionTypes, setSelectedQuestionTypes] = useState<QuestionType[]>([
@@ -409,6 +410,13 @@ const App: React.FC = () => {
     }} />;
   }
 
+  if (screen === 'privacy') {
+    return <PrivacyPolicy onBack={() => {
+      audioService.playSfx(SoundType.SFX_CANCEL);
+      setScreen('title');
+    }} />;
+  }
+
   if (screen === 'title') {
     return (
       <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-4 text-center relative overflow-hidden">
@@ -482,10 +490,16 @@ const App: React.FC = () => {
         </div>
         
         <footer className="absolute bottom-2 w-full text-center px-4 opacity-60 hover:opacity-100 transition-opacity z-20">
-          <p className="text-[10px] text-slate-600">
+          <p className="text-[10px] text-slate-600 mb-1">
             本アプリは学習用であり、実務上の正確性を保証するものではありません。日商簿記検定の最新の出題範囲と異なる場合があります。<br/>
             © 2024 Toyama Digital Works. All rights reserved.
           </p>
+          <button 
+            onClick={() => setScreen('privacy')}
+            className="text-[10px] text-slate-500 hover:text-indigo-400 underline transition-colors"
+          >
+            プライバシーポリシー
+          </button>
         </footer>
       </div>
     );

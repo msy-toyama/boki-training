@@ -1,8 +1,4 @@
-interface Env {
-  // Add environment variables here if needed
-}
-
-export const onRequest: PagesFunction<Env> = async (context) => {
+export const onRequest = async (context: any) => {
   const url = new URL(context.request.url);
   
   // Check if the request is for the pages.dev domain

@@ -91,6 +91,9 @@ const App: React.FC = () => {
       const settings = { bgm: profile.soundSettings.bgm, sfx: profile.soundSettings.sfx };
       setSoundSettings(settings);
       audioService.setSettings(settings.bgm, settings.sfx);
+    } else {
+      // Default settings for new users
+      audioService.setSettings(false, true);
     }
   }, []);
 

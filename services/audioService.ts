@@ -6,7 +6,7 @@ class AudioService {
   private isBgmPlaying: boolean = false;
   private currentBgmType: SoundType | null = null;
   private bgmInterval: number | null = null;
-  private enabled: { bgm: boolean; sfx: boolean } = { bgm: true, sfx: true };
+  private enabled: { bgm: boolean; sfx: boolean } = { bgm: false, sfx: true };
 
   constructor() {
     // Lazy init to comply with browser autoplay policies

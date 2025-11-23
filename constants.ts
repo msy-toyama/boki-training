@@ -310,8 +310,8 @@ export const PROBLEM_TEMPLATES: ProblemTemplate[] = [
     type: QuestionType.JOURNAL,
     textTemplate: (a) => `決算につき、売掛金の期末残高${a.toLocaleString()}円に対して2%の貸倒引当金を設定する。なお、貸倒引当金の残高は${(a*0.01).toLocaleString()}円ある。（差額補充法）`,
     generateJournalAnswer: (a) => ({
-      debits: [{ account: '貸倒引当金繰入', amount: a * 0.01 }],
-      credits: [{ account: '貸倒引当金', amount: a * 0.01 }]
+      debits: [{ account: '貸倒引当金繰入', amount: Math.floor(a * 0.01) }],
+      credits: [{ account: '貸倒引当金', amount: Math.floor(a * 0.01) }]
     }),
     explanation: "目標額(2%) - 前期残高(1%) = 繰入額(1%)。差額を繰り入れます。"
   },
@@ -483,7 +483,7 @@ export const PROBLEM_TEMPLATES: ProblemTemplate[] = [
   {
     type: QuestionType.NUMERIC,
     textTemplate: (a) => `次のデータに基づき、売上総利益を計算せよ。売上高：${(a).toLocaleString()}、期首商品：${(a*0.1).toLocaleString()}、当期仕入：${(a*0.7).toLocaleString()}、期末商品：${(a*0.15).toLocaleString()}。`,
-    generateNumericAnswer: (a) => a - ( (a*0.1) + (a*0.7) - (a*0.15) ),
+    generateNumericAnswer: (a) => Math.floor(a - ( (a*0.1) + (a*0.7) - (a*0.15) )),
     explanation: "売上総利益 ＝ 売上高 － 売上原価。売上原価 ＝ 期首 ＋ 仕入 － 期末。よって、売上 － (期首＋仕入－期末)。"
   },
   {
@@ -813,7 +813,7 @@ export const PROBLEM_TEMPLATES: ProblemTemplate[] = [
   },
   {
     type: QuestionType.NUMERIC,
-    textTemplate: (a) => `決算整理前の貯蔵品（消耗品）勘定残高は${(a * 0.06).toLocaleString()}円、期末実地棚卸高は${(a * 0.018).toLocaleString()}円である。購入時に全額費用処理している場合、決算整理後のP/Lに計上される消耗品費はいくらか。`,
+    textTemplate: (a) => `決算整理前の消耗品費勘定残高は${(a * 0.06).toLocaleString()}円、期末実地棚卸高は${(a * 0.018).toLocaleString()}円である。購入時に全額費用処理している場合、決算整理後のP/Lに計上される消耗品費はいくらか。`,
     generateNumericAnswer: (a) => a * 0.042, // a*0.06 - a*0.018 = a*0.042
     explanation: "費用処理法（購入時に全額費用計上）の場合、決算で期末残高を資産に振り替えます。P/L計上額 = 期首残高 - 期末残高。",
   },
@@ -847,10 +847,10 @@ export const PROBLEM_TEMPLATES: ProblemTemplate[] = [
   // --- 25. 消費税を含む複合取引 (Complex Transactions with Tax) ---
   {
     type: QuestionType.JOURNAL,
-    textTemplate: (a) => `商品${a.toLocaleString()}円（税抜）を仕入れ、代金は消費税10%とともに掛けとした。なお、引取運賃${(a*0.03).toLocaleString()}円（税込11,000円、消費税込み）を現金で支払った。（税抜方式）`,
+    textTemplate: (a) => `商品${a.toLocaleString()}円（税抜）を仕入れ、代金は消費税10%とともに掛けとした。なお、引取運賃${(a*0.05).toLocaleString()}円（税抜）を現金で支払った。（税抜方式）`,
     generateJournalAnswer: (a) => ({
-      debits: [{ account: '仕入', amount: a + Math.floor(a * 0.1) }, { account: '仮払消費税', amount: Math.floor(a * 0.1) + Math.floor(a * 0.01) }],
-      credits: [{ account: '買換金', amount: Math.floor(a * 1.1) }, { account: '現金', amount: Math.floor(a * 0.11) }]
+      debits: [{ account: '仕入', amount: a + Math.floor(a * 0.05) }, { account: '仮払消費税', amount: Math.floor(a * 0.1) + Math.floor(a * 0.005) }],
+      credits: [{ account: '買掛金', amount: Math.floor(a * 1.1) }, { account: '現金', amount: Math.floor(a * 0.055) }]
     }),
     explanation: "商品仕入と引取運賃（付随費用）を合算して仕入原価とします。消費税は仮払消費税で処理。引取運賃の税抜額を仕入に加算。"
   },
@@ -858,7 +858,7 @@ export const PROBLEM_TEMPLATES: ProblemTemplate[] = [
     type: QuestionType.JOURNAL,
     textTemplate: (a) => `商品${a.toLocaleString()}円（税抜）を売り上げ、代金は消費税10%とともに掛けとした。なお、先方負担の発送費${Math.floor(a * 0.02).toLocaleString()}円（消費税込み${Math.floor(a * 0.022).toLocaleString()}円）を立替払いし、現金で支払った。`,
     generateJournalAnswer: (a) => ({
-      debits: [{ account: '売掛金', amount: Math.floor(a * 1.1 + a * 0.022) }, { account: '立替金', amount: Math.floor(a * 0.022) }],
+      debits: [{ account: '売掛金', amount: Math.floor(a * 1.1) }, { account: '立替金', amount: Math.floor(a * 0.022) }],
       credits: [{ account: '売上', amount: a }, { account: '仮受消費税', amount: Math.floor(a * 0.1) }, { account: '現金', amount: Math.floor(a * 0.022) }]
     }),
     explanation: "売上取引と立替金を別々に処理します。発送費は先方負担のため売掛金に含めるか立替金とします（ここでは立替金勘定使用）。"
@@ -887,8 +887,8 @@ export const PROBLEM_TEMPLATES: ProblemTemplate[] = [
     type: QuestionType.JOURNAL,
     textTemplate: (a) => `決算日において次の整理を行う。①期末商品棚卸高${(a*1.5).toLocaleString()}円（期首商品は${a.toLocaleString()}円）、②売掛金${(a*20).toLocaleString()}円と受取手形${(a*10).toLocaleString()}円に対し2%の貸倒引当金を設定（前期末残高${(a*0.5).toLocaleString()}円、差額補充法）。`,
     generateJournalAnswer: (a) => ({
-      debits: [{ account: '仕入', amount: a }, { account: '貸倒引当金繰入', amount: a * 0.1 }],
-      credits: [{ account: '繰越商品', amount: a * 0.5 }, { account: '貸倒引当金', amount: a * 0.1 }]
+      debits: [{ account: '仕入', amount: a }, { account: '繰越商品', amount: a * 1.5 }, { account: '貸倒引当金繰入', amount: a * 0.1 }],
+      credits: [{ account: '繰越商品', amount: a }, { account: '仕入', amount: a * 1.5 }, { account: '貸倒引当金', amount: a * 0.1 }]
     }),
     explanation: "①商品：借方に期首a円・貸方に期末a×1.5、純額で仕入減額a×0.5。②貸倒引当金：(a×20+a×10)×2%=a×0.6、差額a×0.6-a×0.5=a×0.1を繰入。"
   },
@@ -896,12 +896,12 @@ export const PROBLEM_TEMPLATES: ProblemTemplate[] = [
   // --- 27. 固定資産の売却（複合仕訳） (Fixed Asset Disposal) ---
   {
     type: QuestionType.JOURNAL,
-    textTemplate: (a) => `備品（取得原価${a.toLocaleString()}円、減価償却累計額${(a*0.7).toLocaleString()}円、間接法）を${(a*0.4).toLocaleString()}円で売却し、代金は翌月末受取りとした。なお、売却時に運搬費${(a*0.01).toLocaleString()}円を現金で支払った。`,
+    textTemplate: (a) => `備品（取得原価${a.toLocaleString()}円、減価償却累計額${(a*0.7).toLocaleString()}円、間接法）を${(a*0.2).toLocaleString()}円で売却し、代金は翌月末受取りとした。なお、売却時に運搬費${(a*0.01).toLocaleString()}円を現金で支払った。`,
     generateJournalAnswer: (a) => ({
-      debits: [{ account: '減価償却累計額', amount: a * 0.7 }, { account: '未収金', amount: a * 0.4 }, { account: '固定資産売却損', amount: a * 0.3 }, { account: '支払手数料', amount: a * 0.01 }],
+      debits: [{ account: '減価償却累計額', amount: a * 0.7 }, { account: '未収金', amount: a * 0.2 }, { account: '固定資産売却損', amount: a * 0.11 }],
       credits: [{ account: '備品', amount: a }, { account: '現金', amount: a * 0.01 }]
     }),
-    explanation: "帳簿価額=a-a×0.7=a×0.3。売却損=帳簿価額a×0.3-売却価額a×0.4=▲a×0.1（実際は売却益a×0.1）。※問題文修正：実際は売却益となるため、固定資産売却益に修正すべきですが、説明として損失ケースを示します。"
+    explanation: "帳簿価額=取得原価a-減価償却累計額0.7a=0.3a。売却損=帳簿価額0.3a-売却価額0.2a=0.1a。これに売却時の運搬費0.01aを加算し、固定資産売却損は0.11aとなります。"
   },
   {
     type: QuestionType.JOURNAL,
@@ -929,10 +929,10 @@ export const PROBLEM_TEMPLATES: ProblemTemplate[] = [
     type: QuestionType.JOURNAL,
     textTemplate: (a) => `当座預金の残高は${(a*0.6).toLocaleString()}円であったが、次の取引を行った。①買掛金${a.toLocaleString()}円の支払いとして小切手を振り出した、②得意先から売掛金${(a*0.3).toLocaleString()}円の回収として小切手を受け取り、ただちに当座預金に預け入れた。なお、当座借越契約（二勘定制）を締結している。`,
     generateJournalAnswer: (a) => ({
-      debits: [{ account: '買掛金', amount: a }, { account: '当座預金', amount: a * 0.3 }],
-      credits: [{ account: '当座預金', amount: a * 0.6 }, { account: '当座借越', amount: a * 0.4 }, { account: '売掛金', amount: a * 0.3 }]
+      debits: [{ account: '買掛金', amount: a }],
+      credits: [{ account: '当座預金', amount: a * 0.6 }, { account: '当座借越', amount: a * 0.1 }, { account: '売掛金', amount: a * 0.3 }]
     }),
-    explanation: "①支払：残高a×0.6を超える部分a×0.4を当座借越で処理。②入金：小切手をただちに預け入れるため当座預金の増加。"
+    explanation: "①支払：残高a×0.6を超える部分a×0.4が当座借越となります。②入金：a×0.3を預け入れ、当座借越を減少させます。結果として、当座借越の残高はa×0.1（貸方）となります。"
   },
   {
     type: QuestionType.JOURNAL,
@@ -1056,8 +1056,8 @@ export const PROBLEM_TEMPLATES: ProblemTemplate[] = [
     type: QuestionType.JOURNAL,
     textTemplate: (a) => `決算日において次の整理を行う。①売掛金${(a * 50).toLocaleString()}円と受取手形${(a * 30).toLocaleString()}円に対し2%の貸倒引当金を設定（前残高${(a * 0.8).toLocaleString()}円、差額補充法）、②消耗品の期末実地棚卸高${(a * 0.3).toLocaleString()}円（購入時費用処理）、③期末商品棚卸高${(a * 15).toLocaleString()}円（期首商品は${(a * 12).toLocaleString()}円）。`,
     generateJournalAnswer: (a) => ({
-      debits: [{ account: '貸倒引当金繰入', amount: Math.floor(a * 0.8) }, { account: '貯蔵品', amount: Math.floor(a * 0.3) }, { account: '仕入', amount: a * 12 }],
-      credits: [{ account: '貸倒引当金', amount: Math.floor(a * 0.8) }, { account: '消耗品費', amount: Math.floor(a * 0.3) }, { account: '繰越商品', amount: a * 12 }]
+      debits: [{ account: '貸倒引当金繰入', amount: Math.floor(a * 0.8) }, { account: '貯蔵品', amount: Math.floor(a * 0.3) }, { account: '仕入', amount: a * 12 }, { account: '繰越商品', amount: a * 15 }],
+      credits: [{ account: '貸倒引当金', amount: Math.floor(a * 0.8) }, { account: '消耗品費', amount: Math.floor(a * 0.3) }, { account: '繰越商品', amount: a * 12 }, { account: '仕入', amount: a * 15 }]
     }),
     explanation: "①貸倒引当金：(50a+30a)×2%=1.6a、設定額1.6a-前残高0.8a=0.8a繰入。②貯蔵品：期末残高を資産計上。③繰越商品：期首商品を仕入に振替（しーくりくりしー）の借方側。"
   },
@@ -1082,7 +1082,7 @@ export const PROBLEM_TEMPLATES: ProblemTemplate[] = [
     explanation: "3伝票制でも仕訳は通常通り行います。現金支払分は出金伝票、掛分は振替伝票で起票します。"
   },
 
-  // --- 37. 税効果会計の基礎（簿記3級範囲外だが理解促進） ---
+  // --- 37. 消費税の処理（Tax Accounting） ---
   {
     type: QuestionType.SELECTION,
     textTemplate: () => "消費税の仮払消費税と仮受消費税の差額を決算時に処理する勘定科目はどれか。",

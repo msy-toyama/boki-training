@@ -15,7 +15,7 @@ import { Sword, Shield, Trophy, AlertTriangle, BookOpen, Flag, BarChart3, Histor
 const App: React.FC = () => {
   // Game Flow State
   const [screen, setScreen] = useState<'title' | 'settings' | 'question-type-select' | 'battle' | 'result' | 'gameover' | 'clear' | 'ranking' | 'privacy'>('title');
-  const [soundSettings, setSoundSettings] = useState({ bgm: true, sfx: true });
+  const [soundSettings, setSoundSettings] = useState({ bgm: false, sfx: true });
   const [difficulty, setDifficulty] = useState<Difficulty>('Easy');
   const [selectedQuestionTypes, setSelectedQuestionTypes] = useState<QuestionType[]>([
     QuestionType.JOURNAL,
@@ -445,95 +445,97 @@ const App: React.FC = () => {
 
   if (screen === 'title') {
     return (
-      <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-4 text-center relative overflow-hidden">
+      <div className="min-h-screen bg-slate-900 flex flex-col relative overflow-hidden">
         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#4f46e5 2px, transparent 2px)', backgroundSize: '30px 30px' }}></div>
         
-        <div className="relative z-10 max-w-2xl w-full space-y-12 mb-12">
-          <div className="space-y-4 animate-in fade-in zoom-in duration-700">
-            <div className="inline-block p-4 bg-slate-800 rounded-full mb-4 border-4 border-indigo-500 shadow-xl">
-              <Sword size={64} className="text-yellow-400" />
+        <div className="relative z-10 flex-1 flex flex-col items-center justify-center p-4 w-full">
+          <div className="max-w-2xl w-full space-y-8 md:space-y-12 my-8 text-center">
+            <div className="space-y-4 animate-in fade-in zoom-in duration-700">
+              <div className="inline-block p-4 bg-slate-800 rounded-full mb-4 border-4 border-indigo-500 shadow-xl">
+                <Sword size={64} className="text-yellow-400" />
+              </div>
+              <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-slate-400 font-pixel drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)]">
+                簿記<br/>トレーニング大戦
+              </h1>
+              <p className="text-indigo-300 text-xl font-bold tracking-widest">3級 100本ノック</p>
             </div>
-            <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-slate-400 font-pixel drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)]">
-              簿記<br/>トレーニング大戦
-            </h1>
-            <p className="text-indigo-300 text-xl font-bold tracking-widest">3級 100本ノック</p>
-          </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            <button 
-              onClick={() => selectDifficulty('Practice')}
-              aria-label="練習モードでゲームを開始"
-              className="group relative bg-slate-800 hover:bg-blue-900 border-4 border-slate-600 hover:border-blue-400 p-8 rounded-xl transition-all hover:-translate-y-2 shadow-xl"
-            >
-              <BookOpen className="w-12 h-12 mx-auto mb-4 text-blue-400 group-hover:scale-110 transition-transform" />
-              <h3 className="text-2xl font-bold text-white mb-2">Practice</h3>
-              <p className="text-slate-400 text-sm">練習用<br/>時間制限なし</p>
-            </button>
+            <div className="grid md:grid-cols-3 gap-6">
+              <button 
+                onClick={() => selectDifficulty('Practice')}
+                aria-label="練習モードでゲームを開始"
+                className="group relative bg-slate-800 hover:bg-blue-900 border-4 border-slate-600 hover:border-blue-400 p-8 rounded-xl transition-all hover:-translate-y-2 shadow-xl"
+              >
+                <BookOpen className="w-12 h-12 mx-auto mb-4 text-blue-400 group-hover:scale-110 transition-transform" />
+                <h3 className="text-2xl font-bold text-white mb-2">Practice</h3>
+                <p className="text-slate-400 text-sm">練習用<br/>時間制限なし</p>
+              </button>
 
-            <button 
-              onClick={() => selectDifficulty('Easy')}
-              aria-label="イージーモードでゲームを開始"
-              className="group relative bg-slate-800 hover:bg-green-900 border-4 border-slate-600 hover:border-green-400 p-8 rounded-xl transition-all hover:-translate-y-2 shadow-xl"
-            >
-              <Shield className="w-12 h-12 mx-auto mb-4 text-green-400 group-hover:scale-110 transition-transform" />
-              <h3 className="text-2xl font-bold text-white mb-2">Easy</h3>
-              <p className="text-slate-400 text-sm">初心者向け<br/>ゆっくり考えられます</p>
-            </button>
+              <button 
+                onClick={() => selectDifficulty('Easy')}
+                aria-label="イージーモードでゲームを開始"
+                className="group relative bg-slate-800 hover:bg-green-900 border-4 border-slate-600 hover:border-green-400 p-8 rounded-xl transition-all hover:-translate-y-2 shadow-xl"
+              >
+                <Shield className="w-12 h-12 mx-auto mb-4 text-green-400 group-hover:scale-110 transition-transform" />
+                <h3 className="text-2xl font-bold text-white mb-2">Easy</h3>
+                <p className="text-slate-400 text-sm">初心者向け<br/>ゆっくり考えられます</p>
+              </button>
 
-            <button 
-              onClick={() => selectDifficulty('Hard')}
-              aria-label="ハードモードでゲームを開始"
-              className="group relative bg-slate-800 hover:bg-red-900 border-4 border-slate-600 hover:border-red-400 p-8 rounded-xl transition-all hover:-translate-y-2 shadow-xl"
-            >
-              <Sword className="w-12 h-12 mx-auto mb-4 text-red-400 group-hover:scale-110 transition-transform" />
-              <h3 className="text-2xl font-bold text-white mb-2">Hard</h3>
-              <p className="text-slate-400 text-sm">上級者向け<br/>素早い判断が必要です</p>
-            </button>
-          </div>
+              <button 
+                onClick={() => selectDifficulty('Hard')}
+                aria-label="ハードモードでゲームを開始"
+                className="group relative bg-slate-800 hover:bg-red-900 border-4 border-slate-600 hover:border-red-400 p-8 rounded-xl transition-all hover:-translate-y-2 shadow-xl"
+              >
+                <Sword className="w-12 h-12 mx-auto mb-4 text-red-400 group-hover:scale-110 transition-transform" />
+                <h3 className="text-2xl font-bold text-white mb-2">Hard</h3>
+                <p className="text-slate-400 text-sm">上級者向け<br/>素早い判断が必要です</p>
+              </button>
+            </div>
 
-          <div className="flex justify-center gap-4">
-            <button 
-              onClick={() => {
-                audioService.init();
-                audioService.playSfx(SoundType.SFX_SELECT);
-                setScreen('settings');
-              }}
-              className="text-indigo-300 hover:text-white flex items-center justify-center gap-2 transition-colors px-4 py-2"
-            >
-              <Settings size={20} /> サウンド設定
-            </button>
-            <button 
-              onClick={() => {
-                audioService.init();
-                audioService.playSfx(SoundType.SFX_SELECT);
-                setScreen('ranking');
-              }}
-              className="text-indigo-300 hover:text-white flex items-center justify-center gap-2 transition-colors px-4 py-2"
-            >
-              <History size={20} /> プレイ履歴
-            </button>
-            <button 
-              onClick={() => {
-                audioService.playSfx(SoundType.SFX_SELECT);
-                shareToX('RPG風簿記学習ゲーム「簿記トレーニング大戦」で遊ぼう！日商簿記3級を完全攻略！');
-              }}
-              className="text-indigo-300 hover:text-white flex items-center justify-center gap-2 transition-colors px-4 py-2"
-            >
-              <Twitter size={20} /> Xでシェア
-            </button>
-            <button 
-              onClick={() => {
-                audioService.playSfx(SoundType.SFX_SELECT);
-                shareNative('RPG風簿記学習ゲーム「簿記トレーニング大戦」で遊ぼう！日商簿記3級を完全攻略！');
-              }}
-              className="text-indigo-300 hover:text-white flex items-center justify-center gap-2 transition-colors px-4 py-2"
-            >
-              <Share2 size={20} /> その他
-            </button>
+            <div className="grid grid-cols-2 md:flex md:justify-center gap-4">
+              <button 
+                onClick={() => {
+                  audioService.init();
+                  audioService.playSfx(SoundType.SFX_SELECT);
+                  setScreen('settings');
+                }}
+                className="text-indigo-300 hover:text-white flex items-center justify-center gap-2 transition-colors px-4 py-2 bg-slate-800/50 rounded-lg md:bg-transparent md:rounded-none"
+              >
+                <Settings size={20} /> サウンド設定
+              </button>
+              <button 
+                onClick={() => {
+                  audioService.init();
+                  audioService.playSfx(SoundType.SFX_SELECT);
+                  setScreen('ranking');
+                }}
+                className="text-indigo-300 hover:text-white flex items-center justify-center gap-2 transition-colors px-4 py-2 bg-slate-800/50 rounded-lg md:bg-transparent md:rounded-none"
+              >
+                <History size={20} /> プレイ履歴
+              </button>
+              <button 
+                onClick={() => {
+                  audioService.playSfx(SoundType.SFX_SELECT);
+                  shareToX('RPG風簿記学習ゲーム「簿記トレーニング大戦」で遊ぼう！日商簿記3級を完全攻略！');
+                }}
+                className="text-indigo-300 hover:text-white flex items-center justify-center gap-2 transition-colors px-4 py-2 bg-slate-800/50 rounded-lg md:bg-transparent md:rounded-none"
+              >
+                <Twitter size={20} /> Xでシェア
+              </button>
+              <button 
+                onClick={() => {
+                  audioService.playSfx(SoundType.SFX_SELECT);
+                  shareNative('RPG風簿記学習ゲーム「簿記トレーニング大戦」で遊ぼう！日商簿記3級を完全攻略！');
+                }}
+                className="text-indigo-300 hover:text-white flex items-center justify-center gap-2 transition-colors px-4 py-2 bg-slate-800/50 rounded-lg md:bg-transparent md:rounded-none"
+              >
+                <Share2 size={20} /> その他
+              </button>
+            </div>
           </div>
         </div>
         
-        <footer className="absolute bottom-2 w-full text-center px-4 opacity-60 hover:opacity-100 transition-opacity z-20">
+        <footer className="relative z-20 w-full text-center py-4 px-4 opacity-60 hover:opacity-100 transition-opacity bg-slate-900/50 backdrop-blur-sm mt-auto">
           <p className="text-[10px] text-slate-600 mb-1">
             本アプリは学習用であり、実務上の正確性を保証するものではありません。日商簿記検定の最新の出題範囲と異なる場合があります。<br/>
             © 2024 Toyama Digital Works. All rights reserved.
@@ -558,7 +560,7 @@ const App: React.FC = () => {
       audioService.playSfx(SoundType.SFX_SELECT);
       
       // Save to localStorage
-      const profile = getUserProfile() || { soundSettings: { bgm: true, sfx: true } };
+      const profile = getUserProfile() || { soundSettings: { bgm: false, sfx: true } };
       profile.soundSettings.bgm = newBgm;
       localStorage.setItem('boki-training-profile', JSON.stringify(profile));
     };
@@ -571,7 +573,7 @@ const App: React.FC = () => {
       if (newSfx) audioService.playSfx(SoundType.SFX_SELECT);
       
       // Save to localStorage
-      const profile = getUserProfile() || { soundSettings: { bgm: true, sfx: true } };
+      const profile = getUserProfile() || { soundSettings: { bgm: false, sfx: true } };
       profile.soundSettings.sfx = newSfx;
       localStorage.setItem('boki-training-profile', JSON.stringify(profile));
     };

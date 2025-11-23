@@ -458,7 +458,7 @@ const App: React.FC = () => {
                 <Sword size={64} className="text-yellow-400" />
               </div>
               <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-slate-400 font-pixel drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)]">
-                簿記<br/>トレーニング大戦
+                簿記<br/>トレーニング<br className="md:hidden" />大戦
               </h1>
               <p className="text-indigo-300 text-xl font-bold tracking-widest">3級 100本ノック</p>
             </div>

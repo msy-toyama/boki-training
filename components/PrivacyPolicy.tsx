@@ -70,8 +70,13 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack }) => {
           <section>
             <h2 className="text-lg font-bold text-white mb-3 border-l-4 border-indigo-500 pl-3">5. お問い合わせ</h2>
             <p>
-              本アプリに関するお問い合わせや不具合の報告は、GitHubリポジトリのIssueまたは開発者のSNSアカウントまでお願いいたします。
+              本アプリに関するお問い合わせや不具合の報告は、開発者のX（旧Twitter）アカウントへのDM（ダイレクトメッセージ）にて受け付けております。
             </p>
+            <div className="mt-2">
+              <a href="https://x.com/ikasumi_dev" target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:underline flex items-center gap-2">
+                @ikasumi_dev (X)
+              </a>
+            </div>
           </section>
 
           <div className="pt-8 text-center text-xs text-slate-500">

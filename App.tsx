@@ -22,6 +22,7 @@ const App: React.FC = () => {
     QuestionType.SELECTION,
     QuestionType.NUMERIC
   ]);
+  const [activeTopic, setActiveTopic] = useState<string | undefined>(undefined);
   
   // Data State
   const [problem, setProblem] = useState<GeneratedProblem | null>(null);
@@ -94,6 +95,83 @@ const App: React.FC = () => {
     } else {
       // Default settings for new users
       audioService.setSettings(false, true);
+    }
+  }, []);
+
+  // --- Check URL Params and Auto-Start Topic/Type Battles ---
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const queryType = params.get('type')?.toLowerCase();
+    const queryTopic = params.get('topic')?.toLowerCase();
+    const queryDiff = params.get('difficulty')?.toLowerCase() || params.get('diff')?.toLowerCase();
+
+    if (queryType || queryTopic || queryDiff) {
+      // Determine Difficulty
+      let selectedDiff: Difficulty = 'Practice'; // Default is Practice for stress-free study
+      if (queryDiff) {
+        if (queryDiff === 'easy') selectedDiff = 'Easy';
+        else if (queryDiff === 'normal' || queryDiff === 'medium') selectedDiff = 'Easy';
+        else if (queryDiff === 'hard') selectedDiff = 'Hard';
+        else if (queryDiff === 'practice') selectedDiff = 'Practice';
+      }
+
+      // Determine Allowed Question Types
+      let types: QuestionType[] = [
+        QuestionType.JOURNAL,
+        QuestionType.SELECTION,
+        QuestionType.NUMERIC
+      ];
+      if (queryType) {
+        if (queryType === 'journal' || queryType === 'shiwake') {
+          types = [QuestionType.JOURNAL];
+        } else if (queryType === 'selection' || queryType === 'kanjo') {
+          types = [QuestionType.SELECTION];
+        } else if (queryType === 'numeric' || queryType === 'keisan') {
+          types = [QuestionType.NUMERIC];
+        }
+      }
+
+      const topic = queryTopic || undefined;
+      setActiveTopic(topic);
+      setDifficulty(selectedDiff);
+      setSelectedQuestionTypes(types);
+
+      // Load best score for this difficulty
+      const best = getPersonalBest(selectedDiff);
+      setCurrentHighScore(best);
+
+      const settings = GAME_SETTINGS[selectedDiff];
+      setPlayerState({
+        maxHp: settings.playerHp,
+        currentHp: settings.playerHp,
+        score: 0,
+        combo: 0
+      });
+      setQuestionsAnswered(0);
+      setMonsterIndex(0);
+      setCurrentMonster(spawnMonster(0));
+      setAttackInterval(settings.startInterval);
+      setScreen('battle');
+      
+      // Load first problem directly with query settings
+      setLoading(true);
+      setTimer(0);
+      setUserAnswer(null);
+      setBattleResult(null);
+      setDamageDisplay(null);
+      setShowSurrenderConfirm(false);
+      setIsSubmitting(false);
+      setAttackInterval(settings.startInterval);
+      
+      generateProblem(selectedDiff, types, topic)
+        .then(newProblem => {
+          setProblem(newProblem);
+          setLoading(false);
+        })
+        .catch(err => {
+          console.error("Auto-start load failed", err);
+          setLoading(false);
+        });
     }
   }, []);
 
@@ -268,7 +346,7 @@ const App: React.FC = () => {
     setIsSubmitting(false);
     setAttackInterval(calculateInterval(diff, qIndex));
     
-    const newProblem = await generateProblem(diff, types);
+    const newProblem = await generateProblem(diff, types, activeTopic);
     setProblem(newProblem);
     setLoading(false);
   };
@@ -495,6 +573,27 @@ const App: React.FC = () => {
               </button>
             </div>
 
+            {/* SEO Knowledge Base Banner */}
+            <div className="bg-slate-800/80 border-2 border-indigo-500/50 rounded-xl p-6 shadow-2xl flex flex-col md:flex-row items-center justify-between text-left gap-4 max-w-3xl mx-auto my-6">
+              <div>
+                <span className="bg-indigo-600/85 text-white text-xs font-semibold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                  お役立ちコンテンツ
+                </span>
+                <h3 className="text-xl font-bold text-white mt-2">簿記3級 最短攻略コラム・ナレッジベース</h3>
+                <p className="text-slate-300 text-sm mt-1">
+                  仕訳練習、勘定科目完全一覧、決算整理、試算表、よくあるミスなど、試験によく出る超重要論点の解説を今すぐチェック！
+                </p>
+              </div>
+              <a
+                href="/kb/"
+                onClick={() => audioService.playSfx(SoundType.SFX_SELECT)}
+                className="w-full md:w-auto shrink-0 inline-flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold py-3 px-6 rounded-lg transition-transform hover:-translate-y-0.5 active:translate-y-0 shadow-lg text-center"
+              >
+                <BookOpen size={20} className="text-yellow-300" />
+                攻略コラムを読む
+              </a>
+            </div>
+
             <div className="grid grid-cols-2 md:flex md:justify-center gap-4">
               <button 
                 onClick={() => {
@@ -544,10 +643,13 @@ const App: React.FC = () => {
             © 2024 Toyama Digital Works. All rights reserved.
           </p>
           <button 
-            onClick={() => setScreen('privacy')}
+            onClick={() => {
+              audioService.playSfx(SoundType.SFX_SELECT);
+              setScreen('privacy');
+            }}
             className="text-[10px] text-slate-500 hover:text-indigo-400 underline transition-colors"
           >
-            プライバシーポリシー
+            当サイトについて・利用規約・お問い合わせ・プライバシーポリシー
           </button>
         </footer>
       </div>

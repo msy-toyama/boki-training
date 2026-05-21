@@ -152,7 +152,7 @@ export const PROBLEM_TEMPLATES: ProblemTemplate[] = [
   },
   {
     type: QuestionType.JOURNAL,
-    textTemplate: (a, t) => `当座預金の残高は${(a-50000).toLocaleString()}円であったが、${t}からの買掛金の支払いとして小切手${a.toLocaleString()}円を振り出した。なお、銀行とは当座借越契約（限度額あり）を結んでいる。`,
+    textTemplate: (a, t) => `当座預金の残高は${Math.floor(a * 0.8).toLocaleString()}円であったが、${t}からの買掛金の支払いとして小切手${a.toLocaleString()}円を振り出した。なお、銀行とは当座借越契約（限度額あり）を結んでいる。`,
     generateJournalAnswer: (a) => ({
       debits: [{ account: '買掛金', amount: a }],
       credits: [{ account: '当座預金', amount: a }]
@@ -317,10 +317,10 @@ export const PROBLEM_TEMPLATES: ProblemTemplate[] = [
   },
   {
     type: QuestionType.JOURNAL,
-    textTemplate: (a) => `株式会社の設立にあたり、株式100株を1株${(a * 10).toLocaleString()}円で発行し、全額の払込みを受け、当座預金とした。なお、資本金は会社法で認められる最低額とする。`,
+    textTemplate: (a) => `株式会社の設立にあたり、株式100株を1株${Math.floor(a / 100).toLocaleString()}円で発行し、全額の払込みを受け、当座預金とした。なお、資本金は会社法で認められる最低額とする。`,
     generateJournalAnswer: (a) => ({
-      debits: [{ account: '当座預金', amount: a * 1000 }],
-      credits: [{ account: '資本金', amount: a * 500 }, { account: '資本準備金', amount: a * 500 }]
+      debits: [{ account: '当座預金', amount: a }],
+      credits: [{ account: '資本金', amount: a * 0.5 }, { account: '資本準備金', amount: a * 0.5 }]
     }),
     explanation: "払込金額の2分の1を超えない額を資本金に計上せず、資本準備金とすることができます。（※3級範囲では全額資本金が基本ですが、準備金計上の知識も問われることがあります。ただし3級の基本は全額資本金のため、本問は発展的です）"
   },
@@ -1125,5 +1125,262 @@ export const PROBLEM_TEMPLATES: ProblemTemplate[] = [
     textTemplate: (a) => `決算整理前試算表の「前払保険料」は${(a * 0.6).toLocaleString()}円（当期7/1支払、1年分）である。決算日は翌年3/31である。決算整理後の「前払保険料」（B/S計上額）はいくらか。`,
     generateNumericAnswer: (a) => Math.floor(a * 0.15), // 0.6 × 3/12 = 0.15（4/1～6/30の3ヶ月分）
     explanation: "7/1支払の1年分（7/1～翌6/30）のうち、3/31時点で未経過なのは4/1～6/30の3ヶ月分です。"
+  },
+
+  // --- 40. 実践的な仕訳・計算・選択の追加テンプレート (新規追加 117〜141問) ---
+  // --- 40-1. 従業員の立替金精算 (仕訳) ---
+  {
+    type: QuestionType.JOURNAL,
+    textTemplate: (a, t) => `出張中の従業員より、旅費の概算払として手渡していた現金${a.toLocaleString()}円について旅費交通費${Math.floor(a * 0.85).toLocaleString()}円を使用したとの報告を受け、精算し、残額は現金で受け取った。`,
+    generateJournalAnswer: (a) => ({
+      debits: [{ account: '旅費交通費', amount: Math.floor(a * 0.85) }, { account: '現金', amount: Math.floor(a * 0.15) }],
+      credits: [{ account: '仮払金', amount: a }]
+    }),
+    explanation: "概算払時に「仮払金」を貸方に振替えて精算し、残高と交通費の実績を適切に記録します。"
+  },
+  // --- 40-2. 電子記録債権の譲渡と裏書 (仕訳) ---
+  {
+    type: QuestionType.JOURNAL,
+    textTemplate: (a, t) => `${t}から仕入れた商品${a.toLocaleString()}円の代金支払のため、かねて同店より受け取っていた電子記録債権${a.toLocaleString()}円を譲渡（譲渡記録の請求）した。`,
+    generateJournalAnswer: (a) => ({
+      debits: [{ account: '仕入', amount: a }],
+      credits: [{ account: '電子記録債権', amount: a }]
+    }),
+    explanation: "電子記録債権を譲渡した場合は、その債権額を減額（貸方）します。"
+  },
+  // --- 40-3. クレジットカード決済手数料 (仕訳) ---
+  {
+    type: QuestionType.JOURNAL,
+    textTemplate: (a) => `顧客に対して商品${a.toLocaleString()}円をクレジット決済にて売り上げた。信販会社への決済手数料は売上高の3%（当方負担）とし、販売時に費用処理する。代金は後日信販会社より支払われる。`,
+    generateJournalAnswer: (a) => ({
+      debits: [{ account: 'クレジット売掛金', amount: Math.floor(a * 0.97) }, { account: '支払手数料', amount: Math.floor(a * 0.03) }],
+      credits: [{ account: '売上', amount: a }]
+    }),
+    explanation: "クレジットによる売上高の決済手数料3%分を「支払手数料」（費用）とし、残額を「クレジット売掛金」とします。"
+  },
+  // --- 40-4. 有形固定資産の除却 (仕訳) ---
+  {
+    type: QuestionType.JOURNAL,
+    textTemplate: (a) => `使用をやめた備品（取得原価${(a * 10).toLocaleString()}円、減価償却累計額${(a * 9).toLocaleString()}円、間接法で記帳）を除却した。なお、除却費用${Math.floor(a * 0.2).toLocaleString()}円は現金で支払った。また、この備品の評価額はゼロである。`,
+    generateJournalAnswer: (a) => ({
+      debits: [{ account: '減価償却累計額', amount: a * 9 }, { account: '固定資産除却損', amount: a * 1.2 }],
+      credits: [{ account: '備品', amount: a * 10 }, { account: '現金', amount: Math.floor(a * 0.2) }]
+    }),
+    explanation: "備品を帳簿から除き（貸方：備品、借方：累計額）、評価額ゼロ（帳簿価額はa×1）と除却費用分（a×0.2）の合計金額（a×1.2）が「固定資産除却損」となります。"
+  },
+  // --- 40-5. 手形の更改（書き換え） (仕訳) ---
+  {
+    type: QuestionType.JOURNAL,
+    textTemplate: (a, t) => `${t}から受け取っていた受取手形${a.toLocaleString()}円の期日が到来したが、先方より執拗な懇願を受け、支払期日の延長（書き換え）を承認した。新手形を受け取り旧手形と交換した。なお、利息分等の手数料は発生していない。`,
+    generateJournalAnswer: (a) => ({
+      debits: [{ account: '受取手形', amount: a }],
+      credits: [{ account: '受取手形', amount: a }]
+    }),
+    explanation: "手形の書き換え取引では、旧手形を回収し新手形を発行するため、借方・貸方ともに「受取手形」が同額で起票されます。"
+  },
+  // --- 40-6. 仮受金の原因判明（売掛金回収および手付金） (仕訳) ---
+  {
+    type: QuestionType.JOURNAL,
+    textTemplate: (a, t) => `当座預金に振り込まれていたものの原因が不明であった${a.toLocaleString()}円について調査した結果、${t}に対する売掛金回収分${Math.floor(a * 0.7).toLocaleString()}円と、残額は新規注文に対する手付金であることが判明した。`,
+    generateJournalAnswer: (a) => ({
+      debits: [{ account: '仮受金', amount: a }],
+      credits: [{ account: '売掛金', amount: Math.floor(a * 0.7) }, { account: '前受金', amount: Math.floor(a * 0.3) }]
+    }),
+    explanation: "入金時の「仮受金」を借方に振り替えて消去し、原因として判明した売掛金の消去、および新規注文に対する手付金（前受金）に振り替えます。"
+  },
+  // --- 40-7. 株式の発行・全額資本金計上 (仕訳) ---
+  {
+    type: QuestionType.JOURNAL,
+    textTemplate: (a) => `増資にあたり、新株100株を1株${Math.floor(a / 100).toLocaleString()}円で発行し、全額の払込みを受けて当座預金とした。なお、資本金は全額「会社法が定める最も一般的な上限額」を計上することとした。`,
+    generateJournalAnswer: (a) => ({
+      debits: [{ account: '当座預金', amount: a }],
+      credits: [{ account: '資本金', amount: a }]
+    }),
+    explanation: "会社法上、払込金額は原則として全額を「資本金」とします（準備金勘定を設定しない旨の指示のため、すべて資本金となります）。"
+  },
+  // --- 40-8. 差入保証金（賃貸借契約） (仕訳) ---
+  {
+    type: QuestionType.JOURNAL,
+    textTemplate: (a) => `新たに事務所を借りる契約を結び、月額敷金（保証金）として${a.toLocaleString()}円、および当月分家賃として${Math.floor(a * 0.4).toLocaleString()}円を、普通預金から支払った。`,
+    generateJournalAnswer: (a) => ({
+      debits: [{ account: '差入保証金', amount: a }, { account: '支払家賃', amount: Math.floor(a * 0.4) }],
+      credits: [{ account: '普通預金', amount: Math.floor(a * 1.4) }]
+    }),
+    explanation: "将来返還される予定の敷金・保証金は「差入保証金」（資産）、当月の家賃は「支払家賃」（費用）とします。"
+  },
+  // --- 40-9. 地代等の前受期末決算処理 (仕訳) ---
+  {
+    type: QuestionType.JOURNAL,
+    textTemplate: (a) => `決算日において、受取地代残高${a.toLocaleString()}円のうち、翌期に属する前受地代分${Math.floor(a * 0.25).toLocaleString()}円を繰り延べる決算仕訳を起票する。`,
+    generateJournalAnswer: (a) => ({
+      debits: [{ account: '受取家賃', amount: Math.floor(a * 0.25) }],
+      credits: [{ account: '前受収益', amount: Math.floor(a * 0.25) }]
+    }),
+    explanation: "当期に受け取った地代（収益）のうち来期分にあたる部分は「前受収益」（負債）に振り替えて翌期に繰り延べます。※勘定システムに対応するため受取家賃/地代系列で決済します。"
+  },
+  // --- 40-10. 給与支給と源泉所得税・住民税 (仕訳) ---
+  {
+    type: QuestionType.JOURNAL,
+    textTemplate: (a) => `当期従業員の給料総額${(a * 10).toLocaleString()}円のうち、所得税の源泉徴収分${a.toLocaleString()}円、住民税預り金${Math.floor(a * 0.8).toLocaleString()}円、および健康保険料等の社会保険料預り金${Math.floor(a * 1.2).toLocaleString()}円を控除し、手取額を当座預金から振り込んだ。`,
+    generateJournalAnswer: (a) => ({
+      debits: [{ account: '給料', amount: a * 10 }],
+      credits: [{ account: '預り金', amount: Math.floor(a * 3) }, { account: '当座預金', amount: Math.floor(a * 7) }]
+    }),
+    explanation: "給料総額（借方：給料）から控除した源泉税・住民税・社会保険料はすべて「預り金」（または個別の所得税預り金等）として貸方にまとめ、手取額を当座預金から支払います。"
+  },
+  // --- 40-11. 法人税等の中間申告 (仕訳) ---
+  {
+    type: QuestionType.JOURNAL,
+    textTemplate: (a) => `中間申告に伴い、法人税等の中間納付額${a.toLocaleString()}円を、現金で国税局に納付した。`,
+    generateJournalAnswer: (a) => ({
+      debits: [{ account: '仮払法人税等', amount: a }],
+      credits: [{ account: '現金', amount: a }]
+    }),
+    explanation: "事業年度の途中で支払う国税の中間納付額は「仮払法人税等」勘定を用いて資産（借方）に一時計上します。"
+  },
+  // --- 40-12. 納税充当金の確定時決算（仮払相殺含む） (仕訳) ---
+  {
+    type: QuestionType.JOURNAL,
+    textTemplate: (a) => `決算に伴い、当期の法人税、住民税及び事業税が${(a * 2.5).toLocaleString()}円と確定した。中間申告によりすでに納付している${a.toLocaleString()}円を相殺し、残額は未払いとする。`,
+    generateJournalAnswer: (a) => ({
+      debits: [{ account: '法人税、住民税及び事業税', amount: a * 2.5 }],
+      credits: [{ account: '仮払法人税等', amount: a }, { account: '未払法人税等', amount: a * 1.5 }]
+    }),
+    explanation: "確定した租税・税金を費用（借方）とし、前払いしていた「仮払法人税等」を精算（貸方）、不足する確定の未払分は「未払法人税等」に計上します。"
+  },
+
+  // --- 40-13. 決算時の主要勘定・選択関係 (選択問題) ---
+  {
+    type: QuestionType.SELECTION,
+    textTemplate: () => "貸方残高をとり、負債（Liability）に分類されるものはどれか。",
+    generateSelectionAnswer: () => ({
+      correct: "前受金",
+      options: ["前受金", "前払金", "立替金", "仮払法人税等"]
+    }),
+    explanation: "「前受金」は将来商品を引き渡す義務があるため負債（貸方残高）です。前払金・立替金・仮払法人税等は資産（借方残高）に属します。"
+  },
+  {
+    type: QuestionType.SELECTION,
+    textTemplate: () => "3伝票制において、「出金伝票」に必ず含まれる（貸方に位置する）勘定科目はどれか。",
+    generateSelectionAnswer: () => ({
+      correct: "現金",
+      options: ["現金", "当座預金", "支払手形", "仕入"]
+    }),
+    explanation: "出金伝票は現金が減少する取引を起票するため、仕訳の貸方は必ず「現金」になります。"
+  },
+  {
+    type: QuestionType.SELECTION,
+    textTemplate: () => "手形を他人に割り引き、期日前に現金化する処理で生じる割引料を最も適切に処理する科目名はどれか。",
+    generateSelectionAnswer: () => ({
+      correct: "手形売却損",
+      options: ["手形売却損", "支払利息", "支払手数料", "貸倒損失"]
+    }),
+    explanation: "手形を期日前に割り引いた際の手数料（割引料）は、金融取引の費用として「手形売却損」で処理します。"
+  },
+  {
+    type: QuestionType.SELECTION,
+    textTemplate: () => "個人商店の店主が、自家で消費するために店舗の商品（仕入原価 5,000円、販売価格 8,000円）を取り出した。適切な仕訳の貸方科目はどれか。",
+    generateSelectionAnswer: () => ({
+      correct: "仕入（他勘定振替）",
+      options: ["仕入（他勘定振替）", "売上", "引出金", "商品"]
+    }),
+    explanation: "店主の私用での消費（家事消費）では、借方に「引出金」（または資本金）、貸方に「仕入」（原価5,000円）を減少させ、他勘定振替高とします。"
+  },
+  {
+    type: QuestionType.SELECTION,
+    textTemplate: () => "有形固定資産の「減価償却」における残存価額について、現行の簿記検定3級における原則的な扱いはどれか。",
+    generateSelectionAnswer: () => ({
+      correct: "取得原価の0%（残存価額ゼロ）",
+      options: ["取得原価の0%（残存価額ゼロ）", "取得原価の10%", "取得原価 of 5%", "実価（スクラップ価格）"]
+    }),
+    explanation: "現行の簿記3級などの制度（平成19年度税制改正以降の計算基準）では、定額法の残存価額は一律ゼロ（0%）として計算します。"
+  },
+
+  // --- 40-14. 段階的な各種実務計算 (計算問題) ---
+  {
+    type: QuestionType.NUMERIC,
+    textTemplate: (a) => `ある商品を仕入原価${(a * 4).toLocaleString()}円で仕入れ、これに25%の利益（マージン）を付加して定価を設定した。この商品の定価はいくらか。`,
+    generateNumericAnswer: (a) => Math.floor(a * 5),
+    explanation: "定価 = 仕入原価 × (1 + 利益加算率)。a×4 × 1.25 = a×5 となります。"
+  },
+  {
+    type: QuestionType.NUMERIC,
+    textTemplate: (a) => `決算において、売上原価の算定を行う。期首商品棚卸高${(a * 5).toLocaleString()}円、当期商品仕入高${(a * 45).toLocaleString()}円、期末商品棚卸高${(a * 8).toLocaleString()}円である。当期の売上原価はいくらか。`,
+    generateNumericAnswer: (a) => Math.floor(a * 42),
+    explanation: "売上原価 = 期首商品棚卸高 + 当期商品仕入高 - 期末商品棚卸高。計算：5a + 45a - 8a = 42a。"
+  },
+  {
+    type: QuestionType.NUMERIC,
+    textTemplate: (a) => `1年物の定期預金${(a * 100).toLocaleString()}円を、年利率1.2%で満期（1年後）まで預け入れた。満期時に（非課税として）店頭で受け取る利息の全額はいくらか。`,
+    generateNumericAnswer: (a) => Math.round(a * 1.2),
+    explanation: "利息 = 預入元本 × 年利率 × 期間（年）。a×100 × 1.2% × 1年 = a×1.2 となります。"
+  },
+  {
+    type: QuestionType.NUMERIC,
+    textTemplate: (a) => `決算において差額補充法を用い、売掛金残高${(a * 50).toLocaleString()}円の1%に相当する貸倒引当金を設定する。決算整理前の貸倒引当金残高（前残高）は${(a * 0.4).toLocaleString()}円である。このとき追加で計上すべき、当期「貸倒引当金繰入」額はいくらか。`,
+    generateNumericAnswer: (a) => Math.max(0, Math.floor(a * 0.1)),
+    explanation: "設定目標額：50a × 1% = 0.5a。現在残高0.4aとの差額補充額：0.5a - 0.4a = 0.1a を追加（繰り入れ）します。"
+  },
+  {
+    type: QuestionType.NUMERIC,
+    textTemplate: (a) => `当期の売上高は${(a * 80).toLocaleString()}円、売上原価は${(a * 50).toLocaleString()}円、販売費及び一般管理費は${(a * 18).toLocaleString()}円、受取利息（営業外収益）は${(a * 1.5).toLocaleString()}円、支払利息（営業外費用）は${(a * 0.5).toLocaleString()}円である。当期の「経常利益（あるいは税引前利益）」はいくらか。`,
+    generateNumericAnswer: (a) => Math.floor(a * 13),
+    explanation: "営業利益 = 売上高 -売上原価 - 販管費 = 80a - 50a - 18a = 12a。経常利益 = 営業利益 + 営業外収益 - 営業外費用 = 12a + 1.5a - 0.5a = 13a となります。"
+  },
+
+  // --- 40-15. 応用仕訳および計算問題 (新規追加 139〜144問) ---
+  // --- 40-15-1. 自己受託裏書手形の受取 (仕訳) ---
+  {
+    type: QuestionType.JOURNAL,
+    textTemplate: (a, t) => `かねて売り上げていた商品代金の一部回収として、得意先 ${t} から同店宛て・同店取引銀行支払いの約束手形${a.toLocaleString()}円を裏書譲渡（自己受託裏書）により受け取った。`,
+    generateJournalAnswer: (a) => ({
+      debits: [{ account: '受取手形', amount: a }],
+      credits: [{ account: '売掛金', amount: a }]
+    }),
+    explanation: "裏書譲渡でもらった場合であっても、自分自身が最終受取人になる手形であるため「受取手形」が借方に、売掛金の回収として「売掛金」が貸方にきます。"
+  },
+  // --- 40-15-2. 固定資産の除却、時価・処分価値あり (仕訳) ---
+  {
+    type: QuestionType.JOURNAL,
+    textTemplate: (a) => `使用を廃止した備品（取得原価${(a * 10).toLocaleString()}円、減価償却累計額${(a * 8).toLocaleString()}円、間接法）を除却した。処分における評価額（見積価値）は${a.toLocaleString()}円と査定され、倉庫へ「貯蔵品」として保管した。`,
+    generateJournalAnswer: (a) => ({
+      debits: [{ account: '減価償却累計額', amount: a * 8 }, { account: '貯蔵品', amount: a }, { account: '固定資産除却損', amount: a }],
+      credits: [{ account: '備品', amount: a * 10 }]
+    }),
+    explanation: "取得原価10a、減価償却累計額8aのため、純帳簿価値は2a。うち、査定額の1aを「貯蔵品」に振り替え、残りの1aを「固定資産除却損」として計上します。"
+  },
+  // --- 40-15-3. 帳簿、伝票における計算 (計算) ---
+  {
+    type: QuestionType.NUMERIC,
+    textTemplate: (a) => `3伝票制における仕訳取引。振替伝票に起票された一部入金取引において、商品の売上取引が${(a * 10).toLocaleString()}円、うち現金入金（出金伝票および入金伝票合計取引）が${(a * 3).toLocaleString()}円起票されている。このとき振替伝票に起票される取引（売掛金分）はいくらか。`,
+    generateNumericAnswer: (a) => Math.floor(a * 7),
+    explanation: "売上額10aから現金取引分の3aを差し引いた、残りの売掛分 7a が振替伝票の起票取引（売掛金/売上）となります。"
+  },
+  // --- 40-15-4. 分割支払手数料（利息別扱い） (仕訳) ---
+  {
+    type: QuestionType.JOURNAL,
+    textTemplate: (a, t) => `${t}から土地${(a * 20).toLocaleString()}円を購入し、代金は5マイルの分割払い（3マイルは当期末、残額は翌期）とした。なお、契約手数料${a.toLocaleString()}円は現金で支払い、残る土地原本代金は未払いとした。`,
+    generateJournalAnswer: (a) => ({
+      debits: [{ account: '土地', amount: a * 20 }, { account: '支払手数料', amount: a }],
+      credits: [{ account: '未払金', amount: a * 20 }, { account: '現金', amount: a }]
+    }),
+    explanation: "土地の購入額20aは「未払金」（来期以降もあるため）とし、契約手数料aは「支払手数料」（費用）および「現金」の減少として起票します。"
+  },
+  // --- 40-15-5. 売掛金の二重回収（誤回収・仮受金および未払金） (仕訳) ---
+  {
+    type: QuestionType.JOURNAL,
+    textTemplate: (a, t) => `得意先 ${t} から売掛金の二重回収として、誤ってすでに支払済みの口座引落額と同額の${a.toLocaleString()}円が当座預金に振り込まれた。この金額を返還義務のある未払い債務として処理した。`,
+    generateJournalAnswer: (a) => ({
+      debits: [{ account: '当座預金', amount: a }],
+      credits: [{ account: '未払金', amount: a }]
+    }),
+    explanation: "誤入金などで発生した返還義務のあるお金は、のちに払い戻すべき債務である「未払金」または「預り金」として計上します。"
+  },
+  // --- 40-15-6. 売上総利益率（マージン）からの仕入売上逆算 (計算) ---
+  {
+    type: QuestionType.NUMERIC,
+    textTemplate: (a) => `当期商品仕入原価${(a * 30).toLocaleString()}円、期首商品${(a * 3).toLocaleString()}円、期末商品${(a * 5).toLocaleString()}円である。売上総利益率が30%であるとき、当期の商品「売上高」はいくらか。`,
+    generateNumericAnswer: (a) => Math.round((a * 28) / 0.7), // 売上原価=3+30-5=28a. 売上高 = 28a / (1-0.3) = 40a
+    explanation: "売上原価 = 3a + 30a - 5a = 28a。売上総利益率が30%なので売上原価率は70%。売上高 = 28a ÷ 0.7 = 40a となります。"
   }
 ];

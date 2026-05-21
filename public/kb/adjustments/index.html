@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>日商簿記3級 決算整理仕訳の完全攻略マニュアル｜しーくりくりし・減価償却・貸倒設定｜簿記トレーニング大戦</title>
+  <meta name="description" content="簿記3級の合格を決める最大の壁「決算整理仕訳」を初心者向けに徹底解説！売上原価の算定（しーくりくりし）、定額法による減価償却（間接法・直接法）、貸倒引当金の設定（差額補充法）、各種費用・収益の見越・繰延（未払・前払）を完璧に整理。">
+  <link rel="canonical" href="https://boki-training.com/kb/adjustments/">
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+    }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://boki-training.com/kb/adjustments/"
+    },
+    "headline": "日商簿記3級 決算整理仕訳の完全攻略マニュアル",
+    "description": "簿記3級における決算整理仕訳（売上原価、減価償却、貸倒引当金、前払費用など）の計算、解き方を図解。",
+    "publisher": {
+      "@type": "Organization",
+      "name": "簿記トレーニング大戦",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://boki-training.com/index.html"
+      }
+    }
+  }
+  </script>
+</head>
+<body class="bg-slate-900 text-slate-100 flex flex-col min-h-screen">
+
+  <!-- Header -->
+  <header class="bg-slate-800 border-b border-indigo-900 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="/kb/" class="flex items-center gap-2">
+        <span class="text-xl font-bold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">
+          ← 簿記3級 最短攻略KB
+        </span>
+      </a>
+      <a href="/" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition-colors text-sm">
+        ゲーム起動
+      </a>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <article class="space-y-8">
+      
+      <!-- Meta Information -->
+      <div class="space-y-3">
+        <span class="inline-block bg-rose-500/20 text-rose-300 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest border border-rose-500/30">
+          決算整理の重要ポイント
+        </span>
+        <h1 class="text-3xl md:text-4xl font-black tracking-tight text-white leading-tight">
+          日商簿記3級 決算整理仕訳の完全攻略マニュアル｜しーくりくりし・減価償却・貸倒設定
+        </h1>
+        <p class="text-sm text-slate-400">更新日: 2026年5月21日</p>
+      </div>
+
+      <p class="text-slate-300 leading-relaxed text-base md:text-lg">
+        日商簿記3級を勉強する上で、誰しもが必ず一度は「もう分からない…！」と頭を抱えるのが、この**「決算整理仕訳（けっさんせいりしわけ）」**です。<br>
+        しかし、実は決算整理が出題されるパターンは非常に限られており、仕組みと公式さえ覚えてしまえば、確実に得点源にできます。配点の最も大きい第3問（財務諸表・決算整理後残高試算表の作成：配点35点）を制覇し、一発合格を引き寄せるための核心ポイントを、分かりやすく丁寧に解説します！
+      </p>
+
+      <!-- Section 1 -->
+      <section class="space-y-4">
+        <h2 class="text-2xl font-bold text-white border-l-4 border-indigo-500 pl-3">
+          1. 決算整理はなぜ必要なのか？（期間損益計算）
+        </h2>
+        <p class="text-slate-300 leading-relaxed">
+          会社は通常、1年（会計期間）ごとに成績発表を行います。しかし、日々の中で「すでに払ったけれど来年分の費用」や、「今年使うはずだったのに倉庫に残っている商品」が混ざっています。これらを適切に取り除き、**「今年の真の儲け」を正しく計算するための修正プロセス**が、決算整理仕訳です。
+        </p>
+      </section>
+
+      <!-- Section 2 -->
+      <section class="space-y-4">
+        <h2 class="text-2xl font-bold text-white border-l-4 border-indigo-500 pl-3">
+          2. 最難関テーマ①：売上原価の計算「しー・くり・くり・しー」
+        </h2>
+        <p class="text-slate-300 leading-relaxed">
+          売上原価とは、「今年、実際に売れた商品の仕入価格」です。決算書を作るためには、以下の語呂合わせの仕訳を完璧にする必要があります。
+        </p>
+        
+        <div class="bg-indigo-950/40 border border-indigo-500/30 p-6 rounded-lg my-6 space-y-4">
+          <p class="text-center text-xl font-bold text-yellow-300">売上原価の仕訳テンプレート</p>
+          <div class="grid grid-cols-2 gap-4 text-center font-mono text-base font-bold bg-slate-900 p-4 rounded border border-slate-800">
+            <div>① (借) 仕入 ✕✕ (期首繰越)</div>
+            <div>① (貸) 繰越商品 ✕✕</div>
+            <div>② (借) 繰越商品 △△ (期末残高)</div>
+            <div>② (貸) 仕入 △△</div>
+          </div>
+          <p class="text-xs text-slate-350 leading-relaxed">
+            これが「仕（しー）・繰（くり）・繰（くり）・仕（しー）」です。最初（①）に「去年売れ残った（期首）商品」を仕入れに加え、最後に「今年売れ残った（期末）商品（②）」を引くことで、実際に今年売れた分のコスト（仕入）を算出します。
+          </p>
+        </div>
+      </section>
+
+      <!-- Section 3 -->
+      <section class="space-y-4">
+        <h2 class="text-2xl font-bold text-white border-l-4 border-indigo-500 pl-3">
+          3. 重要公式②：定額法による減価償却（間接法）
+        </h2>
+        <p class="text-slate-300 leading-relaxed">
+          建物や車・パソコン（備品）といった固定資産は、毎年使っていくごとに価値が下がっていきます。この価値の下落分を計算するのが「減価償却（げんかしょうきゃく）」です。
+        </p>
+        <div class="bg-slate-850 p-6 rounded-lg border border-slate-700 space-y-3">
+          <span class="font-bold text-yellow-400 block mb-1">■ 1年分の減価償却費の計算式（定額法）</span>
+          <div class="bg-slate-900 p-3 rounded font-mono text-center text-lg text-emerald-400">
+            ( 取得原価 - 残存価額 ) ÷ 耐用年数
+          </div>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            ※現行の日商簿記3級の試験基準では、ほとんどが「残存価額は0円」または「残存価額は取得原価の0％（実質ゼロ円）」として計算されます。そのため、「取得原価 ÷ 耐用年数」が計算の核です。<br>
+            ※期中に購入・売却した場合は、「何ヶ月間使用したか」を数えて「日割・月割（月数 ÷ 12）」計算をする点に超注意が必要です。
+          </p>
+          <span class="font-bold text-yellow-400 block pt-3">■ 間接法の記帳仕訳</span>
+          <div class="grid grid-cols-2 gap-4 text-center font-mono bg-slate-900 p-3 rounded">
+            <div>(借) 減価償却費 ✕✕</div>
+            <div>(貸) 減価償却累計額 ✕✕</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 4 -->
+      <section class="space-y-4">
+        <h2 class="text-2xl font-bold text-white border-l-4 border-indigo-500 pl-3">
+          4. 各種費用・収益の見越・繰延（未払・前払など）
+        </h2>
+        <p class="text-slate-300 leading-relaxed">
+          「まだお金を払っていないけれど、今年度に属する分」を決算書に載せるのが<strong>「見越（みこし）」</strong>、逆に来年分の費用（家賃・保険料）や収益をあらかじめ返した（調整した）のが<strong>「繰延（くりのべ）」</strong>です。これをまとめた万能公式マッピングがこちらです。
+        </p>
+        <div class="grid md:grid-cols-2 gap-4 my-6">
+          <div class="bg-indigo-950/20 border border-slate-750 p-5 rounded-lg space-y-2">
+            <span class="font-bold text-indigo-400 block">① 費用の繰延（前払費用）</span>
+            <p class="text-xs text-slate-300 italic">「来年分の家賃や保険料をあらかじめ支払った」</p>
+            <div class="grid grid-cols-2 gap-2 text-center font-mono text-xs bg-slate-900 p-2 rounded">
+              <div>(借) 前払保険料 ✕✕</div>
+              <div>(貸) 支払保険料 ✕✕</div>
+            </div>
+          </div>
+          <div class="bg-purple-950/20 border border-slate-750 p-5 rounded-lg space-y-2">
+            <span class="font-bold text-purple-400 block">② 費用の見越（未払費用）</span>
+            <p class="text-xs text-slate-300 italic">「今年分なのに支払日が来月なのでまだ支払っていない」</p>
+            <div class="grid grid-cols-2 gap-2 text-center font-mono text-xs bg-slate-900 p-2 rounded">
+              <div>(借) 支払利息 ✕✕</div>
+              <div>(貸) 未払利息 ✕✕</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 5 (CTA) -->
+      <section class="bg-indigo-950/40 border border-indigo-500/30 p-8 rounded-xl space-y-6 text-center">
+        <h2 class="text-2xl font-black text-white">
+          決算整理の複雑な仕訳問題をゲームで100回練習しよう！
+        </h2>
+        <p class="text-slate-300 text-sm max-w-xl mx-auto leading-relaxed">
+          簿記トレーニング大戦には、決算期首・期末の繰延処理、減価償却の月割、貸倒見越補う処理などの「決算整理論点だけ」を強制的にフィルタして遊べる特別コラム連動機能が搭載されています！
+        </p>
+        <div class="flex flex-col sm:flex-row justify-center gap-4">
+          <a href="/?topic=closing&difficulty=practice" class="bg-slate-800 hover:bg-slate-750 text-indigo-300 hover:text-white border-2 border-indigo-500/50 font-bold py-3 px-6 rounded-lg transition-transform text-sm">
+            じっくり解く「Practice」
+          </a>
+          <a href="/?topic=closing&difficulty=easy" class="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold py-3 px-8 rounded-lg transition-transform hover:-translate-y-0.5 shadow-lg text-sm">
+            決算整理モンスターに挑戦！
+          </a>
+        </div>
+      </section>
+
+    </article>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-slate-950 border-t border-slate-850 py-10 px-4 text-center mt-auto">
+    <div class="max-w-7xl mx-auto space-y-4">
+      <div class="flex flex-wrap justify-center gap-6 text-sm text-slate-400">
+        <a href="/kb/" class="hover:text-indigo-400 transition-colors">コラムTOP</a>
+        <a href="/?screen=privacy" class="hover:text-indigo-400 transition-colors">利用規約＆プライバシーポリシー</a>
+        <a href="https://forms.gle/CQLUMaWPg55dwTLi8" target="_blank" class="hover:text-indigo-400 transition-colors">お問い合わせ</a>
+      </div>
+      <p class="text-xs text-slate-500">
+        © 2026 簿記トレーニング大戦. All rights reserved.
+      </p>
+    </div>
+  </footer>
+
+</body>
+</html>

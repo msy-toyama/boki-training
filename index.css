@@ -1,0 +1,155 @@
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;900&family=DotGothic16&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'M PLUS Rounded 1c', sans-serif;
+}
+
+.font-pixel {
+  font-family: 'DotGothic16', sans-serif;
+}
+
+@keyframes shake {
+  0% { transform: translate(1px, 1px) rotate(0deg); }
+  10% { transform: translate(-1px, -2px) rotate(-1deg); }
+  20% { transform: translate(-3px, 0px) rotate(1deg); }
+  30% { transform: translate(3px, 2px) rotate(0deg); }
+  40% { transform: translate(1px, -1px) rotate(1deg); }
+  50% { transform: translate(-1px, 2px) rotate(-1deg); }
+  60% { transform: translate(-3px, 1px) rotate(0deg); }
+  70% { transform: translate(3px, 1px) rotate(-1deg); }
+  80% { transform: translate(-1px, -1px) rotate(1deg); }
+  90% { transform: translate(1px, 2px) rotate(0deg); }
+  100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+
+.animate-shake {
+  animation: shake 0.5s;
+}
+
+.animate-damage {
+  animation: fadeUp 1s forwards;
+}
+
+@keyframes fadeUp {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-50px); }
+}
+
+@keyframes bounce-slow {
+  0%, 100% { transform: translateY(-5%); }
+  50% { transform: translateY(5%); }
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 3s infinite ease-in-out;
+}
+
+.battle-scene {
+  isolation: isolate;
+}
+
+.battle-monster-hit {
+  animation: monster-impact 0.38s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes monster-impact {
+  0% { transform: scale(1) rotate(0deg); filter: brightness(1); }
+  28% { transform: scale(1.18) rotate(-4deg); filter: brightness(1.7) saturate(1.35); }
+  58% { transform: scale(0.92) rotate(3deg); filter: brightness(1.15); }
+  100% { transform: scale(1) rotate(0deg); filter: brightness(1); }
+}
+
+.battle-hit-ring {
+  background: radial-gradient(circle, rgba(250, 204, 21, 0.48), rgba(239, 68, 68, 0.18) 45%, transparent 72%);
+  animation: hit-ring 0.52s ease-out forwards;
+  transform: scale(0.65);
+}
+
+@keyframes hit-ring {
+  0% { opacity: 0.9; transform: scale(0.55); }
+  100% { opacity: 0; transform: scale(1.8); }
+}
+
+.battle-player-hit {
+  animation: arena-hit 0.45s ease-out;
+}
+
+@keyframes arena-hit {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-4px); }
+  40% { transform: translateX(4px); }
+  60% { transform: translateX(-2px); }
+  80% { transform: translateX(2px); }
+}
+
+.battle-screen-flash {
+  animation: screen-flash 0.7s ease-out forwards;
+}
+
+@keyframes screen-flash {
+  0% { opacity: 0; }
+  20% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.damage-number {
+  -webkit-text-stroke: 1px rgba(15, 23, 42, 0.85);
+  text-shadow: 0 4px 0 rgba(15, 23, 42, 0.65), 0 12px 20px rgba(0, 0, 0, 0.45);
+}
+
+.hp-fill {
+  position: relative;
+  overflow: hidden;
+}
+
+.hp-fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.36), transparent);
+  transform: translateX(-130%);
+  animation: hp-shimmer 2.4s ease-in-out infinite;
+}
+
+@keyframes hp-shimmer {
+  0%, 45% { transform: translateX(-130%); }
+  100% { transform: translateX(130%); }
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #1e293b;
+  border-radius: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 5px;
+  border: 2px solid #1e293b;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-shake,
+  .animate-damage,
+  .animate-bounce-slow,
+  .animate-pulse,
+  .animate-spin,
+  .battle-monster-hit,
+  .battle-hit-ring,
+  .battle-player-hit,
+  .battle-screen-flash,
+  .hp-fill::after {
+    animation: none !important;
+  }
+}

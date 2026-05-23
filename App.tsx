@@ -57,6 +57,28 @@ const App: React.FC = () => {
   const [showSurrenderConfirm, setShowSurrenderConfirm] = useState(false);
 
   const timerRef = useRef<number | null>(null);
+  const damageDisplayTimeoutRef = useRef<number | null>(null);
+
+  const showDamage = React.useCallback((display: { amount: number; isCritical: boolean; target: 'monster' | 'player' }, duration = 1500) => {
+    if (damageDisplayTimeoutRef.current !== null) {
+      clearTimeout(damageDisplayTimeoutRef.current);
+      damageDisplayTimeoutRef.current = null;
+    }
+    setDamageDisplay(display);
+    damageDisplayTimeoutRef.current = window.setTimeout(() => {
+      setDamageDisplay(null);
+      damageDisplayTimeoutRef.current = null;
+    }, duration);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (damageDisplayTimeoutRef.current !== null) {
+        clearTimeout(damageDisplayTimeoutRef.current);
+        damageDisplayTimeoutRef.current = null;
+      }
+    };
+  }, []);
 
   // --- Share Functions ---
   const shareUrl = 'https://boki-training.com/';
@@ -217,7 +239,7 @@ const App: React.FC = () => {
     setIsShaking(true);
     setTimeout(() => setIsShaking(false), 500);
     const damage = 10 + Math.floor(questionsAnswered / 10);
-    setDamageDisplay({ amount: damage, isCritical: false, target: 'player' });
+    showDamage({ amount: damage, isCritical: false, target: 'player' });
     
     setPlayerState(prev => {
       const nextHp = Math.max(0, prev.currentHp - damage);
@@ -244,8 +266,7 @@ const App: React.FC = () => {
       return { ...prev, currentHp: nextHp, combo: 0 };
     });
     
-    setTimeout(() => setDamageDisplay(null), 1500);
-  }, [questionsAnswered]);
+  }, [questionsAnswered, showDamage]);
 
   // --- Timer Loop ---
   useEffect(() => {
@@ -341,6 +362,10 @@ const App: React.FC = () => {
     setTimer(0);
     setUserAnswer(null);
     setBattleResult(null);
+    if (damageDisplayTimeoutRef.current !== null) {
+      clearTimeout(damageDisplayTimeoutRef.current);
+      damageDisplayTimeoutRef.current = null;
+    }
     setDamageDisplay(null);
     setShowSurrenderConfirm(false);
     setIsSubmitting(false);
@@ -418,10 +443,10 @@ const App: React.FC = () => {
        const newMonsterHp = Math.max(0, currentMonster.currentHp - damageDealt);
        monsterDefeated = newMonsterHp === 0;
        setCurrentMonster({ ...currentMonster, currentHp: newMonsterHp });
-       setDamageDisplay({ amount: damageDealt, isCritical, target: 'monster' });
+       showDamage({ amount: damageDealt, isCritical, target: 'monster' }, 1400);
        setIsShaking(true);
     } else {
-       setDamageDisplay({ amount: damageTaken, isCritical: false, target: 'player' });
+       showDamage({ amount: damageTaken, isCritical: false, target: 'player' }, 1400);
        setIsShaking(true);
     }
 
@@ -463,7 +488,8 @@ const App: React.FC = () => {
       isCritical: false,
       timeBonus: 0,
       monsterDefeated: false,
-      playerDefeated: true // Treat surrender as defeat
+      playerDefeated: true,
+      surrendered: true
     });
     setUserAnswer(null);
     setScreen('result');
@@ -817,12 +843,12 @@ const App: React.FC = () => {
     <div className="h-screen bg-slate-900 flex flex-col overflow-hidden">
       {/* Header */}
       <header className="flex-shrink-0 bg-slate-950/50 backdrop-blur-md border-b border-slate-800 z-40">
-        <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-          <div className="flex items-center gap-4">
-             <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-indigo-600 rounded flex items-center justify-center font-bold text-white">B</div>
+        <div className="container mx-auto px-3 sm:px-4 py-2 sm:py-3 flex justify-between items-center gap-2">
+          <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+             <div className="flex items-center gap-2 min-w-0">
+                <div className="w-8 h-8 bg-indigo-600 rounded flex items-center justify-center font-bold text-white shrink-0">B</div>
                 <span className="font-bold text-slate-200 hidden sm:inline">簿記トレ大戦</span>
-                <span className={`text-xs px-2 py-1 rounded border ml-1 ${difficulty === 'Hard' ? 'bg-red-900/50 border-red-700 text-red-300' : 'bg-green-900/50 border-green-700 text-green-300'}`}>
+                <span className={`text-xs px-2 py-1 rounded border sm:ml-1 shrink-0 ${difficulty === 'Hard' ? 'bg-red-900/50 border-red-700 text-red-300' : difficulty === 'Practice' ? 'bg-blue-900/50 border-blue-700 text-blue-300' : 'bg-green-900/50 border-green-700 text-green-300'}`}>
                   {difficulty}
                 </span>
              </div>
@@ -833,12 +859,12 @@ const App: React.FC = () => {
              </div>
           </div>
           
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
              <div className="flex flex-col items-end">
                <span className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">SCORE</span>
-               <span className="text-yellow-400 font-mono font-bold leading-none text-xl">{playerState.score.toLocaleString()}</span>
+               <span className="text-yellow-400 font-mono font-bold leading-none text-lg sm:text-xl">{playerState.score.toLocaleString()}</span>
              </div>
-             <div className="h-8 w-[1px] bg-slate-700 mx-2"></div>
+             <div className="hidden sm:block h-8 w-[1px] bg-slate-700 mx-2"></div>
              <div className="flex items-center gap-2 text-sm font-mono text-indigo-300">
                <BookOpen size={16} />
                <span>{questionsAnswered + 1}<span className="text-slate-600">/</span>{MAX_QUESTIONS}</span>
@@ -858,6 +884,7 @@ const App: React.FC = () => {
               timeRatio={Math.min(1, timer / attackInterval)}
               damageDisplay={damageDisplay}
               isShaking={isShaking}
+              isPracticeMode={difficulty === 'Practice'}
             />
           )}
 
@@ -936,7 +963,7 @@ const App: React.FC = () => {
             </div>
             <h3 className="text-2xl font-bold text-white mb-2">降参しますか？</h3>
             <p className="text-slate-400 mb-6">
-              降参すると、この問題は「不正解」扱いとなり、ダメージを受けます。<br/>
+              降参すると、この挑戦は終了します。<br/>
               解説と正解は表示されます。
             </p>
             <div className="flex gap-4">

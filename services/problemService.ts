@@ -18,12 +18,29 @@ const normalizeJournalAnswer = (answer: JournalEntryAnswer): JournalEntryAnswer 
   credits: answer.credits.map(item => ({ ...item, amount: toYen(item.amount) })),
 });
 
+const renderTemplateText = (template: ProblemTemplate, amount: number, target = 'テスト商店'): string => {
+  try {
+    return template.textTemplate(amount, target);
+  } catch {
+    return '';
+  }
+};
+
 const getLargestTextMultiplier = (template: ProblemTemplate): number => {
-  const multipliers = [...template.textTemplate.toString().matchAll(/a\s*\*\s*(\d+(?:\.\d+)?)/g)]
+  const templateSource = template.textTemplate.toString();
+  const multiplyOrDivide = [...templateSource.matchAll(/a\s*([*/])\s*(\d+(?:\.\d+)?)/g)]
+    .map(match => {
+      const operator = match[1];
+      const value = Number(match[2]);
+      return operator === '/' ? 1 / value : value;
+    })
+    .filter(multiplier => Number.isFinite(multiplier) && multiplier > 0);
+
+  const prefixedMultipliers = [...templateSource.matchAll(/(\d+(?:\.\d+)?)\s*\*\s*a/g)]
     .map(match => Number(match[1]))
     .filter(multiplier => Number.isFinite(multiplier) && multiplier > 0);
 
-  return Math.max(1, ...multipliers);
+  return Math.max(1, ...multiplyOrDivide, ...prefixedMultipliers);
 };
 
 const limitAmountForText = (amounts: number[], maxTextAmount: number, multiplier: number): number => {
@@ -157,7 +174,7 @@ export const generateProblem = async (difficulty: Difficulty, allowedTypes?: Que
     } else if (tLower === 'trial-balance') {
       topicTemplates = availableTemplates.filter(t => 
         t.explanation.includes('試算表') || 
-        t.textTemplate(1000).includes('試算表') ||
+        renderTemplateText(t, 1000).includes('試算表') ||
         t.explanation.includes('帳簿') ||
         t.explanation.includes('転記')
       );
@@ -198,7 +215,7 @@ export const generateProblem = async (difficulty: Difficulty, allowedTypes?: Que
     id: crypto.randomUUID(),
     type: template.type,
     text: template.textTemplate(amount, targetName),
-    explanation: template.explanation,
+    explanation: template.explanationTemplate ? template.explanationTemplate(amount, targetName) : template.explanation,
     difficulty: difficulty,
   };
 

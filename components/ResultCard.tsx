@@ -14,7 +14,7 @@ interface ResultCardProps {
 const ResultCard: React.FC<ResultCardProps> = ({ problem, userAnswer, result, onNext, isGameOver }) => {
   let state: 'win' | 'miss' | 'surrender' | 'dead' = 'miss';
   if (result.isCorrect) state = 'win';
-  else if (userAnswer === null && !result.playerDefeated) state = 'surrender';
+  else if (result.surrendered || userAnswer === null) state = 'surrender';
   else if (result.playerDefeated) state = 'dead';
 
   // Helper to render User Answer
@@ -26,13 +26,13 @@ const ResultCard: React.FC<ResultCardProps> = ({ problem, userAnswer, result, on
       return (
         <div className="space-y-1 text-slate-300 font-mono text-xs">
           {ans.debits.map((d, i) => (
-            <div key={`ud-${i}`} className="flex justify-between border-b border-slate-800/50 pb-1">
-              <span>(借){d.account}</span><span>¥{d.amount.toLocaleString()}</span>
+            <div key={`ud-${i}`} className="flex justify-between gap-3 border-b border-slate-800/50 pb-1">
+              <span className="min-w-0 break-words">(借){d.account}</span><span className="shrink-0">¥{d.amount.toLocaleString()}</span>
             </div>
           ))}
           {ans.credits.map((c, i) => (
-            <div key={`uc-${i}`} className="flex justify-between border-b border-slate-800/50 pb-1">
-              <span>(貸){c.account}</span><span>¥{c.amount.toLocaleString()}</span>
+            <div key={`uc-${i}`} className="flex justify-between gap-3 border-b border-slate-800/50 pb-1">
+              <span className="min-w-0 break-words">(貸){c.account}</span><span className="shrink-0">¥{c.amount.toLocaleString()}</span>
             </div>
           ))}
         </div>
@@ -54,13 +54,13 @@ const ResultCard: React.FC<ResultCardProps> = ({ problem, userAnswer, result, on
       return (
         <div className="space-y-1 text-indigo-100 font-mono text-xs">
           {problem.correctJournal.debits.map((d, i) => (
-            <div key={`cd-${i}`} className="flex justify-between border-b border-indigo-500/20 pb-1">
-              <span>(借){d.account}</span><span>¥{d.amount.toLocaleString()}</span>
+            <div key={`cd-${i}`} className="flex justify-between gap-3 border-b border-indigo-500/20 pb-1">
+              <span className="min-w-0 break-words">(借){d.account}</span><span className="shrink-0">¥{d.amount.toLocaleString()}</span>
             </div>
           ))}
           {problem.correctJournal.credits.map((c, i) => (
-            <div key={`cc-${i}`} className="flex justify-between border-b border-indigo-500/20 pb-1">
-              <span>(貸){c.account}</span><span>¥{c.amount.toLocaleString()}</span>
+            <div key={`cc-${i}`} className="flex justify-between gap-3 border-b border-indigo-500/20 pb-1">
+              <span className="min-w-0 break-words">(貸){c.account}</span><span className="shrink-0">¥{c.amount.toLocaleString()}</span>
             </div>
           ))}
         </div>
@@ -77,7 +77,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ problem, userAnswer, result, on
   };
 
   return (
-    <div className="space-y-6 bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-5 bg-slate-800 p-4 sm:p-6 rounded-lg border border-slate-700 shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-500">
       
       {/* Result Banner */}
       <div className={`text-center p-6 rounded-lg border-4 ${
@@ -125,11 +125,11 @@ const ResultCard: React.FC<ResultCardProps> = ({ problem, userAnswer, result, on
       </div>
 
       {/* Explanation Area */}
-      <div className="bg-slate-900 p-5 rounded-lg border border-slate-700">
+      <div className="bg-slate-900 p-4 sm:p-5 rounded-lg border border-slate-700 shadow-inner">
         <h4 className="flex items-center gap-2 font-bold text-slate-300 mb-3 border-b border-slate-700 pb-2">
           <BookOpen size={18} /> 解説
         </h4>
-        <p className="text-slate-300 text-sm leading-relaxed">
+        <p className="text-slate-300 text-sm leading-relaxed whitespace-pre-line break-words">
           {problem.explanation}
         </p>
       </div>
@@ -137,12 +137,12 @@ const ResultCard: React.FC<ResultCardProps> = ({ problem, userAnswer, result, on
       {/* Comparison Grid - Hide if surrendered (unless you want to show what you missed) */}
       {/* User asked to see answer even after surrender or death */}
       <div className="grid md:grid-cols-2 gap-4 text-sm">
-        <div className="bg-slate-950/50 p-4 rounded border border-slate-800">
+        <div className="bg-slate-950/50 p-4 rounded-lg border border-slate-800 min-w-0">
           <h4 className="font-bold text-slate-500 mb-3 text-xs uppercase">あなたの回答</h4>
           {renderUserAnswer()}
         </div>
 
-        <div className="bg-indigo-900/20 p-4 rounded border border-indigo-500/20">
+        <div className="bg-indigo-900/20 p-4 rounded-lg border border-indigo-500/20 min-w-0">
           <h4 className="font-bold text-indigo-400 mb-3 text-xs uppercase">正解</h4>
           {renderCorrectAnswer()}
         </div>

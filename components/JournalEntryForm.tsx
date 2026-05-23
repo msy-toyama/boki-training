@@ -220,10 +220,10 @@ const JournalEntryForm: React.FC<JournalEntryFormProps> = ({ problem, onSubmit, 
           </h3>
           <div className="space-y-2">
             {debits.map((row, index) => (
-              <div key={`debit-${index}`} className="flex gap-2 items-center">
-                <div className="flex-1">
+              <div key={`debit-${index}`} className="flex gap-2 items-center min-w-0">
+                <div className="flex-1 min-w-0">
                   <select
-                    className={`w-full p-2 border rounded-md text-sm focus:ring-2 focus:ring-indigo-400 outline-none bg-slate-800/80 text-slate-100 font-medium appearance-none ${row.account === '' ? 'border-red-400 bg-red-900/30' : 'border-slate-600'}`}
+                    className={`w-full p-2 border rounded-md text-xs sm:text-sm focus:ring-2 focus:ring-indigo-400 outline-none bg-slate-800/80 text-slate-100 font-medium appearance-none ${row.account === '' ? 'border-red-400 bg-red-900/30' : 'border-slate-600'}`}
                     value={row.account}
                     onChange={(e) => handleChange('debit', index, 'account', e.target.value)}
                   >
@@ -233,9 +233,9 @@ const JournalEntryForm: React.FC<JournalEntryFormProps> = ({ problem, onSubmit, 
                     ))}
                   </select>
                 </div>
-                <div className="w-36 relative">
+                <div className="w-28 sm:w-36 relative shrink-0">
                   <select
-                    className="w-full p-2 pl-2 pr-6 border border-slate-600 rounded-md text-sm text-right focus:ring-2 focus:ring-indigo-400 outline-none font-mono font-bold text-slate-100 bg-slate-800/80 appearance-none"
+                    className="w-full p-2 pl-2 pr-6 border border-slate-600 rounded-md text-xs sm:text-sm text-right focus:ring-2 focus:ring-indigo-400 outline-none font-mono font-bold text-slate-100 bg-slate-800/80 appearance-none"
                     value={row.amount === 0 ? '' : row.amount}
                     onChange={(e) => handleChange('debit', index, 'amount', e.target.value)}
                   >
@@ -273,10 +273,10 @@ const JournalEntryForm: React.FC<JournalEntryFormProps> = ({ problem, onSubmit, 
           </h3>
           <div className="space-y-3">
             {credits.map((row, index) => (
-              <div key={`credit-${index}`} className="flex gap-2 items-center">
-                <div className="flex-1">
+              <div key={`credit-${index}`} className="flex gap-2 items-center min-w-0">
+                <div className="flex-1 min-w-0">
                   <select
-                    className={`w-full p-2 border rounded-md text-sm focus:ring-2 focus:ring-indigo-400 outline-none bg-slate-800/80 text-slate-100 font-medium appearance-none ${row.account === '' ? 'border-red-400 bg-red-900/30' : 'border-slate-600'}`}
+                    className={`w-full p-2 border rounded-md text-xs sm:text-sm focus:ring-2 focus:ring-indigo-400 outline-none bg-slate-800/80 text-slate-100 font-medium appearance-none ${row.account === '' ? 'border-red-400 bg-red-900/30' : 'border-slate-600'}`}
                     value={row.account}
                     onChange={(e) => handleChange('credit', index, 'account', e.target.value)}
                   >
@@ -286,9 +286,9 @@ const JournalEntryForm: React.FC<JournalEntryFormProps> = ({ problem, onSubmit, 
                     ))}
                   </select>
                 </div>
-                <div className="w-36 relative">
+                <div className="w-28 sm:w-36 relative shrink-0">
                    <select
-                    className="w-full p-2 pl-2 pr-6 border border-slate-600 rounded-md text-sm text-right focus:ring-2 focus:ring-indigo-400 outline-none font-mono font-bold text-slate-100 bg-slate-800/80 appearance-none"
+                    className="w-full p-2 pl-2 pr-6 border border-slate-600 rounded-md text-xs sm:text-sm text-right focus:ring-2 focus:ring-indigo-400 outline-none font-mono font-bold text-slate-100 bg-slate-800/80 appearance-none"
                     value={row.amount === 0 ? '' : row.amount}
                     onChange={(e) => handleChange('credit', index, 'amount', e.target.value)}
                   >

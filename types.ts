@@ -31,6 +31,8 @@ export interface ProblemTemplate {
   type: QuestionType;
   // Text generator
   textTemplate: (amount: number, target?: string) => string;
+  // Optional dynamic explanation generator using the same generated amount/context.
+  explanationTemplate?: (amount: number, target?: string) => string;
   // Answer generators
   generateJournalAnswer?: (amount: number, target?: string) => JournalEntryAnswer;
   generateSelectionAnswer?: () => { correct: string; options: string[] };
@@ -80,6 +82,7 @@ export interface BattleResult {
   timeBonus: number;
   monsterDefeated: boolean;
   playerDefeated: boolean;
+  surrendered?: boolean;
 }
 
 // --- Sound Types ---

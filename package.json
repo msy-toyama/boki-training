@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build:kb-css": "BROWSERSLIST_IGNORE_OLD_DATA=1 tailwindcss -c tailwind.kb.config.cjs -i ./styles/kb.css -o ./public/kb/styles.css --minify",
+    "build": "npm run build:kb-css && tsc && vite build",
     "preview": "vite preview",
     "audit:problems": "node scripts/auditProblems.mjs",
     "deploy": "npm run build && gh-pages -d dist"

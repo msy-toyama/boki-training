@@ -8,7 +8,13 @@ module.exports = {
     './utils/**/*.{ts,tsx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        slate: {
+          750: '#273449',
+        },
+      },
+    },
   },
   plugins: [],
 };

@@ -239,17 +239,18 @@ Content Security Policyの設定。
 
 ```
 /*
-  X-Frame-Options: DENY
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://adservice.google.com https://*.adtrafficquality.google https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://pagead2.googlesyndication.com https://adservice.google.com https://googleads.g.doubleclick.net https://*.adtrafficquality.google https://csi.gstatic.com https://static.cloudflareinsights.com; frame-src 'self' https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://*.adtrafficquality.google https://www.google.com; img-src 'self' data: https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://*.googlesyndication.com https://*.adtrafficquality.google; media-src 'self' data:;
   X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  X-XSS-Protection: 1; mode=block
   Referrer-Policy: strict-origin-when-cross-origin
-  Permissions-Policy: geolocation=(), microphone=(), camera=()
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self';
+  Cache-Control: public, max-age=0, must-revalidate
 ```
 
 **設定内容**:
-- `script-src 'unsafe-inline' 'unsafe-eval'`: Web Audio API対応
-- `img-src data: https:`: Data URIとHTTPS画像許可
-- `font-src data:`: Data URIフォント許可
+- `script-src`: アプリ本体、AdSense、Cloudflare Insightsを許可
+- `style-src`: ローカルCSSとGoogle Fonts読み込みを許可
+- `frame-src` / `img-src` / `connect-src`: AdSense関連通信を許可
 
 ---
 
@@ -425,14 +426,14 @@ Error: Build failed
 2. ビルドコマンド・出力ディレクトリ確認
 3. 環境変数設定確認
 
-### CSPエラー: Web Audio API
+### CSPエラー: 外部サービス
 
 ```
-Refused to execute inline script because it violates CSP
+Refused to load the script because it violates CSP
 ```
 
 **対策**:
-`_headers`ファイルで`'unsafe-eval'`を追加
+`_headers` と `index.html` のCSPに、実際に利用している外部サービスのドメインを追加
 
 ---
 

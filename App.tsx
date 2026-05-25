@@ -1,16 +1,22 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { generateProblem } from './services/problemService';
-import { saveScore, getUserProfile, getPersonalBest } from './services/scoreService';
-import { GeneratedProblem, UserAnswer, Difficulty, Monster, BattleResult, PlayerState, QuestionType, JournalEntryAnswer, ScoreRecord, UserProfile, SoundType } from './types';
-import { MONSTERS_LIST, MAX_QUESTIONS, GAME_SETTINGS } from './constants';
+import { saveScore, getUserProfile, getPersonalBest, saveUserProfile } from './services/scoreService';
+import { GeneratedProblem, UserAnswer, Difficulty, Monster, BattleResult, PlayerState, QuestionType, ScoreRecord, UserProfile, SoundType } from './types';
+import { MAX_QUESTIONS, GAME_SETTINGS } from './constants';
 import { audioService } from './services/audioService';
+import { checkAnswer } from './utils/answerValidation';
+import { recordAttempt } from './services/learningStatsService';
+import { safeLocalStorage } from './utils/helpers';
+import { calculateInterval, spawnMonster } from './utils/gameLogic';
 import JournalEntryForm from './components/JournalEntryForm';
 import ResultCard from './components/ResultCard';
 import BattleScene from './components/BattleScene';
 import RankingScreen from './components/RankingScreen';
 import QuestionTypeSelector from './components/QuestionTypeSelector';
 import PrivacyPolicy from './components/PrivacyPolicy';
-import { Sword, Shield, Trophy, AlertTriangle, BookOpen, Flag, BarChart3, History, Crown, Settings, Volume2, VolumeX, Music, Zap, Share2, Twitter } from 'lucide-react';
+import { Sword, Shield, Trophy, AlertTriangle, BookOpen, Flag, BarChart3, History, Crown, Settings, Volume2, VolumeX, Music, Zap, Share2, Twitter, Target, X } from 'lucide-react';
+
+const ONBOARDING_STORAGE_KEY = 'boki_onboarding_seen_v1';
 
 const App: React.FC = () => {
   // Game Flow State
@@ -24,6 +30,8 @@ const App: React.FC = () => {
     QuestionType.NUMERIC
   ]);
   const [activeTopic, setActiveTopic] = useState<string | undefined>(undefined);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [liveMessage, setLiveMessage] = useState('');
   
   // Data State
   const [problem, setProblem] = useState<GeneratedProblem | null>(null);
@@ -120,6 +128,17 @@ const App: React.FC = () => {
       audioService.setSettings(false, true);
     }
   }, []);
+
+  useEffect(() => {
+    if (!safeLocalStorage.getItem(ONBOARDING_STORAGE_KEY)) {
+      setShowOnboarding(true);
+    }
+  }, []);
+
+  const dismissOnboarding = () => {
+    safeLocalStorage.setItem(ONBOARDING_STORAGE_KEY, '1');
+    setShowOnboarding(false);
+  };
 
   // --- Check URL Params and Auto-Start Topic/Type Battles ---
   useEffect(() => {
@@ -219,34 +238,13 @@ const App: React.FC = () => {
     }
   }, [screen, difficulty]);
 
-  // --- Initialize Monster ---
-  const spawnMonster = (index: number): Monster => {
-    const baseMonster = MONSTERS_LIST[index % MONSTERS_LIST.length];
-    const loopCount = Math.floor(index / MONSTERS_LIST.length);
-    const multiplier = 1 + (loopCount * 0.5);
-    return {
-      ...baseMonster,
-      id: crypto.randomUUID(),
-      maxHp: Math.floor(baseMonster.hp * multiplier),
-      currentHp: Math.floor(baseMonster.hp * multiplier),
-      level: index + 1
-    };
-  };
-
-  // --- Dynamic Timer Calculation ---
-  const calculateInterval = (diff: Difficulty, qIndex: number) => {
-    const settings = GAME_SETTINGS[diff];
-    const progress = Math.min(qIndex / MAX_QUESTIONS, 1);
-    const current = settings.startInterval - (progress * (settings.startInterval - settings.minInterval));
-    return Math.max(settings.minInterval, current);
-  };
-
   // --- Handle Time Damage ---
   const handleTimeDamage = React.useCallback(() => {
     audioService.playSfx(SoundType.SFX_DAMAGE);
     setIsShaking(true);
     setTimeout(() => setIsShaking(false), 500);
     const damage = 10 + Math.floor(questionsAnswered / 10);
+    setLiveMessage(`時間経過により${damage}ダメージを受けました。`);
     showDamage({ amount: damage, isCritical: false, target: 'player' });
     
     setPlayerState(prev => {
@@ -335,14 +333,16 @@ const App: React.FC = () => {
   const selectDifficulty = (selectedDiff: Difficulty) => {
     audioService.init();
     audioService.playSfx(SoundType.SFX_DECISION);
+    setActiveTopic(undefined);
     setDifficulty(selectedDiff);
     setScreen('question-type-select');
   };
 
   // --- Confirm Question Types and Start Battle ---
-  const confirmQuestionTypes = (types: QuestionType[]) => {
+  const confirmQuestionTypes = (types: QuestionType[], topic?: string) => {
     audioService.playSfx(SoundType.SFX_DECISION);
     setSelectedQuestionTypes(types);
+    setActiveTopic(topic);
     
     // Load best score for this difficulty
     const best = getPersonalBest(difficulty);
@@ -362,10 +362,10 @@ const App: React.FC = () => {
     setScreen('battle');
     
     // Load first problem with selected question types
-    loadNextProblem(difficulty, 0, types);
+    loadNextProblem(difficulty, 0, types, topic);
   };
 
-  const loadNextProblem = async (diff: Difficulty, qIndex: number, types: QuestionType[]) => {
+  const loadNextProblem = async (diff: Difficulty, qIndex: number, types: QuestionType[], topic = activeTopic) => {
     setLoading(true);
     setTimer(0);
     setUserAnswer(null);
@@ -379,30 +379,9 @@ const App: React.FC = () => {
     setIsSubmitting(false);
     setAttackInterval(calculateInterval(diff, qIndex));
     
-    const newProblem = await generateProblem(diff, types, activeTopic);
+    const newProblem = await generateProblem(diff, types, topic);
     setProblem(newProblem);
     setLoading(false);
-  };
-
-  // --- Validate Answer ---
-  const checkAnswer = (userAns: UserAnswer, prob: GeneratedProblem): boolean => {
-    if (prob.type === QuestionType.SELECTION) {
-      return typeof userAns === 'string' && userAns === prob.correctSelection;
-    }
-    if (prob.type === QuestionType.NUMERIC) {
-      return typeof userAns === 'number' && userAns === prob.correctNumeric;
-    }
-    if (prob.type === QuestionType.JOURNAL && prob.correctJournal) {
-      // 型ガード: userAnsがJournalEntryAnswerであることを確認
-      if (typeof userAns === 'object' && userAns !== null && 'debits' in userAns && 'credits' in userAns) {
-        const u = userAns as JournalEntryAnswer;
-        const normalize = (items: { account: string; amount: number }[]) => 
-          items.map(i => `${i.account}:${i.amount}`).sort().join('|');
-        return normalize(u.debits) === normalize(prob.correctJournal.debits) &&
-               normalize(u.credits) === normalize(prob.correctJournal.credits);
-      }
-    }
-    return false;
   };
 
   const handleAnswer = (answer: UserAnswer) => {
@@ -415,6 +394,14 @@ const App: React.FC = () => {
     }
     
     const isCorrect = checkAnswer(answer, problem);
+    setLiveMessage(isCorrect ? '正解です。モンスターにダメージを与えました。' : '不正解です。解説と正解を確認してください。');
+    recordAttempt({
+      difficulty,
+      questionType: problem.type,
+      topic: problem.topic,
+      isCorrect,
+      elapsedSeconds: Math.round(timer * 10) / 10
+    });
 
     let damageDealt = 0;
     let damageTaken = 0;
@@ -488,6 +475,16 @@ const App: React.FC = () => {
     if (timerRef.current !== null) {
       clearInterval(timerRef.current);
       timerRef.current = null;
+    }
+    if (problem) {
+      setLiveMessage('降参しました。解説と正解を確認してください。');
+      recordAttempt({
+        difficulty,
+        questionType: problem.type,
+        topic: problem.topic,
+        isCorrect: false,
+        elapsedSeconds: Math.round(timer * 10) / 10
+      });
     }
     setBattleResult({
       damageDealt: 0,
@@ -607,6 +604,42 @@ const App: React.FC = () => {
               </button>
             </div>
 
+            {showOnboarding && (
+              <div className="bg-slate-800/90 border-2 border-blue-500/60 rounded-xl p-5 shadow-2xl text-left max-w-3xl mx-auto relative">
+                <button
+                  onClick={dismissOnboarding}
+                  aria-label="初回案内を閉じる"
+                  className="absolute right-3 top-3 text-slate-400 hover:text-white p-1"
+                >
+                  <X size={18} />
+                </button>
+                <div className="flex items-start gap-4 pr-8">
+                  <div className="w-10 h-10 rounded-lg bg-blue-600/30 border border-blue-400/40 flex items-center justify-center shrink-0">
+                    <Target size={22} className="text-blue-300" />
+                  </div>
+                  <div className="space-y-3">
+                    <div>
+                      <h2 className="text-lg font-bold text-white">まずはPracticeで仕訳10問</h2>
+                      <p className="text-sm text-slate-300 mt-1">
+                        時間制限なしで基礎を固め、履歴画面で苦手論点を確認できます。
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        dismissOnboarding();
+                        selectDifficulty('Practice');
+                      }}
+                      className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded-lg transition-colors"
+                    >
+                      <BookOpen size={18} /> Practiceを始める
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="sr-only" aria-live="polite" aria-atomic="true">{liveMessage}</div>
+
             {/* SEO Knowledge Base Banner */}
             <div className="bg-slate-800/80 border-2 border-indigo-500/50 rounded-xl p-6 shadow-2xl flex flex-col md:flex-row items-center justify-between text-left gap-4 max-w-3xl mx-auto my-6">
               <div>
@@ -706,9 +739,9 @@ const App: React.FC = () => {
       audioService.playSfx(SoundType.SFX_SELECT);
       
       // Save to localStorage
-      const profile = getUserProfile() || { soundSettings: { bgm: false, sfx: true } };
+      const profile: UserProfile = getUserProfile() || { name: 'プレイヤー', prefecture: '未設定', soundSettings: { bgm: false, sfx: true } };
       profile.soundSettings.bgm = newBgm;
-      localStorage.setItem('boki-training-profile', JSON.stringify(profile));
+      saveUserProfile(profile);
     };
 
     const toggleSfx = () => {
@@ -719,9 +752,9 @@ const App: React.FC = () => {
       if (newSfx) audioService.playSfx(SoundType.SFX_SELECT);
       
       // Save to localStorage
-      const profile = getUserProfile() || { soundSettings: { bgm: false, sfx: true } };
+      const profile: UserProfile = getUserProfile() || { name: 'プレイヤー', prefecture: '未設定', soundSettings: { bgm: false, sfx: true } };
       profile.soundSettings.sfx = newSfx;
-      localStorage.setItem('boki-training-profile', JSON.stringify(profile));
+      saveUserProfile(profile);
     };
 
     return (
@@ -856,6 +889,7 @@ const App: React.FC = () => {
 
   return (
     <div className="h-screen bg-slate-900 flex flex-col overflow-hidden">
+      <div className="sr-only" aria-live="polite" aria-atomic="true">{liveMessage}</div>
       {/* Header */}
       <header className="flex-shrink-0 bg-slate-950/50 backdrop-blur-md border-b border-slate-800 z-40">
         <div className="container mx-auto px-3 sm:px-4 py-2 sm:py-3 flex justify-between items-center gap-2">

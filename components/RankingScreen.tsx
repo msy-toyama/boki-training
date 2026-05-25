@@ -1,8 +1,9 @@
 
 import React, { useEffect, useState } from 'react';
-import { ScoreRecord, Difficulty } from '../types';
+import { ScoreRecord, Difficulty, LearningStatsSummary } from '../types';
 import { getHistory, getPersonalBest } from '../services/scoreService';
-import { History, ArrowLeft, Filter } from 'lucide-react';
+import { getLearningStatsSummary } from '../services/learningStatsService';
+import { History, ArrowLeft, Filter, Target, Flame, CalendarDays, TrendingDown } from 'lucide-react';
 
 interface RankingScreenProps {
   onBack: () => void;
@@ -12,6 +13,7 @@ const RankingScreen: React.FC<RankingScreenProps> = ({ onBack }) => {
   const [history, setHistory] = useState<ScoreRecord[]>([]);
   const [bestEasy, setBestEasy] = useState(0);
   const [bestHard, setBestHard] = useState(0);
+  const [stats, setStats] = useState<LearningStatsSummary | null>(null);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'All' | Difficulty>('All');
 
@@ -20,6 +22,7 @@ const RankingScreen: React.FC<RankingScreenProps> = ({ onBack }) => {
     setHistory(getHistory());
     setBestEasy(getPersonalBest('Easy'));
     setBestHard(getPersonalBest('Hard'));
+    setStats(getLearningStatsSummary());
     setLoading(false);
   }, []);
 
@@ -48,6 +51,88 @@ const RankingScreen: React.FC<RankingScreenProps> = ({ onBack }) => {
              </div>
           </div>
         </div>
+
+        {stats && (
+          <section className="mb-8 space-y-4" aria-labelledby="learning-stats-heading">
+            <div className="flex items-center justify-between gap-3">
+              <h2 id="learning-stats-heading" className="text-xl font-bold text-white flex items-center gap-2">
+                <Target className="text-indigo-400" /> 弱点分析
+              </h2>
+              <div className="text-xs text-slate-500">
+                正答 {stats.correctAttempts} / {stats.totalAttempts}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-3">
+              <div className="bg-slate-800 rounded-lg p-4 border border-slate-700 text-center">
+                <CalendarDays size={18} className="mx-auto mb-2 text-blue-400" />
+                <div className="text-2xl font-black text-white">{stats.last7DaysAttempts}</div>
+                <div className="text-[11px] text-slate-400">直近7日</div>
+              </div>
+              <div className="bg-slate-800 rounded-lg p-4 border border-slate-700 text-center">
+                <Flame size={18} className="mx-auto mb-2 text-orange-400" />
+                <div className="text-2xl font-black text-white">{stats.streakDays}</div>
+                <div className="text-[11px] text-slate-400">連続日数</div>
+              </div>
+              <div className="bg-slate-800 rounded-lg p-4 border border-slate-700 text-center">
+                <Target size={18} className="mx-auto mb-2 text-emerald-400" />
+                <div className="text-2xl font-black text-white">
+                  {stats.totalAttempts === 0 ? 0 : Math.round((stats.correctAttempts / stats.totalAttempts) * 100)}%
+                </div>
+                <div className="text-[11px] text-slate-400">総合正答率</div>
+              </div>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="bg-slate-800 rounded-xl border border-slate-700 p-4">
+                <h3 className="text-sm font-bold text-red-300 flex items-center gap-2 mb-3">
+                  <TrendingDown size={16} /> 苦手トップ3
+                </h3>
+                {stats.weakestTopics.length === 0 ? (
+                  <p className="text-sm text-slate-500">2回以上解いた正答率80%未満の論点が表示されます。</p>
+                ) : (
+                  <div className="space-y-3">
+                    {stats.weakestTopics.map(topic => (
+                      <div key={topic.topic} className="space-y-1">
+                        <div className="flex items-center justify-between gap-2 text-sm">
+                          <span className="font-bold text-slate-200">{topic.label}</span>
+                          <span className="font-mono text-red-300">{topic.accuracy}%</span>
+                        </div>
+                        <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
+                          <div className="h-full bg-red-500" style={{ width: `${topic.accuracy}%` }} />
+                        </div>
+                        <a href={`/?topic=${topic.topic}&difficulty=practice`} className="text-xs text-indigo-300 hover:text-indigo-200 underline">
+                          この論点をPracticeで鍛える
+                        </a>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div className="bg-slate-800 rounded-xl border border-slate-700 p-4">
+                <h3 className="text-sm font-bold text-indigo-300 mb-3">論点別正答率</h3>
+                {stats.byTopic.length === 0 ? (
+                  <p className="text-sm text-slate-500">問題を解くと論点別の正答率が記録されます。</p>
+                ) : (
+                  <div className="space-y-2 max-h-48 overflow-y-auto pr-1 custom-scrollbar">
+                    {stats.byTopic.map(topic => (
+                      <div key={topic.topic} className="flex items-center justify-between gap-3 text-sm border-b border-slate-700/70 pb-2">
+                        <div className="min-w-0">
+                          <div className="font-bold text-slate-200 truncate">{topic.label}</div>
+                          <div className="text-xs text-slate-500">{topic.correct}/{topic.attempts} 正解</div>
+                        </div>
+                        <span className={`font-mono font-bold ${topic.accuracy >= 80 ? 'text-emerald-300' : topic.accuracy >= 50 ? 'text-yellow-300' : 'text-red-300'}`}>
+                          {topic.accuracy}%
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </section>
+        )}
 
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-xl font-bold text-white flex items-center gap-2">

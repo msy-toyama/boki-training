@@ -223,6 +223,7 @@ const JournalEntryForm: React.FC<JournalEntryFormProps> = ({ problem, onSubmit, 
               <div key={`debit-${index}`} className="flex gap-2 items-center min-w-0">
                 <div className="flex-1 min-w-0">
                   <select
+                    aria-label={`借方${index + 1}行目の勘定科目`}
                     className={`w-full p-2 border rounded-md text-xs sm:text-sm focus:ring-2 focus:ring-indigo-400 outline-none bg-slate-800/80 text-slate-100 font-medium appearance-none ${row.account === '' ? 'border-red-400 bg-red-900/30' : 'border-slate-600'}`}
                     value={row.account}
                     onChange={(e) => handleChange('debit', index, 'account', e.target.value)}
@@ -235,6 +236,7 @@ const JournalEntryForm: React.FC<JournalEntryFormProps> = ({ problem, onSubmit, 
                 </div>
                 <div className="w-28 sm:w-36 relative shrink-0">
                   <select
+                    aria-label={`借方${index + 1}行目の金額`}
                     className="w-full p-2 pl-2 pr-6 border border-slate-600 rounded-md text-xs sm:text-sm text-right focus:ring-2 focus:ring-indigo-400 outline-none font-mono font-bold text-slate-100 bg-slate-800/80 appearance-none"
                     value={row.amount === 0 ? '' : row.amount}
                     onChange={(e) => handleChange('debit', index, 'amount', e.target.value)}
@@ -250,6 +252,7 @@ const JournalEntryForm: React.FC<JournalEntryFormProps> = ({ problem, onSubmit, 
                 </div>
                 <button
                   onClick={() => handleRemoveRow('debit', index)}
+                  aria-label={`借方${index + 1}行目を削除`}
                   className="p-1.5 text-slate-400 hover:text-red-500 transition-colors"
                   disabled={debits.length === 1}
                 >
@@ -276,6 +279,7 @@ const JournalEntryForm: React.FC<JournalEntryFormProps> = ({ problem, onSubmit, 
               <div key={`credit-${index}`} className="flex gap-2 items-center min-w-0">
                 <div className="flex-1 min-w-0">
                   <select
+                    aria-label={`貸方${index + 1}行目の勘定科目`}
                     className={`w-full p-2 border rounded-md text-xs sm:text-sm focus:ring-2 focus:ring-indigo-400 outline-none bg-slate-800/80 text-slate-100 font-medium appearance-none ${row.account === '' ? 'border-red-400 bg-red-900/30' : 'border-slate-600'}`}
                     value={row.account}
                     onChange={(e) => handleChange('credit', index, 'account', e.target.value)}
@@ -288,6 +292,7 @@ const JournalEntryForm: React.FC<JournalEntryFormProps> = ({ problem, onSubmit, 
                 </div>
                 <div className="w-28 sm:w-36 relative shrink-0">
                    <select
+                    aria-label={`貸方${index + 1}行目の金額`}
                     className="w-full p-2 pl-2 pr-6 border border-slate-600 rounded-md text-xs sm:text-sm text-right focus:ring-2 focus:ring-indigo-400 outline-none font-mono font-bold text-slate-100 bg-slate-800/80 appearance-none"
                     value={row.amount === 0 ? '' : row.amount}
                     onChange={(e) => handleChange('credit', index, 'amount', e.target.value)}
@@ -303,6 +308,7 @@ const JournalEntryForm: React.FC<JournalEntryFormProps> = ({ problem, onSubmit, 
                 </div>
                 <button
                   onClick={() => handleRemoveRow('credit', index)}
+                  aria-label={`貸方${index + 1}行目を削除`}
                   className="p-1.5 text-slate-400 hover:text-red-500 transition-colors"
                   disabled={credits.length === 1}
                 >

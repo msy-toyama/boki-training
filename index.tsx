@@ -2,7 +2,12 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
 import ErrorBoundary from './utils/errorBoundary';
+import { installGlobalErrorHandlers } from './services/errorMonitoringService';
+import { registerServiceWorker } from './services/pwaService';
 import './index.css';
+
+installGlobalErrorHandlers();
+registerServiceWorker();
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {

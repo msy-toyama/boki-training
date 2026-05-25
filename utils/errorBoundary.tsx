@@ -1,5 +1,6 @@
 import { Component, ErrorInfo, ReactNode } from 'react';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
+import { recordError } from '../services/errorMonitoringService';
 
 interface Props {
   children: ReactNode;
@@ -26,6 +27,7 @@ class ErrorBoundary extends Component<Props, State> {
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('Uncaught error:', error, errorInfo);
+    recordError('react.error-boundary', error, errorInfo.componentStack ?? undefined);
   }
 
   private handleReset = () => {

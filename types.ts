@@ -8,6 +8,25 @@ export enum QuestionType {
 export type Difficulty = 'Easy' | 'Hard' | 'Practice';
 export type BookkeepingLevel = 'Level3' | 'Level2';
 
+export enum ProblemTopic {
+  GENERAL = 'general',
+  JOURNAL_BASICS = 'journal-basics',
+  ACCOUNTS = 'accounts',
+  SALES_TAX = 'sales-tax',
+  OVERDRAFT = 'overdraft',
+  NOTES = 'notes',
+  FIXED_ASSETS = 'fixed-assets',
+  ACCRUALS = 'accruals',
+  CLOSING = 'closing',
+  TRIAL_BALANCE = 'trial-balance',
+  MISTAKES = 'mistakes'
+}
+
+export interface KbLink {
+  path: string;
+  label: string;
+}
+
 // 勘定科目の分類（第2問対策用）
 export type AccountCategory = 'Asset' | 'Liability' | 'NetAsset' | 'Revenue' | 'Expense';
 
@@ -38,6 +57,8 @@ export interface ProblemTemplate {
   generateSelectionAnswer?: () => { correct: string; options: string[] };
   generateNumericAnswer?: (amount: number) => number;
   explanation: string;
+  topic?: ProblemTopic;
+  kbLink?: KbLink;
 }
 
 export interface GeneratedProblem {
@@ -56,6 +77,8 @@ export interface GeneratedProblem {
   
   explanation: string;
   difficulty: Difficulty;
+  topic?: ProblemTopic;
+  kbLink?: KbLink;
 }
 
 export interface Monster {
@@ -123,4 +146,31 @@ export interface ScoreRecord {
   monsterDefeated: number;
   userName: string;
   prefecture: string;
+}
+
+export interface AttemptRecord {
+  id: string;
+  date: string;
+  difficulty: Difficulty;
+  questionType: QuestionType;
+  topic: ProblemTopic;
+  isCorrect: boolean;
+  elapsedSeconds?: number;
+}
+
+export interface TopicAccuracySummary {
+  topic: ProblemTopic;
+  label: string;
+  attempts: number;
+  correct: number;
+  accuracy: number;
+}
+
+export interface LearningStatsSummary {
+  totalAttempts: number;
+  correctAttempts: number;
+  last7DaysAttempts: number;
+  streakDays: number;
+  byTopic: TopicAccuracySummary[];
+  weakestTopics: TopicAccuracySummary[];
 }

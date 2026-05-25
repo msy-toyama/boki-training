@@ -1,6 +1,7 @@
 
 import { GeneratedProblem, QuestionType, Difficulty, AccountCategory, JournalEntryAnswer, ProblemTemplate } from "../types";
 import { PROBLEM_TEMPLATES, ACCOUNT_TITLES, ACCOUNT_DEFINITIONS } from "../constants";
+import { LEARNING_TOPIC_DEFINITIONS, createKbLink, enrichExplanation, resolveLearningTopic } from "./learningTopicService";
 
 const COMPANY_NAMES = ['A商店', 'B商事', 'C物産', 'D商店', 'E社', 'Fマート', '山田商店', '鈴木商事'];
 
@@ -152,6 +153,10 @@ export const generateProblem = async (difficulty: Difficulty, allowedTypes?: Que
   // Simulate subtle async delay
   await new Promise(resolve => setTimeout(resolve, 50));
 
+  if (allowedTypes && allowedTypes.length === 0) {
+    throw new Error('No templates available for the selected question types');
+  }
+
   // 1. Filter templates by allowed types (if specified)
   let availableTemplates = allowedTypes && allowedTypes.length > 0
     ? PROBLEM_TEMPLATES.filter(t => allowedTypes.includes(t.type))
@@ -161,7 +166,13 @@ export const generateProblem = async (difficulty: Difficulty, allowedTypes?: Que
   if (topic) {
     const tLower = topic.toLowerCase();
     let topicTemplates = availableTemplates;
-    if (tLower === 'closing' || tLower === 'adjustments') {
+    const definition = LEARNING_TOPIC_DEFINITIONS.find(item => item.topic === tLower);
+    if (definition) {
+      topicTemplates = availableTemplates.filter(t => {
+        const text = `${renderTemplateText(t, 1000)}\n${t.explanation}`;
+        return definition.keywords.some(keyword => text.includes(keyword));
+      });
+    } else if (tLower === 'closing' || tLower === 'adjustments') {
       topicTemplates = availableTemplates.filter(t => 
         t.explanation.includes('決算整理') || 
         t.explanation.includes('減価償却') || 
@@ -284,6 +295,11 @@ export const generateProblem = async (difficulty: Difficulty, allowedTypes?: Que
       }
       break;
   }
+
+  const learningTopic = resolveLearningTopic(template, problem.text, problem.explanation);
+  problem.topic = learningTopic.topic;
+  problem.kbLink = createKbLink(learningTopic, template);
+  problem.explanation = enrichExplanation(problem.explanation, learningTopic);
 
   return problem;
 };

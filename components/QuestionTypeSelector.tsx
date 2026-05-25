@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { QuestionType } from '../types';
 import { BookOpen, CheckCircle2, Circle, ArrowLeft } from 'lucide-react';
+import { LEARNING_TOPIC_DEFINITIONS } from '../services/learningTopicService';
 
 interface QuestionTypeSelectorProps {
-  onConfirm: (types: QuestionType[]) => void;
+  onConfirm: (types: QuestionType[], topic?: string) => void;
   onBack: () => void;
 }
 
@@ -13,6 +14,7 @@ const QuestionTypeSelector: React.FC<QuestionTypeSelectorProps> = ({ onConfirm, 
     QuestionType.SELECTION,
     QuestionType.NUMERIC
   ]);
+  const [selectedTopic, setSelectedTopic] = useState('');
 
   const toggleType = (type: QuestionType) => {
     if (selectedTypes.includes(type)) {
@@ -51,6 +53,8 @@ const QuestionTypeSelector: React.FC<QuestionTypeSelectorProps> = ({ onConfirm, 
     }
   ];
 
+  const topicOptions = LEARNING_TOPIC_DEFINITIONS.filter(topic => topic.topic !== 'general' && topic.topic !== 'journal-basics');
+
   return (
     <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-4 text-center relative overflow-hidden">
       <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#4f46e5 2px, transparent 2px)', backgroundSize: '30px 30px' }}></div>
@@ -80,7 +84,7 @@ const QuestionTypeSelector: React.FC<QuestionTypeSelectorProps> = ({ onConfirm, 
                 className={`w-full p-6 rounded-xl border-4 transition-all hover:scale-105 ${colorClasses[info.color as keyof typeof colorClasses]}`}
               >
                 <div className="flex items-center gap-4">
-                  <div className="text-4xl">{info.emoji}</div>
+                  <div className="text-4xl" aria-hidden="true">{info.emoji}</div>
                   <div className="flex-1 text-left">
                     <h3 className="text-xl font-bold text-white mb-1">{info.name}</h3>
                     <p className="text-slate-400 text-sm">{info.description}</p>
@@ -94,9 +98,26 @@ const QuestionTypeSelector: React.FC<QuestionTypeSelectorProps> = ({ onConfirm, 
           })}
         </div>
 
+        <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 text-left shadow-lg">
+          <label htmlFor="topic-filter" className="block text-sm font-bold text-slate-200 mb-2">
+            論点フィルタ
+          </label>
+          <select
+            id="topic-filter"
+            value={selectedTopic}
+            onChange={(event) => setSelectedTopic(event.target.value)}
+            className="w-full rounded-lg border border-slate-600 bg-slate-900 px-3 py-3 text-slate-100 outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/30"
+          >
+            <option value="">すべての論点</option>
+            {topicOptions.map(topic => (
+              <option key={topic.topic} value={topic.topic}>{topic.label}</option>
+            ))}
+          </select>
+        </div>
+
         <div className="pt-4 space-y-3">
           <button
-            onClick={() => onConfirm(selectedTypes)}
+            onClick={() => onConfirm(selectedTypes, selectedTopic || undefined)}
             disabled={selectedTypes.length === 0}
             className="w-full px-8 py-4 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-700 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all hover:scale-105 shadow-lg text-lg"
           >

@@ -132,6 +132,17 @@ const ResultCard: React.FC<ResultCardProps> = ({ problem, userAnswer, result, on
         <p className="text-slate-300 text-sm leading-relaxed whitespace-pre-line break-words">
           {problem.explanation}
         </p>
+        {problem.kbLink && (
+          <a
+            href={problem.kbLink.path}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 inline-flex items-center gap-2 rounded-lg border border-indigo-500/30 bg-indigo-950/40 px-3 py-2 text-sm font-bold text-indigo-200 hover:border-indigo-400 hover:bg-indigo-900/60 transition-colors"
+          >
+            <BookOpen size={16} />
+            {problem.kbLink.label}
+          </a>
+        )}
       </div>
 
       {/* Comparison Grid - Hide if surrendered (unless you want to show what you missed) */}

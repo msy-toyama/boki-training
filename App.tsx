@@ -15,6 +15,7 @@ import { Sword, Shield, Trophy, AlertTriangle, BookOpen, Flag, BarChart3, Histor
 const App: React.FC = () => {
   // Game Flow State
   const [screen, setScreen] = useState<'title' | 'settings' | 'question-type-select' | 'battle' | 'result' | 'gameover' | 'clear' | 'ranking' | 'privacy'>('title');
+  const [infoTab, setInfoTab] = useState<'about' | 'terms' | 'privacy' | 'contact'>('about');
   const [soundSettings, setSoundSettings] = useState({ bgm: false, sfx: true });
   const [difficulty, setDifficulty] = useState<Difficulty>('Easy');
   const [selectedQuestionTypes, setSelectedQuestionTypes] = useState<QuestionType[]>([
@@ -126,6 +127,7 @@ const App: React.FC = () => {
     const queryType = params.get('type')?.toLowerCase();
     const queryTopic = params.get('topic')?.toLowerCase();
     const queryDiff = params.get('difficulty')?.toLowerCase() || params.get('diff')?.toLowerCase();
+    const queryScreen = params.get('screen')?.toLowerCase();
 
     if (queryType || queryTopic || queryDiff) {
       // Determine Difficulty
@@ -194,6 +196,12 @@ const App: React.FC = () => {
           console.error("Auto-start load failed", err);
           setLoading(false);
         });
+      return;
+    }
+
+    if (queryScreen === 'about' || queryScreen === 'terms' || queryScreen === 'privacy' || queryScreen === 'contact') {
+      setInfoTab(queryScreen);
+      setScreen('privacy');
     }
   }, []);
 
@@ -544,7 +552,7 @@ const App: React.FC = () => {
   }
 
   if (screen === 'privacy') {
-    return <PrivacyPolicy onBack={() => {
+    return <PrivacyPolicy initialTab={infoTab} onBack={() => {
       audioService.playSfx(SoundType.SFX_CANCEL);
       setScreen('title');
     }} />;
@@ -671,12 +679,19 @@ const App: React.FC = () => {
           <button 
             onClick={() => {
               audioService.playSfx(SoundType.SFX_SELECT);
+              setInfoTab('about');
               setScreen('privacy');
             }}
             className="text-[10px] text-slate-500 hover:text-indigo-400 underline transition-colors"
           >
-            当サイトについて・利用規約・お問い合わせ・プライバシーポリシー
+            アプリ内インフォメーション
           </button>
+          <div className="mt-2 flex flex-wrap justify-center gap-x-3 gap-y-1 text-[10px] text-slate-500">
+            <a href="/about/" className="hover:text-indigo-400 underline transition-colors">このサイトについて</a>
+            <a href="/terms/" className="hover:text-indigo-400 underline transition-colors">利用規約</a>
+            <a href="/privacy/" className="hover:text-indigo-400 underline transition-colors">プライバシーポリシー</a>
+            <a href="/contact/" className="hover:text-indigo-400 underline transition-colors">お問い合わせ</a>
+          </div>
         </footer>
       </div>
     );

@@ -3,12 +3,13 @@ import { Shield, ArrowLeft, Info, FileText, Mail, BookOpen, AlertTriangle } from
 
 interface PrivacyPolicyProps {
   onBack: () => void;
+  initialTab?: TabType;
 }
 
 type TabType = 'about' | 'terms' | 'privacy' | 'contact';
 
-const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack }) => {
-  const [activeTab, setActiveTab] = useState<TabType>('about');
+const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack, initialTab = 'about' }) => {
+  const [activeTab, setActiveTab] = useState<TabType>(initialTab);
 
   return (
     <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-4 text-slate-300 relative overflow-hidden">
@@ -204,14 +205,14 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack }) => {
               </section>
 
               <section className="space-y-2">
-                <h2 className="text-base md:text-lg font-bold text-white border-l-4 border-indigo-500 pl-3">3. アクセス解析ツール（Google Analytics）の利用</h2>
+                <h2 className="text-base md:text-lg font-bold text-white border-l-4 border-indigo-500 pl-3">3. アクセス解析ツールの利用</h2>
                 <p>
-                  本アプリでは、アクセス解析とサービス改善のためにGoogle社が提供する「Google Analytics」を利用しています。
-                  Google Analyticsはデータ収集にCookieを使用しています。このデータは匿名で収集されており、個人を特定する情報は含まれません。
+                  本アプリでは、アクセス解析とサービス改善のために、Google Analytics等のアクセス解析ツールを利用する場合があります。
+                  これらのツールはデータ収集にCookieを使用することがありますが、収集されるデータは匿名であり、個人を特定する情報は含まれません。
                 </p>
                 <p>
-                  この収集は、ブラウザ設定でCookieを無効にすることで拒否可能です。
-                  規約の詳細は、以下のGoogle公式サイトをご覧ください。
+                  Cookieを利用した計測は、ブラウザ設定でCookieを無効にすることで拒否可能です。
+                  Google社の規約とプライバシーポリシーの詳細は、以下の公式サイトをご覧ください。
                 </p>
                 <div className="mt-2 flex flex-col gap-1 text-indigo-400 text-xs pl-1">
                   <a href="https://marketingplatform.google.com/about/analytics/terms/jp/" target="_blank" rel="noopener noreferrer" className="hover:underline">● Google Analytics 利用規約</a>

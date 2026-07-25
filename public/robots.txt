@@ -1,4 +1,12 @@
 User-agent: *
 Allow: /
 
+# Google AdSense クローラー（広告配信・審査用）
+User-agent: Mediapartners-Google
+Allow: /
+
+# Google AdSense サイト審査用
+User-agent: AdsBot-Google
+Allow: /
+
 Sitemap: https://boki-training.com/sitemap.xml

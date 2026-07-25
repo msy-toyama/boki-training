@@ -45,7 +45,7 @@ const BattleScene: React.FC<BattleSceneProps> = ({ monster, playerState, timeRat
          <div className="flex-1">
             <div className="flex items-baseline gap-2 mb-1">
               <span className="text-yellow-400 font-pixel text-xl tracking-wider shadow-black drop-shadow-md">{monster.name}</span>
-              <span className="text-xs text-slate-400 bg-slate-900 px-1.5 py-0.5 rounded border border-slate-600">Lv.{monster.level}</span>
+              <span className="text-xs text-slate-300 bg-slate-900 px-1.5 py-0.5 rounded border border-slate-600">Lv.{monster.level}</span>
             </div>
             {/* Monster HP Bar */}
             <div className="w-full max-w-[220px] h-3 bg-slate-900 rounded-full border border-slate-600 overflow-hidden relative shadow-inner">
@@ -60,7 +60,7 @@ const BattleScene: React.FC<BattleSceneProps> = ({ monster, playerState, timeRat
       {/* Battle Area */}
       <div className="flex-1 flex flex-col items-center justify-center relative min-h-[100px]">
         {/* Monster Emoji */}
-        <div className={`battle-monster relative text-7xl sm:text-8xl md:text-8xl lg:text-9xl transition-transform duration-100 cursor-default select-none drop-shadow-[0_18px_20px_rgba(0,0,0,0.45)] ${isShaking ? 'animate-shake' : 'animate-bounce-slow'} ${monsterHit ? 'battle-monster-hit' : ''}`}>
+        <div className={`battle-monster relative text-6xl sm:text-7xl md:text-8xl lg:text-9xl transition-transform duration-100 cursor-default select-none drop-shadow-[0_18px_20px_rgba(0,0,0,0.45)] ${isShaking ? 'animate-shake' : 'animate-bounce-slow'} ${monsterHit ? 'battle-monster-hit' : ''}`}>
           {monster.emoji}
           {monsterHit && <div className="absolute inset-0 -z-10 rounded-full battle-hit-ring" />}
           
@@ -127,4 +127,4 @@ const BattleScene: React.FC<BattleSceneProps> = ({ monster, playerState, timeRat
   );
 };
 
-export default BattleScene;
+export default React.memo(BattleScene);

@@ -11,12 +11,12 @@
 ### Web版
 ```
 boki-training/
-├── App.tsx (780行)
+├── App.tsx (1,087行)
 ├── index.tsx
-├── types.ts (200行)
-├── constants.ts (1,129行)
-├── components/ (7ファイル)
-├── services/ (3ファイル)
+├── types.ts
+├── constants.ts (1,560行)
+├── components/ (6ファイル)
+├── services/ (8ファイル)
 └── public/
 ```
 
@@ -56,9 +56,9 @@ BokiTraining/
 
 | Web版 | iOS版 | 備考 |
 |---|---|---|
-| React 18.2.0 | SwiftUI | UIフレームワーク |
-| TypeScript 5.0.2 | Swift 5.9+ | 言語 |
-| Vite 7.2.4 | Xcode 15+ | ビルドツール |
+| React 18.3.1 | SwiftUI | UIフレームワーク |
+| TypeScript 5.9.3 | Swift 5.9+ | 言語 |
+| Vite 7.3.3 | Xcode 15+ | ビルドツール |
 | localStorage | UserDefaults / CoreData | データ永続化 |
 | Web Audio API | AVFoundation | オーディオ |
 | CSS / TailwindCSS | SwiftUI Modifiers | スタイリング |
@@ -932,7 +932,7 @@ class ProblemServiceTests: XCTestCase {
 | サービス | ★★★☆☆ | オーディオは音声ファイル必要 |
 | ViewModel | ★★★★☆ | タイマー・State管理の書き換え |
 | View | ★★★☆☆ | SwiftUIの学習必要 |
-| 問題テンプレート | ★★★★★ | 116種すべてSwift化 |
+| 問題テンプレート | ★★★★★ | 147種すべてSwift化 |
 
 ### 推定工数
 

@@ -75,6 +75,12 @@ export const LEARNING_TOPIC_DEFINITIONS: LearningTopicDefinition[] = [
     keywords: ['試算表', '精算表', '帳簿', '転記', '仕訳日計表', '総勘定元帳', '補助簿']
   },
   {
+    topic: ProblemTopic.FINANCIAL_STATEMENTS,
+    label: '財務諸表',
+    kbLink: { path: '/kb/adjustments/', label: '財務諸表作成を復習する' },
+    keywords: ['財務諸表', '損益計算書', '貸借対照表', '当期純利益', '繰越利益剰余金']
+  },
+  {
     topic: ProblemTopic.ACCOUNTS,
     label: '勘定科目',
     kbLink: { path: '/kb/accounts/', label: '勘定科目を復習する' },
@@ -113,6 +119,7 @@ const PRIORITY_ORDER = [
   ProblemTopic.FIXED_ASSETS,
   ProblemTopic.ACCRUALS,
   ProblemTopic.TRIAL_BALANCE,
+  ProblemTopic.FINANCIAL_STATEMENTS,
   ProblemTopic.ACCOUNTS,
   ProblemTopic.MISTAKES,
   ProblemTopic.CLOSING,

@@ -4,6 +4,7 @@ import { JournalEntryAnswer, JournalEntryItem, QuestionType, UserAnswer, Generat
 import { ACCOUNT_TITLES } from '../constants';
 import { Trash2, Plus, Sword, Calculator, CheckCircle2, ChevronDown } from 'lucide-react';
 import { audioService } from '../services/audioService';
+import StatementProblemForm from './StatementProblemForm';
 
 interface JournalEntryFormProps {
   problem: GeneratedProblem;
@@ -75,6 +76,10 @@ const JournalEntryForm: React.FC<JournalEntryFormProps> = ({ problem, onSubmit, 
   };
 
   // --- Render ---
+
+  if (problem.type === QuestionType.STATEMENT) {
+    return <StatementProblemForm problem={problem} onSubmit={onSubmit} isSubmitting={isSubmitting} />;
+  }
 
   // 1. SELECTION TYPE
   if (problem.type === QuestionType.SELECTION) {
@@ -224,6 +229,7 @@ const JournalEntryForm: React.FC<JournalEntryFormProps> = ({ problem, onSubmit, 
                 <div className="flex-1 min-w-0">
                   <select
                     aria-label={`借方${index + 1}行目の勘定科目`}
+                    title={row.account || undefined}
                     className={`w-full p-2 border rounded-md text-xs sm:text-sm focus:ring-2 focus:ring-indigo-400 outline-none bg-slate-800/80 text-slate-100 font-medium appearance-none ${row.account === '' ? 'border-red-400 bg-red-900/30' : 'border-slate-600'}`}
                     value={row.account}
                     onChange={(e) => handleChange('debit', index, 'account', e.target.value)}
@@ -280,6 +286,7 @@ const JournalEntryForm: React.FC<JournalEntryFormProps> = ({ problem, onSubmit, 
                 <div className="flex-1 min-w-0">
                   <select
                     aria-label={`貸方${index + 1}行目の勘定科目`}
+                    title={row.account || undefined}
                     className={`w-full p-2 border rounded-md text-xs sm:text-sm focus:ring-2 focus:ring-indigo-400 outline-none bg-slate-800/80 text-slate-100 font-medium appearance-none ${row.account === '' ? 'border-red-400 bg-red-900/30' : 'border-slate-600'}`}
                     value={row.account}
                     onChange={(e) => handleChange('credit', index, 'account', e.target.value)}
@@ -360,4 +367,4 @@ const JournalEntryForm: React.FC<JournalEntryFormProps> = ({ problem, onSubmit, 
   );
 };
 
-export default JournalEntryForm;
+export default React.memo(JournalEntryForm);

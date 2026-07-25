@@ -127,48 +127,66 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack, initialTab = 'abo
           {/* TAB 2: TERMS */}
           {activeTab === 'terms' && (
             <div className="space-y-6 animate-in fade-in duration-200">
+              <p className="text-xs text-slate-500">制定日: 2024年11月21日 / 改訂日: 2026年5月25日</p>
+
               <section className="space-y-2">
                 <h2 className="text-base md:text-lg font-bold text-white border-l-4 border-indigo-500 pl-3">第1条（規約の適用）</h2>
                 <p>
-                  本利用規約（以下、「本規約」）は、Toyama Digital Works（以下、「当方」）がWeb上で提供する「簿記トレーニング大戦」（以下、「本アプリ」）の利用条件を定めるものです。
-                  本アプリを利用するすべてのユーザーは、本規約に同意したものとみなされます。
+                  本利用規約（以下、「本規約」）は、Toyama Digital Works（以下、「当方」）がWeb上で提供する「簿記トレーニング大戦」および関連するナレッジベース（以下、「本サイト」）の利用条件を定めるものです。
+                  ユーザーは、本サイトを利用することにより本規約に同意したものとみなされます。
                 </p>
               </section>
 
               <section className="space-y-2">
-                <h2 className="text-base md:text-lg font-bold text-white border-l-4 border-indigo-500 pl-3">第2条（禁止事項）</h2>
-                <p>ユーザーは、本アプリの利用にあたり、以下の行為を行ってはなりません。</p>
-                <ul className="list-disc list-inside space-y-1 ml-2 text-slate-400">
-                  <li>本アプリのサーバーやネットワークシステムに過度な負担をかける行為</li>
-                  <li>自動化スクリプトやツールを用いて、不正にハイスコア等のデータを送信・改ざんする行為</li>
-                  <li>有害なコンピュータープログラム等を送信または書き込む行為</li>
-                  <li>知的財産権、著作権、プライバシーその他の権利を侵害する行為</li>
-                  <li>その他、当方が不適切と判断する一切の行為</li>
-                </ul>
-              </section>
-
-              <section className="space-y-2">
-                <h2 className="text-base md:text-lg font-bold text-white border-l-4 border-indigo-500 pl-3">第3条（提供の停止等）</h2>
+                <h2 className="text-base md:text-lg font-bold text-white border-l-4 border-indigo-500 pl-3">第2条（サービスの内容）</h2>
                 <p>
-                  当方は、システムの保守・点検、サーバーダウン、法律の改訂、自然災害などの事由が生じた場合、ユーザーに事前に通知することなく本アプリの全部または一部の提供を停止または中断することができるものとします。
+                  本サイトは、日商簿記3級を中心とした学習支援コンテンツ、問題演習、プレイ履歴保存、学習コラムを提供します。
+                  本サイトは無料で利用できますが、広告配信サービスによる広告が表示される場合があります。
                 </p>
+              </section>
+
+              <section className="space-y-2">
+                <h2 className="text-base md:text-lg font-bold text-white border-l-4 border-indigo-500 pl-3">第3条（禁止事項）</h2>
+                <p>ユーザーは、本サイトの利用にあたり、以下の行為を行ってはなりません。</p>
+                <ul className="list-disc list-inside space-y-1 ml-2 text-slate-400">
+                  <li>本サイトのサーバーやネットワークに過度な負担をかける行為</li>
+                  <li>自動化スクリプト等によりスコアや履歴を不正に改ざんする行為</li>
+                  <li>本サイトのコンテンツを無断で複製、転載、再配布する行為</li>
+                  <li>第三者の権利、プライバシー、知的財産権を侵害する行為</li>
+                  <li>法令または公序良俗に反する行為</li>
+                </ul>
               </section>
 
               <section className="space-y-2">
                 <h2 className="text-base md:text-lg font-bold text-white border-l-4 border-indigo-500 pl-3">第4条（免責事項）</h2>
                 <p>
-                  本アプリに掲載されている問題、解説、計算結果等の情報は細心の注意を払って作成されていますが、その正確性、適切性、有用性、最新性、または動作について一切保証いたしません。
+                  本サイトの問題、解説、学習計画、計算結果等は、学習支援を目的として作成されています。内容の正確性、完全性、最新性、有用性について細心の注意を払っていますが、これらを保証するものではありません。
                 </p>
                 <div className="flex gap-2 bg-slate-800 p-3 rounded border border-amber-900/40 text-amber-300 text-xs">
                   <AlertTriangle className="flex-shrink-0" size={16} />
-                  <p>ユーザーが本アプリを利用したこと、または利用できなかったことによって生じた一切の損害（学習目標の不達成、スコア消失、通信費の増加など）について、当方は賠償責任を負わないものとします。</p>
+                  <p>本サイトの利用または利用不能により生じた損害、学習成果、試験結果、データ消失、通信費等について、運営者は法令上認められる範囲で責任を負いません。</p>
                 </div>
               </section>
 
               <section className="space-y-2">
-                <h2 className="text-base md:text-lg font-bold text-white border-l-4 border-indigo-500 pl-3">第5条（準拠法・裁判管轄）</h2>
+                <h2 className="text-base md:text-lg font-bold text-white border-l-4 border-indigo-500 pl-3">第5条（知的財産権）</h2>
                 <p>
-                  本規約の解釈にあたっては、日本法を準拠法とします。本アプリに関して紛争が生じた場合には、当方の所在地を管轄する裁判所を専属的合意管轄とします。
+                  本サイトに掲載される文章、問題、解説、UI、画像、プログラム等の権利は、運営者または正当な権利者に帰属します。
+                  個人の学習目的での閲覧や利用を除き、無断転載、複製、改変、再配布を禁止します。
+                </p>
+              </section>
+
+              <section className="space-y-2">
+                <h2 className="text-base md:text-lg font-bold text-white border-l-4 border-indigo-500 pl-3">第6条（サービスの変更・停止）</h2>
+                <p>
+                  運営者は、保守、障害対応、内容改善、仕様変更等のため、事前の通知なく本サイトの全部または一部を変更、停止、終了することがあります。
+                </p>
+              </section>
+
+              <section className="space-y-2">
+                <h2 className="text-base md:text-lg font-bold text-white border-l-4 border-indigo-500 pl-3">第7条（準拠法・管轄）</h2>
+                <p>
+                  本規約は日本法に準拠します。本サイトに関して紛争が生じた場合は、運営者の所在地を管轄する裁判所を第一審の専属的合意管轄裁判所とします。
                 </p>
               </section>
             </div>
@@ -177,42 +195,52 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack, initialTab = 'abo
           {/* TAB 3: PRIVACY */}
           {activeTab === 'privacy' && (
             <div className="space-y-6 animate-in fade-in duration-200">
+              <p className="text-xs text-slate-500">制定日: 2024年11月21日 / 改訂日: 2026年5月25日</p>
+
               <section className="space-y-2">
-                <h2 className="text-base md:text-lg font-bold text-white border-l-4 border-indigo-500 pl-3">1. 個人情報の収集について</h2>
+                <h2 className="text-base md:text-lg font-bold text-white border-l-4 border-indigo-500 pl-3">1. 収集する情報</h2>
                 <p>
-                  「簿記トレーニング大戦」（以下、「本アプリ」）では、ユーザーの利便性向上、ランキングシステムの提供、不具合追跡、および利用状況分析のために、Cookie（クッキー）やローカルストレージ等のブラウザ保存領域、および以下の匿名情報を収集することがあります。
+                  簿記トレーニング大戦（以下、「本サイト」）では、学習体験の保存、プレイ履歴の表示、サービス改善、不具合確認のために、以下の情報を取得またはブラウザ内に保存することがあります。
                 </p>
                 <ul className="list-disc list-inside space-y-1 ml-2 text-slate-400">
-                  <li>ランキング登録時のニックネーム（任意）</li>
-                  <li>スコア、正解数、クリアタイム、コンボ数などのプレイ履歴</li>
-                  <li>アクセス解析によって得られる情報（IPアドレス、お使いのブラウザ・端末の種類、アクセス日時等）</li>
+                  <li>スコア、正解数、難易度、プレイ日時などの学習履歴</li>
+                  <li>サウンド設定、表示設定などのアプリ利用設定</li>
+                  <li>ランキングや履歴表示のためにユーザーが任意で入力したニックネーム等</li>
+                  <li>アクセス解析により取得されるブラウザ、端末、アクセス日時、参照元などの匿名情報</li>
                 </ul>
               </section>
 
               <section className="space-y-2">
-                <h2 className="text-base md:text-lg font-bold text-white border-l-4 border-indigo-500 pl-3">2. 広告配信サービス（Google AdSense等）の利用</h2>
+                <h2 className="text-base md:text-lg font-bold text-white border-l-4 border-indigo-500 pl-3">2. ローカルストレージの利用</h2>
                 <p>
-                  当サイトでは、第三者配信事業者であるGoogle社が提供する広告配信サービス「Google AdSense」を利用して広告を表示することがあります。
-                </p>
-                <p>
-                  Google等の広告配信事業者は、ユーザーが過去に当サイトや他のウェブサイトにアクセスした際の情報に基づいて、特に関心のある商品やサービスの広告（パーソナライズ広告）を表示するため、Cookieを使用しています。
-                </p>
-                <p>
-                  ユーザーは、Google社の広告設定によりパーソナライズ広告を無効にできます。また、
-                  <a href="https://aboutads.info/choices" target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:underline">www.aboutads.info</a> 
-                  にアクセスすることで、第三者配信事業者のCookieを無効化できます。
+                  本サイトは、スコア履歴やサウンド設定をユーザーのブラウザ内に保存するため、localStorage等のブラウザ保存領域を使用します。
+                  これらの情報は原則としてユーザーの端末内に保存され、ブラウザの設定や履歴削除操作によって削除できます。
                 </p>
               </section>
 
               <section className="space-y-2">
-                <h2 className="text-base md:text-lg font-bold text-white border-l-4 border-indigo-500 pl-3">3. アクセス解析ツールの利用</h2>
+                <h2 className="text-base md:text-lg font-bold text-white border-l-4 border-indigo-500 pl-3">3. 広告配信サービスについて</h2>
                 <p>
-                  本アプリでは、アクセス解析とサービス改善のために、Google Analytics等のアクセス解析ツールを利用する場合があります。
-                  これらのツールはデータ収集にCookieを使用することがありますが、収集されるデータは匿名であり、個人を特定する情報は含まれません。
+                  当サイトでは、第三者配信事業者であるGoogle社が提供する広告配信サービス「Google AdSense」を利用して広告を表示することがあります。
+                  Googleなどの広告配信事業者は、ユーザーの興味に応じた広告を表示するためにCookieを使用することがあります。
+                  Cookieを使用することで、当サイトや他サイトへの過去のアクセス情報に基づいて広告が配信されます。
                 </p>
                 <p>
-                  Cookieを利用した計測は、ブラウザ設定でCookieを無効にすることで拒否可能です。
-                  Google社の規約とプライバシーポリシーの詳細は、以下の公式サイトをご覧ください。
+                  ユーザーは、
+                  <a href="https://adssettings.google.com/" target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:underline">Googleの広告設定ページ</a>
+                  でパーソナライズ広告を無効にできます。また、第三者配信事業者のCookie利用については、
+                  <a href="https://aboutads.info/choices" target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:underline">aboutads.info</a>
+                  から無効化できる場合があります。GoogleによるCookie等の利用に関する詳細は、
+                  <a href="https://policies.google.com/technologies/ads?hl=ja" target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:underline">Googleの広告に関するポリシー</a>
+                  をご確認ください。
+                </p>
+              </section>
+
+              <section className="space-y-2">
+                <h2 className="text-base md:text-lg font-bold text-white border-l-4 border-indigo-500 pl-3">4. アクセス解析について</h2>
+                <p>
+                  本サイトでは、アクセス状況の把握とサービス改善のために、Google Analytics等のアクセス解析ツールを利用する場合があります。
+                  これらのツールはCookieを使用して匿名の利用状況データを収集することがありますが、個人を特定する情報は含まれません。
                 </p>
                 <div className="mt-2 flex flex-col gap-1 text-indigo-400 text-xs pl-1">
                   <a href="https://marketingplatform.google.com/about/analytics/terms/jp/" target="_blank" rel="noopener noreferrer" className="hover:underline">● Google Analytics 利用規約</a>
@@ -221,16 +249,19 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack, initialTab = 'abo
               </section>
 
               <section className="space-y-2">
-                <h2 className="text-base md:text-lg font-bold text-white border-l-4 border-indigo-500 pl-3">4. 個人情報の第三者提供</h2>
+                <h2 className="text-base md:text-lg font-bold text-white border-l-4 border-indigo-500 pl-3">5. 個人情報の第三者提供</h2>
                 <p>
-                  本アプリが直接収集する情報はすべて匿名かつ集計データであり、法令に基づく開示請求等がある場合を除き、個人を特定可能な情報を第三者に提供・販売することは一切ありません。
+                  当サイトが取得した情報は、法令に基づく開示請求がある場合を除き、本人の同意なく第三者に販売または提供することはありません。
+                  広告配信、アクセス解析、問い合わせフォームなど外部サービスを利用する場合は、それぞれの事業者のプライバシーポリシーが適用されます。
                 </p>
               </section>
 
-              <div className="pt-4 text-right text-xs text-slate-500">
-                <p>2024年11月21日 制定</p>
-                <p>2026年5月21日 改訂（広告配信ポリシーの追記）</p>
-              </div>
+              <section className="space-y-2">
+                <h2 className="text-base md:text-lg font-bold text-white border-l-4 border-indigo-500 pl-3">6. お問い合わせ</h2>
+                <p>
+                  本ポリシーに関するお問い合わせは、上部タブの「お問い合わせ」からご連絡ください。
+                </p>
+              </section>
             </div>
           )}
 
@@ -288,7 +319,7 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack, initialTab = 'abo
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-slate-700 bg-slate-800/50 flex-shrink-0">
+        <div className="p-4 border-t border-slate-700 bg-slate-800/50 flex-shrink-0 space-y-3">
           <button 
             onClick={onBack}
             className="w-full py-3 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded-lg transition-colors flex items-center justify-center gap-2"
@@ -296,6 +327,7 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack, initialTab = 'abo
             <ArrowLeft size={20} />
             ゲームに戻る
           </button>
+          <p className="text-center text-xs text-slate-500">© 2026 簿記トレーニング大戦. All rights reserved.</p>
         </div>
 
       </div>

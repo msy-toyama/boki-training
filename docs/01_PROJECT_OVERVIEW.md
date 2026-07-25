@@ -5,8 +5,8 @@
 
 ## バージョン情報
 - **現在のバージョン**: 1.0.0
-- **最終更新日**: 2025年11月21日
-- **開発環境**: React 18.2.0 + TypeScript 5.0.2 + Vite 7.2.4
+- **最終更新日**: 2026年5月26日
+- **開発環境**: React 18.3.1 + TypeScript 5.9.3 + Vite 7.3.3（lockfile基準）
 
 ## プロジェクトの目的
 日商簿記3級の学習をRPG風のゲーム形式で楽しく学べるWebアプリケーション。
@@ -24,8 +24,9 @@
    - 計算問題（Numeric）: 数値を入力
 
 3. **問題生成システム**
-   - 116種類の問題テンプレート
+   - 147種類の問題テンプレート
    - ランダムパラメータ生成で実質無限の問題
+   - 現行3級範囲タグにより、標準・発展・旧範囲・範囲外を分類
 
 4. **ゲーム要素**
    - モンスターのHP管理
@@ -42,16 +43,17 @@
 6. **データ永続化**
    - ハイスコア記録
    - プレイ履歴
+   - 間違えた問題の保存・再出題
    - サウンド設定
    - ユーザープロファイル
 
 ## 技術スタック
 
 ### フロントエンド
-- **React 18.2.0**: UIライブラリ
-- **TypeScript 5.0.2**: 型安全性
-- **Vite 7.2.4**: ビルドツール（超高速）
-- **Tailwind CSS 3.4.1**: ユーティリティファーストCSS
+- **React 18.3.1**: UIライブラリ（lockfile基準）
+- **TypeScript 5.9.3**: 型安全性（lockfile基準）
+- **Vite 7.3.3**: ビルドツール（lockfile基準）
+- **Tailwind CSS 3.4.17**: ユーティリティファーストCSS
 - **Lucide React**: アイコンライブラリ
 
 ### Web API
@@ -59,8 +61,8 @@
 - **localStorage**: データ永続化
 
 ### デプロイ
-- **Cloudflare Pages**: ホスティング（無料）
-- **GitHub Actions**: 自動デプロイ
+- **Cloudflare Pages**: 本番ホスティング
+- **GitHub Actions**: GitHub Pages向け補助デプロイ
 - **独自ドメイン**: boki-training.com
 
 ## プロジェクト構成
@@ -72,6 +74,7 @@ boki-training/
 │   ├── manifest.json       # PWA設定
 │   ├── robots.txt          # SEO: クローラー制御
 │   ├── sitemap.xml         # SEO: サイトマップ
+│   ├── sw.js               # PWA Service Worker
 │   └── _headers            # Cloudflare Pages用ヘッダー設定
 ├── components/             # 🧩 Reactコンポーネント
 │   ├── BattleScene.tsx     # 戦闘画面
@@ -79,36 +82,34 @@ boki-training/
 │   ├── QuestionTypeSelector.tsx # 問題形式選択
 │   ├── RankingScreen.tsx   # ランキング画面
 │   ├── ResultCard.tsx      # 結果表示カード
-│   └── UserProfileForm.tsx # ユーザープロファイル入力
 ├── services/               # 🔧 サービスレイヤー
 │   ├── audioService.ts     # サウンド管理
-│   ├── geminiService.ts    # AI解説生成（未使用）
+│   ├── learningStatsService.ts # 学習履歴・弱点分析
+│   ├── learningTopicService.ts # 論点推定・KBリンク
+│   ├── problemScopeService.ts # 現行3級範囲タグ
 │   ├── problemService.ts   # 問題生成ロジック
-│   └── scoreService.ts     # スコア管理
+│   ├── scoreService.ts     # スコア管理
+│   └── wrongAnswerService.ts # 間違い問題の保存・復習
 ├── utils/                  # 🛠️ ユーティリティ
 ├── App.tsx                 # 📱 メインアプリケーション
 ├── index.tsx               # 🚀 エントリーポイント
 ├── types.ts                # 📝 TypeScript型定義
-├── constants.ts            # 📊 定数・問題テンプレート（1,125行）
+├── constants.ts            # 📊 定数・問題テンプレート（1,560行）
 ├── index.html              # 🌐 HTMLエントリーポイント
 ├── vite.config.ts          # ⚙️ Vite設定
 ├── tsconfig.json           # ⚙️ TypeScript設定
 ├── package.json            # 📦 依存関係
 └── README.md               # 📖 プロジェクト説明
 
-総コード行数: 約3,500行
+総コード行数: 約7,000行（docs除くTS/TSX/監査スクリプト）
 ```
 
 ## パフォーマンス指標
-- **ビルド時間**: 565ms（超高速）
-- **バンドルサイズ**: 264KB（gzip: 77KB）
-- **TypeScriptエラー**: 0件
-- **セキュリティ脆弱性**: 0件
-- **Lighthouse スコア**: 
-  - Performance: 95+
-  - Accessibility: 90+
-  - Best Practices: 95+
-  - SEO: 100
+- **TypeScriptエラー**: 0件（`npx tsc --noEmit`）
+- **テスト**: 11ファイル / 42テスト
+- **問題監査**: 全テンプレートと生成サンプルを検証
+- **範囲タグ内訳**: 標準104 / 発展30 / 旧範囲3 / 範囲外10
+- **Lighthouse スコア**: 要再測定
 
 ## SEO対策
 - ✅ 19項目の完全実装

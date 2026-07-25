@@ -57,6 +57,13 @@ describe('scoreService', () => {
     expect(getPersonalBest('Hard')).toBe(800);
   });
 
+  it('PracticeのスコアはHardベストに混入させない', () => {
+    saveScore({ ...makeScore(900), difficulty: 'Practice' });
+
+    expect(getPersonalBest('Practice')).toBe(0);
+    expect(getPersonalBest('Hard')).toBe(0);
+  });
+
   it('保存先localStorageが例外を投げてもfalseを返す', () => {
     const setItemSpy = vi.spyOn(localStorage, 'setItem').mockImplementation(() => {
       throw new Error('quota exceeded');

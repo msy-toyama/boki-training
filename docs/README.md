@@ -25,25 +25,28 @@
 - 勘定科目マスター88科目
 - モンスターリスト12種
 - ゲーム設定（HP、時間制限）
-- 116種類の問題テンプレート
+- 147種類の問題テンプレート
 - 難易度分布、カテゴリー30種
 
 ### 04. [サービスレイヤー](./04_SERVICE_LAYER.md)
 - audioService.ts (249行): Web Audio API実装
-- problemService.ts (158行): 問題生成ロジック
-- scoreService.ts (69行): スコア・プロファイル管理
+- problemService.ts (321行): 問題生成ロジック
+- problemScopeService.ts (161行): 現行3級範囲タグ分類
+- scoreService.ts (67行): スコア・プロファイル管理
+- wrongAnswerService.ts (70行): 間違い問題の保存・復習
 - iOS AVFoundation/UserDefaultsへのマッピング
 
 ### 05. [コンポーネント](./05_COMPONENTS.md)
 - BattleScene.tsx (133行): 戦闘画面UI
 - JournalEntryForm.tsx (358行): 問題回答入力フォーム
 - QuestionTypeSelector.tsx (132行): 出題範囲選択画面
-- RankingScreen.tsx (107行): ランキング・履歴表示
-- ResultCard.tsx (166行): 結果カード
+- RankingScreen.tsx (222行): ランキング・履歴表示
+- ResultCard.tsx (177行): 結果カード
+- SettingsScreen.tsx (77行): サウンド設定画面
 - iOS SwiftUIへの変換例
 
 ### 06. [メインアプリロジック](./06_APP_LOGIC.md)
-- App.tsx (780行): 全体統括ロジック
+- App.tsx (1,087行): 全体統括ロジック
 - 画面遷移管理
 - タイマーループ
 - 状態管理（20以上のstate）
@@ -52,7 +55,7 @@
 - iOS ViewModelへの移行方法
 
 ### 07. [ビルド・デプロイ設定](./07_BUILD_AND_DEPLOY.md)
-- Vite 7.2.4設定
+- Vite 7.3.3設定
 - TypeScript設定
 - Cloudflare Pagesデプロイ
 - CSP設定
@@ -73,14 +76,15 @@
 
 | 項目 | 値 |
 |---|---|
-| 総コード行数 | 3,522行 |
-| 問題テンプレート | 116種類 |
+| 総コード行数 | 約7,000行（TS/TSX/監査スクリプト） |
+| 問題テンプレート | 147種類 |
+| 現行3級範囲タグ | 標準104 / 発展30 / 旧範囲3 / 範囲外10 |
 | 勘定科目 | 91科目 |
 | モンスター | 12種類 |
 | 難易度 | 3種類（Practice/Easy/Hard） |
 | サウンド | BGM 3種 + SFX 8種 |
-| ビルド時間 | 609ms |
-| ビルドサイズ | 約133KB（Gzip） |
+| テスト | 11ファイル / 42テスト |
+| 問題監査 | `npm run audit:problems` |
 
 ---
 
@@ -88,9 +92,9 @@
 
 | Web版 | iOS版 |
 |---|---|
-| React 18.2.0 | SwiftUI |
-| TypeScript 5.0.2 | Swift 5.9+ |
-| Vite 7.2.4 | Xcode 15+ |
+| React 18.3.1 | SwiftUI |
+| TypeScript 5.9.3 | Swift 5.9+ |
+| Vite 7.3.3 | Xcode 15+ |
 | localStorage | UserDefaults / CoreData |
 | Web Audio API | AVFoundation |
 | CSS / TailwindCSS | SwiftUI Modifiers |
@@ -113,6 +117,12 @@ npm run dev
 
 # ビルド
 npm run build
+
+# テスト
+npm run test:run
+
+# 問題テンプレート監査
+npm run audit:problems
 
 # プレビュー
 npm run preview
@@ -211,7 +221,7 @@ docs/
 ## サポート
 
 ### Web版
-- **URL**: https://boki-training.pages.dev/
+- **URL**: https://boki-training.com/
 - **リポジトリ**: https://github.com/msy-toyama/boki-training
 
 ### ドキュメント更新日

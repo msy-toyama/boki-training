@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { generateProblem } from './services/problemService';
 import { saveScore, getUserProfile, getPersonalBest, saveUserProfile } from './services/scoreService';
-import { GeneratedProblem, UserAnswer, Difficulty, Monster, BattleResult, PlayerState, QuestionType, ScoreRecord, UserProfile, SoundType } from './types';
+import { GeneratedProblem, UserAnswer, Difficulty, Monster, BattleResult, PlayerState, QuestionType, ScoreRecord, UserProfile, SoundType, WrongAnswerRecord, BookkeepingLevel } from './types';
 import { MAX_QUESTIONS, GAME_SETTINGS } from './constants';
 import { audioService } from './services/audioService';
 import { checkAnswer } from './utils/answerValidation';
 import { recordAttempt } from './services/learningStatsService';
+import { getLevel2TopicLabel } from './services/level2TopicService';
+import { getPendingWrongAnswerRecords, markWrongAnswerResolved, recordWrongAnswer } from './services/wrongAnswerService';
 import { safeLocalStorage } from './utils/helpers';
 import { calculateInterval, spawnMonster } from './utils/gameLogic';
 import JournalEntryForm from './components/JournalEntryForm';
@@ -14,7 +16,8 @@ import BattleScene from './components/BattleScene';
 import RankingScreen from './components/RankingScreen';
 import QuestionTypeSelector from './components/QuestionTypeSelector';
 import PrivacyPolicy from './components/PrivacyPolicy';
-import { Sword, Shield, Trophy, AlertTriangle, BookOpen, Flag, BarChart3, History, Crown, Settings, Volume2, VolumeX, Music, Zap, Share2, Twitter, Target, X } from 'lucide-react';
+import SettingsScreen from './screens/SettingsScreen';
+import { Sword, Shield, Trophy, AlertTriangle, BookOpen, Flag, BarChart3, History, Crown, Settings, Share2, Twitter, Target, X, RefreshCw } from 'lucide-react';
 
 const ONBOARDING_STORAGE_KEY = 'boki_onboarding_seen_v1';
 
@@ -30,6 +33,12 @@ const App: React.FC = () => {
     QuestionType.NUMERIC
   ]);
   const [activeTopic, setActiveTopic] = useState<string | undefined>(undefined);
+  const [activeLevel, setActiveLevel] = useState<BookkeepingLevel>('Level3');
+  const [activeLevel2Track, setActiveLevel2Track] = useState<'commercial' | 'industrial' | undefined>(undefined);
+  const [activeLevel2Topic, setActiveLevel2Topic] = useState<string | undefined>(undefined);
+  const [wrongReviewQueue, setWrongReviewQueue] = useState<WrongAnswerRecord[]>([]);
+  const [wrongReviewIndex, setWrongReviewIndex] = useState(0);
+  const [currentWrongRecordId, setCurrentWrongRecordId] = useState<string | null>(null);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [liveMessage, setLiveMessage] = useState('');
   
@@ -91,7 +100,7 @@ const App: React.FC = () => {
 
   // --- Share Functions ---
   const shareUrl = 'https://boki-training.com/';
-  const shareHashtags = '簿記トレ大戦,簿記3級';
+  const shareHashtags = '簿記トレ大戦,簿記3級,簿記2級';
 
   const shareToX = (text: string) => {
     const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareUrl)}&hashtags=${shareHashtags}`;
@@ -147,8 +156,10 @@ const App: React.FC = () => {
     const queryTopic = params.get('topic')?.toLowerCase();
     const queryDiff = params.get('difficulty')?.toLowerCase() || params.get('diff')?.toLowerCase();
     const queryScreen = params.get('screen')?.toLowerCase();
+    const queryLevel = params.get('level')?.toLowerCase();
+    const queryLevel2Topic = params.get('level2topic')?.toLowerCase() || params.get('l2topic')?.toLowerCase();
 
-    if (queryType || queryTopic || queryDiff) {
+    if (queryType || queryTopic || queryDiff || queryLevel) {
       // Determine Difficulty
       let selectedDiff: Difficulty = 'Practice'; // Default is Practice for stress-free study
       if (queryDiff) {
@@ -171,13 +182,43 @@ const App: React.FC = () => {
           types = [QuestionType.SELECTION];
         } else if (queryType === 'numeric' || queryType === 'keisan') {
           types = [QuestionType.NUMERIC];
+        } else if (queryType === 'statement' || queryType === 'closing' || queryType === 'worksheet' || queryType === 'financial') {
+          types = [QuestionType.STATEMENT];
         }
       }
 
       const topic = queryTopic || undefined;
+      setWrongReviewQueue([]);
+      setWrongReviewIndex(0);
+      setCurrentWrongRecordId(null);
       setActiveTopic(topic);
       setDifficulty(selectedDiff);
       setSelectedQuestionTypes(types);
+
+      // 級・分野の判定（?level=level2 / level2-industrial 等）
+      let selectedLevel: BookkeepingLevel = 'Level3';
+      let selectedTrack: 'commercial' | 'industrial' | undefined = undefined;
+      if (queryLevel && (queryLevel.includes('2') || queryLevel.includes('level2'))) {
+        selectedLevel = 'Level2';
+        if (queryLevel.includes('industrial') || queryLevel.includes('kougyou') || queryLevel.includes('工業')) {
+          selectedTrack = 'industrial';
+        } else if (queryLevel.includes('commercial') || queryLevel.includes('shougyou') || queryLevel.includes('商業')) {
+          selectedTrack = 'commercial';
+        }
+      }
+      setActiveLevel(selectedLevel);
+      setActiveLevel2Track(selectedTrack);
+      const selectedLevel2Topic = selectedLevel === 'Level2' ? (queryLevel2Topic || undefined) : undefined;
+      setActiveLevel2Topic(selectedLevel2Topic);
+      // 2級では対応するタイプが限られるため、範囲外のタイプを除去
+      if (selectedLevel === 'Level2') {
+        const allowed = selectedTrack === 'commercial'
+          ? [QuestionType.JOURNAL]
+          : [QuestionType.JOURNAL, QuestionType.NUMERIC];
+        const filtered = types.filter(t => allowed.includes(t));
+        types = filtered.length > 0 ? filtered : allowed;
+        setSelectedQuestionTypes(types);
+      }
 
       // Load best score for this difficulty
       const best = getPersonalBest(selectedDiff);
@@ -206,7 +247,7 @@ const App: React.FC = () => {
       setIsSubmitting(false);
       setAttackInterval(settings.startInterval);
       
-      generateProblem(selectedDiff, types, topic)
+      generateProblem(selectedDiff, types, topic, { level: selectedLevel, level2Track: selectedTrack, level2Topic: selectedLevel2Topic })
         .then(newProblem => {
           setProblem(newProblem);
           setLoading(false);
@@ -214,6 +255,8 @@ const App: React.FC = () => {
         .catch(err => {
           console.error("Auto-start load failed", err);
           setLoading(false);
+          setLiveMessage('問題の読み込みに失敗しました。タイトル画面に戻ります。もう一度お試しください。');
+          setScreen('title');
         });
       return;
     }
@@ -313,6 +356,10 @@ const App: React.FC = () => {
   // --- Save Score Effect on Game End ---
   useEffect(() => {
     if (screen === 'gameover' || screen === 'clear') {
+      if (difficulty === 'Practice') {
+        return;
+      }
+
       const profile = getUserProfile();
       
       const record: ScoreRecord = {
@@ -339,10 +386,22 @@ const App: React.FC = () => {
   };
 
   // --- Confirm Question Types and Start Battle ---
-  const confirmQuestionTypes = (types: QuestionType[], topic?: string) => {
+  const confirmQuestionTypes = (
+    types: QuestionType[],
+    topic?: string,
+    level: BookkeepingLevel = 'Level3',
+    level2Track?: 'commercial' | 'industrial',
+    level2Topic?: string
+  ) => {
     audioService.playSfx(SoundType.SFX_DECISION);
+    setWrongReviewQueue([]);
+    setWrongReviewIndex(0);
+    setCurrentWrongRecordId(null);
     setSelectedQuestionTypes(types);
     setActiveTopic(topic);
+    setActiveLevel(level);
+    setActiveLevel2Track(level2Track);
+    setActiveLevel2Topic(level2Topic);
     
     // Load best score for this difficulty
     const best = getPersonalBest(difficulty);
@@ -362,10 +421,18 @@ const App: React.FC = () => {
     setScreen('battle');
     
     // Load first problem with selected question types
-    loadNextProblem(difficulty, 0, types, topic);
+    loadNextProblem(difficulty, 0, types, topic, level, level2Track, level2Topic);
   };
 
-  const loadNextProblem = async (diff: Difficulty, qIndex: number, types: QuestionType[], topic = activeTopic) => {
+  const loadNextProblem = async (
+    diff: Difficulty,
+    qIndex: number,
+    types: QuestionType[],
+    topic = activeTopic,
+    level = activeLevel,
+    level2Track = activeLevel2Track,
+    level2Topic = activeLevel2Topic
+  ) => {
     setLoading(true);
     setTimer(0);
     setUserAnswer(null);
@@ -379,9 +446,66 @@ const App: React.FC = () => {
     setIsSubmitting(false);
     setAttackInterval(calculateInterval(diff, qIndex));
     
-    const newProblem = await generateProblem(diff, types, topic);
-    setProblem(newProblem);
+    try {
+      const newProblem = await generateProblem(diff, types, topic, { level, level2Track, level2Topic });
+      setProblem(newProblem);
+      setLoading(false);
+    } catch (err) {
+      console.error("Problem load failed", err);
+      setLoading(false);
+      setLiveMessage('問題の読み込みに失敗しました。タイトル画面に戻ります。もう一度お試しください。');
+      setScreen('title');
+    }
+  };
+
+  const loadWrongReviewProblem = (record: WrongAnswerRecord, index: number) => {
+    const reviewProblem: GeneratedProblem = {
+      ...record.problem,
+      difficulty: 'Practice'
+    };
+    setWrongReviewIndex(index);
+    setCurrentWrongRecordId(record.id);
+    setProblem(reviewProblem);
     setLoading(false);
+    setTimer(0);
+    setUserAnswer(null);
+    setBattleResult(null);
+    if (damageDisplayTimeoutRef.current !== null) {
+      clearTimeout(damageDisplayTimeoutRef.current);
+      damageDisplayTimeoutRef.current = null;
+    }
+    setDamageDisplay(null);
+    setShowSurrenderConfirm(false);
+    setIsSubmitting(false);
+    setAttackInterval(GAME_SETTINGS.Practice.startInterval);
+    setQuestionsAnswered(index);
+    setMonsterIndex(index);
+    setCurrentMonster(spawnMonster(index));
+    setScreen('battle');
+  };
+
+  const startWrongAnswerReview = () => {
+    const records = getPendingWrongAnswerRecords();
+    if (records.length === 0) {
+      setLiveMessage('復習できる間違い問題はありません。');
+      return;
+    }
+
+    audioService.init();
+    audioService.playSfx(SoundType.SFX_DECISION);
+    setDifficulty('Practice');
+    setActiveTopic(undefined);
+    setSelectedQuestionTypes([records[0].problem.type]);
+    setWrongReviewQueue(records);
+    setPlayerState({
+      maxHp: GAME_SETTINGS.Practice.playerHp,
+      currentHp: GAME_SETTINGS.Practice.playerHp,
+      score: 0,
+      combo: 0
+    });
+    setMonsterIndex(0);
+    loadWrongReviewProblem(records[0], 0);
+    setLiveMessage('間違えた問題の復習を開始しました。');
   };
 
   const handleAnswer = (answer: UserAnswer) => {
@@ -402,6 +526,11 @@ const App: React.FC = () => {
       isCorrect,
       elapsedSeconds: Math.round(timer * 10) / 10
     });
+    if (isCorrect && currentWrongRecordId) {
+      markWrongAnswerResolved(currentWrongRecordId);
+    } else if (!isCorrect) {
+      recordWrongAnswer(problem, answer);
+    }
 
     let damageDealt = 0;
     let damageTaken = 0;
@@ -485,6 +614,7 @@ const App: React.FC = () => {
         isCorrect: false,
         elapsedSeconds: Math.round(timer * 10) / 10
       });
+      recordWrongAnswer(problem, null);
     }
     setBattleResult({
       damageDealt: 0,
@@ -508,6 +638,20 @@ const App: React.FC = () => {
   const handleNext = () => {
     audioService.playSfx(SoundType.SFX_SELECT);
     if (!battleResult) return;
+    if (wrongReviewQueue.length > 0) {
+      const nextIndex = wrongReviewIndex + 1;
+      const nextRecord = wrongReviewQueue[nextIndex];
+      if (nextRecord) {
+        loadWrongReviewProblem(nextRecord, nextIndex);
+      } else {
+        setWrongReviewQueue([]);
+        setWrongReviewIndex(0);
+        setCurrentWrongRecordId(null);
+        setScreen('ranking');
+        setLiveMessage('間違えた問題の復習が完了しました。');
+      }
+      return;
+    }
     if (battleResult.playerDefeated) {
        setScreen('gameover');
        return;
@@ -527,7 +671,33 @@ const App: React.FC = () => {
     loadNextProblem(difficulty, nextQIndex, selectedQuestionTypes);
   };
 
+  const toggleBgm = () => {
+    const newBgm = !soundSettings.bgm;
+    const newSettings = { ...soundSettings, bgm: newBgm };
+    setSoundSettings(newSettings);
+    audioService.setSettings(newSettings.bgm, newSettings.sfx);
+    audioService.playSfx(SoundType.SFX_SELECT);
+
+    const profile: UserProfile = getUserProfile() || { name: 'プレイヤー', prefecture: '未設定', soundSettings: { bgm: false, sfx: true } };
+    profile.soundSettings.bgm = newBgm;
+    saveUserProfile(profile);
+  };
+
+  const toggleSfx = () => {
+    const newSfx = !soundSettings.sfx;
+    const newSettings = { ...soundSettings, sfx: newSfx };
+    setSoundSettings(newSettings);
+    audioService.setSettings(newSettings.bgm, newSettings.sfx);
+    if (newSfx) audioService.playSfx(SoundType.SFX_SELECT);
+
+    const profile: UserProfile = getUserProfile() || { name: 'プレイヤー', prefecture: '未設定', soundSettings: { bgm: false, sfx: true } };
+    profile.soundSettings.sfx = newSfx;
+    saveUserProfile(profile);
+  };
+
   // --- RENDER ---
+
+  const totalQuestionCount = wrongReviewQueue.length > 0 ? wrongReviewQueue.length : MAX_QUESTIONS;
 
   if (screen === 'question-type-select') {
     return (
@@ -542,7 +712,7 @@ const App: React.FC = () => {
   }
 
   if (screen === 'ranking') {
-    return <RankingScreen onBack={() => {
+    return <RankingScreen onStartWrongReview={startWrongAnswerReview} onBack={() => {
       audioService.playSfx(SoundType.SFX_CANCEL);
       setScreen('title');
     }} />;
@@ -569,7 +739,7 @@ const App: React.FC = () => {
               <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-slate-400 font-pixel drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)]">
                 簿記<br/>トレーニング<br className="md:hidden" />大戦
               </h1>
-              <p className="text-indigo-300 text-xl font-bold tracking-widest">3級 100本ノック</p>
+              <p className="text-indigo-300 text-xl font-bold tracking-widest">日商簿記 3級・2級 対応</p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-6">
@@ -580,7 +750,12 @@ const App: React.FC = () => {
               >
                 <BookOpen className="w-12 h-12 mx-auto mb-4 text-blue-400 group-hover:scale-110 transition-transform" />
                 <h3 className="text-2xl font-bold text-white mb-2">Practice</h3>
-                <p className="text-slate-400 text-sm">練習用<br/>時間制限なし</p>
+                <p className="text-slate-300 text-sm mb-3">基礎固め用。スコアには反映されません。</p>
+                <div className="flex flex-wrap justify-center gap-1.5 text-[11px]">
+                  <span className="px-2 py-0.5 rounded-full bg-slate-900/70 border border-slate-600 text-slate-300">HP 無限</span>
+                  <span className="px-2 py-0.5 rounded-full bg-slate-900/70 border border-slate-600 text-slate-300">時間制限なし</span>
+                  <span className="px-2 py-0.5 rounded-full bg-slate-900/70 border border-slate-600 text-slate-300">スコア非記録</span>
+                </div>
               </button>
 
               <button 
@@ -590,7 +765,12 @@ const App: React.FC = () => {
               >
                 <Shield className="w-12 h-12 mx-auto mb-4 text-green-400 group-hover:scale-110 transition-transform" />
                 <h3 className="text-2xl font-bold text-white mb-2">Easy</h3>
-                <p className="text-slate-400 text-sm">初心者向け<br/>ゆっくり考えられます</p>
+                <p className="text-slate-300 text-sm mb-3">初心者向け。ゆっくり考えられます。</p>
+                <div className="flex flex-wrap justify-center gap-1.5 text-[11px]">
+                  <span className="px-2 py-0.5 rounded-full bg-slate-900/70 border border-slate-600 text-slate-300">HP {GAME_SETTINGS.Easy.playerHp}</span>
+                  <span className="px-2 py-0.5 rounded-full bg-slate-900/70 border border-slate-600 text-slate-300">持ち時間 長め</span>
+                  <span className="px-2 py-0.5 rounded-full bg-slate-900/70 border border-slate-600 text-slate-300">スコア記録</span>
+                </div>
               </button>
 
               <button 
@@ -600,7 +780,12 @@ const App: React.FC = () => {
               >
                 <Sword className="w-12 h-12 mx-auto mb-4 text-red-400 group-hover:scale-110 transition-transform" />
                 <h3 className="text-2xl font-bold text-white mb-2">Hard</h3>
-                <p className="text-slate-400 text-sm">上級者向け<br/>素早い判断が必要です</p>
+                <p className="text-slate-300 text-sm mb-3">上級者向け。素早い判断が必要です。</p>
+                <div className="flex flex-wrap justify-center gap-1.5 text-[11px]">
+                  <span className="px-2 py-0.5 rounded-full bg-slate-900/70 border border-slate-600 text-slate-300">HP {GAME_SETTINGS.Hard.playerHp}</span>
+                  <span className="px-2 py-0.5 rounded-full bg-slate-900/70 border border-slate-600 text-slate-300">持ち時間 短め</span>
+                  <span className="px-2 py-0.5 rounded-full bg-slate-900/70 border border-slate-600 text-slate-300">高スコア</span>
+                </div>
               </button>
             </div>
 
@@ -661,6 +846,27 @@ const App: React.FC = () => {
               </a>
             </div>
 
+            {/* SEO Knowledge Base Banner (Level 2) */}
+            <div className="bg-slate-800/80 border-2 border-emerald-500/50 rounded-xl p-6 shadow-2xl flex flex-col md:flex-row items-center justify-between text-left gap-4 max-w-3xl mx-auto my-6">
+              <div>
+                <span className="bg-emerald-600/85 text-white text-xs font-semibold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                  日商簿記2級 対応
+                </span>
+                <h3 className="text-xl font-bold text-white mt-2">簿記2級 商業・工業 攻略ナレッジベース</h3>
+                <p className="text-slate-300 text-sm mt-1">
+                  有価証券・連結・税効果（商業簿記）と、標準原価・直接原価計算・CVP分析（工業簿記）まで、2級の全論点を論点別コラムで完全網羅！
+                </p>
+              </div>
+              <a
+                href="/kb/level2/"
+                onClick={() => audioService.playSfx(SoundType.SFX_SELECT)}
+                className="w-full md:w-auto shrink-0 inline-flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold py-3 px-6 rounded-lg transition-transform hover:-translate-y-0.5 active:translate-y-0 shadow-lg text-center"
+              >
+                <BookOpen size={20} className="text-yellow-300" />
+                2級コラムを読む
+              </a>
+            </div>
+
             <div className="grid grid-cols-2 md:flex md:justify-center gap-4">
               <button 
                 onClick={() => {
@@ -685,7 +891,7 @@ const App: React.FC = () => {
               <button 
                 onClick={() => {
                   audioService.playSfx(SoundType.SFX_SELECT);
-                  shareToX('RPG風簿記学習ゲーム「簿記トレーニング大戦」で遊ぼう！日商簿記3級を完全攻略！');
+                  shareToX('RPG風簿記学習ゲーム「簿記トレーニング大戦」で遊ぼう！日商簿記3級・2級を完全攻略！');
                 }}
                 className="text-indigo-300 hover:text-white flex items-center justify-center gap-2 transition-colors px-4 py-2 bg-slate-800/50 rounded-lg md:bg-transparent md:rounded-none"
               >
@@ -694,7 +900,7 @@ const App: React.FC = () => {
               <button 
                 onClick={() => {
                   audioService.playSfx(SoundType.SFX_SELECT);
-                  shareNative('RPG風簿記学習ゲーム「簿記トレーニング大戦」で遊ぼう！日商簿記3級を完全攻略！');
+                  shareNative('RPG風簿記学習ゲーム「簿記トレーニング大戦」で遊ぼう！日商簿記3級・2級を完全攻略！');
                 }}
                 className="text-indigo-300 hover:text-white flex items-center justify-center gap-2 transition-colors px-4 py-2 bg-slate-800/50 rounded-lg md:bg-transparent md:rounded-none"
               >
@@ -707,7 +913,7 @@ const App: React.FC = () => {
         <footer className="relative z-20 w-full text-center py-4 px-4 opacity-60 hover:opacity-100 transition-opacity bg-slate-900/50 backdrop-blur-sm mt-auto">
           <p className="text-[10px] text-slate-600 mb-1">
             本アプリは学習用であり、実務上の正確性を保証するものではありません。日商簿記検定の最新の出題範囲と異なる場合があります。<br/>
-            © 2024 Toyama Digital Works. All rights reserved.
+            © 2026 簿記トレーニング大戦. All rights reserved.
           </p>
           <button 
             onClick={() => {
@@ -731,108 +937,40 @@ const App: React.FC = () => {
   }
 
   if (screen === 'settings') {
-    const toggleBgm = () => {
-      const newBgm = !soundSettings.bgm;
-      const newSettings = { ...soundSettings, bgm: newBgm };
-      setSoundSettings(newSettings);
-      audioService.setSettings(newSettings.bgm, newSettings.sfx);
-      audioService.playSfx(SoundType.SFX_SELECT);
-      
-      // Save to localStorage
-      const profile: UserProfile = getUserProfile() || { name: 'プレイヤー', prefecture: '未設定', soundSettings: { bgm: false, sfx: true } };
-      profile.soundSettings.bgm = newBgm;
-      saveUserProfile(profile);
-    };
-
-    const toggleSfx = () => {
-      const newSfx = !soundSettings.sfx;
-      const newSettings = { ...soundSettings, sfx: newSfx };
-      setSoundSettings(newSettings);
-      audioService.setSettings(newSettings.bgm, newSettings.sfx);
-      if (newSfx) audioService.playSfx(SoundType.SFX_SELECT);
-      
-      // Save to localStorage
-      const profile: UserProfile = getUserProfile() || { name: 'プレイヤー', prefecture: '未設定', soundSettings: { bgm: false, sfx: true } };
-      profile.soundSettings.sfx = newSfx;
-      saveUserProfile(profile);
-    };
-
     return (
-      <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-4 text-center relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#4f46e5 2px, transparent 2px)', backgroundSize: '30px 30px' }}></div>
-        
-        <div className="relative z-10 max-w-md w-full space-y-8">
-          <div className="space-y-4">
-            <div className="inline-block p-4 bg-slate-800 rounded-full mb-4 border-4 border-indigo-500 shadow-xl">
-              <Settings size={48} className="text-indigo-400" />
-            </div>
-            <h1 className="text-4xl font-bold text-white font-pixel">サウンド設定</h1>
-          </div>
-
-          <div className="bg-slate-800 rounded-xl p-6 space-y-6 border-2 border-slate-700">
-            {/* BGM Setting */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <Music size={24} className="text-indigo-400" />
-                <div className="text-left">
-                  <h3 className="text-white font-bold">BGM（背景音楽）</h3>
-                  <p className="text-slate-400 text-sm">バトル中の音楽</p>
-                </div>
-              </div>
-              <button
-                onClick={toggleBgm}
-                className={`relative w-16 h-8 rounded-full transition-colors ${soundSettings.bgm ? 'bg-indigo-600' : 'bg-slate-600'}`}
-              >
-                <div className={`absolute top-1 left-1 w-6 h-6 bg-white rounded-full transition-transform ${soundSettings.bgm ? 'translate-x-8' : ''} flex items-center justify-center`}>
-                  {soundSettings.bgm ? <Volume2 size={14} className="text-indigo-600" /> : <VolumeX size={14} className="text-slate-600" />}
-                </div>
-              </button>
-            </div>
-
-            {/* SFX Setting */}
-            <div className="flex items-center justify-between pt-6 border-t border-slate-700">
-              <div className="flex items-center gap-3">
-                <Zap size={24} className="text-yellow-400" />
-                <div className="text-left">
-                  <h3 className="text-white font-bold">効果音</h3>
-                  <p className="text-slate-400 text-sm">攻撃音や選択音</p>
-                </div>
-              </div>
-              <button
-                onClick={toggleSfx}
-                className={`relative w-16 h-8 rounded-full transition-colors ${soundSettings.sfx ? 'bg-yellow-600' : 'bg-slate-600'}`}
-              >
-                <div className={`absolute top-1 left-1 w-6 h-6 bg-white rounded-full transition-transform ${soundSettings.sfx ? 'translate-x-8' : ''} flex items-center justify-center`}>
-                  {soundSettings.sfx ? <Volume2 size={14} className="text-yellow-600" /> : <VolumeX size={14} className="text-slate-600" />}
-                </div>
-              </button>
-            </div>
-          </div>
-
-          <button
-            onClick={() => {
-              audioService.playSfx(SoundType.SFX_CANCEL);
-              setScreen('title');
-            }}
-            className="w-full px-8 py-4 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded-xl transition-colors"
-          >
-            タイトルへ戻る
-          </button>
-        </div>
-      </div>
+      <SettingsScreen
+        soundSettings={soundSettings}
+        onToggleBgm={toggleBgm}
+        onToggleSfx={toggleSfx}
+        onBack={() => {
+          audioService.playSfx(SoundType.SFX_CANCEL);
+          setScreen('title');
+        }}
+      />
     );
   }
 
   if (screen === 'gameover' || screen === 'clear') {
      const isClear = screen === 'clear';
+     const resultScopeLabel = activeLevel === 'Level2'
+       ? `2級 ${activeLevel2Track === 'industrial' ? '工業簿記' : '商業簿記'}${activeLevel2Topic ? `・${getLevel2TopicLabel(activeLevel2Topic)}` : ''}`
+       : '3級';
+     const resultScopeColor = activeLevel === 'Level2'
+       ? (activeLevel2Track === 'industrial' ? 'bg-amber-900/50 border-amber-500/60 text-amber-200' : 'bg-emerald-900/50 border-emerald-500/60 text-emerald-200')
+       : 'bg-indigo-900/50 border-indigo-500/60 text-indigo-200';
      return (
        <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-4 relative">
           <div className={`max-w-md w-full p-8 rounded-2xl border-4 ${isClear ? 'bg-yellow-900/40 border-yellow-500' : 'bg-red-900/40 border-red-500'} text-center backdrop-blur-md animate-in zoom-in duration-300`}>
              {isClear ? <Trophy size={80} className="mx-auto text-yellow-400 mb-6" /> : <AlertTriangle size={80} className="mx-auto text-red-500 mb-6" />}
              
              <h2 className="text-4xl font-black text-white mb-2 font-pixel">{isClear ? 'GAME CLEAR!!' : 'GAME OVER'}</h2>
-             <p className="text-slate-300 mb-8">{isClear ? '全100問完走！素晴らしい！' : '残念、体力が尽きてしまった...'}</p>
-             
+             <p className="text-slate-300 mb-4">{isClear ? '全100問完走！素晴らしい！' : '残念、体力が尽きてしまった...'}</p>
+
+             <div className="flex flex-wrap items-center justify-center gap-2 mb-8">
+               <span className={`text-xs font-bold px-3 py-1 rounded-full border ${resultScopeColor}`}>{resultScopeLabel}</span>
+               <span className="text-xs font-bold px-3 py-1 rounded-full border bg-slate-800 border-slate-600 text-slate-300">{difficulty}モード</span>
+             </div>
+
              <div className="bg-slate-800 p-4 rounded-lg mb-8 space-y-2">
                 <div className="flex justify-between text-slate-300">
                    <span>到達問題数</span>
@@ -869,6 +1007,12 @@ const App: React.FC = () => {
                    <Share2 size={20} /> その他
                  </button>
                </div>
+               <button onClick={() => {
+                 audioService.playSfx(SoundType.SFX_DECISION);
+                 confirmQuestionTypes(selectedQuestionTypes, activeTopic, activeLevel, activeLevel2Track, activeLevel2Topic);
+               }} className="w-full px-8 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-slate-900 font-black rounded-full hover:scale-105 transition-transform flex items-center justify-center gap-2 shadow-lg">
+                 <RefreshCw size={20} /> 同じ設定でリトライ
+               </button>
                <button onClick={() => {
                  audioService.playSfx(SoundType.SFX_CANCEL);
                  setScreen('title');
@@ -916,7 +1060,7 @@ const App: React.FC = () => {
              <div className="hidden sm:block h-8 w-[1px] bg-slate-700 mx-2"></div>
              <div className="flex items-center gap-2 text-sm font-mono text-indigo-300">
                <BookOpen size={16} />
-               <span>{questionsAnswered + 1}<span className="text-slate-600">/</span>{MAX_QUESTIONS}</span>
+               <span>{questionsAnswered + 1}<span className="text-slate-600">/</span>{totalQuestionCount}</span>
              </div>
           </div>
         </div>
@@ -954,6 +1098,25 @@ const App: React.FC = () => {
                       <span className="inline-block px-2 py-0.5 bg-indigo-800/60 text-indigo-200 text-xs font-bold rounded mb-1.5">
                         {problem.type}
                       </span>
+                      {problem.scope && problem.scope.tag !== 'standard' && (
+                        <span
+                          className={`ml-2 inline-block px-2 py-0.5 text-xs font-bold rounded mb-1.5 border ${
+                            problem.scope.tag === 'level2_commercial'
+                              ? 'bg-emerald-900/60 text-emerald-200 border-emerald-600/40'
+                              : problem.scope.tag === 'level2_industrial'
+                                ? 'bg-amber-900/60 text-amber-200 border-amber-600/40'
+                                : 'bg-amber-900/60 text-amber-200 border-amber-600/40'
+                          }`}
+                          title={problem.scope.reason}
+                        >
+                          {problem.scope.label}
+                        </span>
+                      )}
+                      {problem.level === 'Level2' && getLevel2TopicLabel(problem.level2Topic) && (
+                        <span className="ml-2 inline-block px-2 py-0.5 bg-slate-700/70 text-slate-200 text-xs font-bold rounded mb-1.5 border border-slate-500/40">
+                          {getLevel2TopicLabel(problem.level2Topic)}
+                        </span>
+                      )}
                       <p className="text-slate-100 text-base md:text-lg font-medium leading-relaxed">{problem.text}</p>
                     </div>
                     {screen === 'battle' && (
@@ -977,6 +1140,11 @@ const App: React.FC = () => {
                   result={battleResult}
                   onNext={handleNext}
                   isGameOver={battleResult.playerDefeated}
+                  nextLabel={wrongReviewQueue.length > 0
+                    ? wrongReviewIndex + 1 >= wrongReviewQueue.length
+                      ? '復習を終了'
+                      : '次の復習問題へ'
+                    : undefined}
                 />
               ) : (
                 <div className="animate-in slide-in-from-bottom-8 duration-500">
@@ -997,6 +1165,10 @@ const App: React.FC = () => {
       {showSurrenderConfirm && (
         <div 
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 animate-in fade-in duration-200"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="surrender-dialog-title"
+          aria-describedby="surrender-dialog-desc"
           onKeyDown={(e) => {
             if (e.key === 'Escape') {
               cancelSurrender();
@@ -1010,8 +1182,8 @@ const App: React.FC = () => {
             <div className="w-16 h-16 bg-yellow-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
                <AlertTriangle className="text-yellow-500" size={32} />
             </div>
-            <h3 className="text-2xl font-bold text-white mb-2">降参しますか？</h3>
-            <p className="text-slate-400 mb-6">
+            <h3 id="surrender-dialog-title" className="text-2xl font-bold text-white mb-2">降参しますか？</h3>
+            <p id="surrender-dialog-desc" className="text-slate-400 mb-6">
               降参すると、この挑戦は終了します。<br/>
               解説と正解は表示されます。
             </p>

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boki-training-v1';
+const CACHE_NAME = 'boki-training-v2';
 const APP_SHELL = [
   '/',
   '/index.html',
@@ -48,6 +48,21 @@ self.addEventListener('fetch', (event) => {
     APP_SHELL.includes(url.pathname);
 
   if (!shouldCache) return;
+
+  if (request.mode === 'navigate' || url.pathname === '/' || url.pathname === '/index.html') {
+    event.respondWith(
+      fetch(request)
+        .then(response => {
+          if (response && response.ok) {
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then(cache => cache.put(request, copy));
+          }
+          return response;
+        })
+        .catch(() => caches.match(request).then(cached => cached || caches.match('/index.html') || caches.match('/')))
+    );
+    return;
+  }
 
   event.respondWith(
     caches.match(request).then(cached => {

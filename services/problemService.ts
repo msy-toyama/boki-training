@@ -1,7 +1,8 @@
 
-import { GeneratedProblem, QuestionType, Difficulty, AccountCategory, JournalEntryAnswer, ProblemTemplate } from "../types";
+import { GeneratedProblem, QuestionType, Difficulty, AccountCategory, JournalEntryAnswer, ProblemScopeTag, ProblemTemplate, StatementProblemData, BookkeepingLevel } from "../types";
 import { PROBLEM_TEMPLATES, ACCOUNT_TITLES, ACCOUNT_DEFINITIONS } from "../constants";
 import { LEARNING_TOPIC_DEFINITIONS, createKbLink, enrichExplanation, resolveLearningTopic } from "./learningTopicService";
+import { DEFAULT_EXAM_SCOPE_TAGS, isDefaultExamAccountTitle, resolveProblemScope } from "./problemScopeService";
 
 const COMPANY_NAMES = ['A商店', 'B商事', 'C物産', 'D商店', 'E社', 'Fマート', '山田商店', '鈴木商事'];
 
@@ -149,7 +150,48 @@ const generateDistractorAmounts = (correctAmounts: number[], difficulty: Difficu
   return Array.from(distractors);
 };
 
-export const generateProblem = async (difficulty: Difficulty, allowedTypes?: QuestionType[], topic?: string): Promise<GeneratedProblem> => {
+const formatYen = (value: number): string => `${toYen(value).toLocaleString()}円`;
+
+const formatJournalSide = (items: JournalEntryAnswer['debits']): string => (
+  items.map(item => `${item.account} ${formatYen(item.amount)}`).join('、')
+);
+
+const buildStatementExplanation = (statement: StatementProblemData): string => {
+  const parts: string[] = [];
+
+  if (statement.closingEntries?.length) {
+    const entries = statement.closingEntries
+      .map((entry, index) => `${index + 1}. 借方：${formatJournalSide(entry.debits)} / 貸方：${formatJournalSide(entry.credits)}`)
+      .join('\n');
+    parts.push(`決算整理仕訳:\n${entries}`);
+  }
+
+  if (statement.explanationRows?.length) {
+    const rows = statement.explanationRows
+      .map(row => `・${row.label}: ${row.formula} = ${formatYen(row.amount)}`)
+      .join('\n');
+    parts.push(`計算メモ:\n${rows}`);
+  }
+
+  return parts.join('\n\n');
+};
+
+export interface GenerateProblemOptions {
+  scopeTags?: ProblemScopeTag[];
+  // 出題級。未指定は3級(Level3)。
+  level?: BookkeepingLevel;
+  // 2級選択時の出題分野の絞り込み。
+  level2Track?: 'commercial' | 'industrial' | 'all';
+  // 2級選択時の論点の絞り込み（level2Topic に一致）。
+  level2Topic?: string;
+}
+
+export const generateProblem = async (
+  difficulty: Difficulty,
+  allowedTypes?: QuestionType[],
+  topic?: string,
+  options: GenerateProblemOptions = {}
+): Promise<GeneratedProblem> => {
   // Simulate subtle async delay
   await new Promise(resolve => setTimeout(resolve, 50));
 
@@ -157,13 +199,50 @@ export const generateProblem = async (difficulty: Difficulty, allowedTypes?: Que
     throw new Error('No templates available for the selected question types');
   }
 
-  // 1. Filter templates by allowed types (if specified)
-  let availableTemplates = allowedTypes && allowedTypes.length > 0
-    ? PROBLEM_TEMPLATES.filter(t => allowedTypes.includes(t.type))
-    : PROBLEM_TEMPLATES;
+  const level: BookkeepingLevel = options.level ?? 'Level3';
 
-  // 1b. Filter templates by topic (if specified)
-  if (topic) {
+  // 0. Filter templates by level (未指定テンプレートは Level3 とみなす)
+  let availableTemplates = PROBLEM_TEMPLATES.filter(t => (t.level ?? 'Level3') === level);
+
+  // 1. Filter templates by allowed types (if specified)
+  if (allowedTypes && allowedTypes.length > 0) {
+    availableTemplates = availableTemplates.filter(t => allowedTypes.includes(t.type));
+  }
+
+  let shouldUseDefaultExamAccounts: boolean;
+
+  if (level === 'Level2') {
+    // 2級では3級のスコープ絞り込みは適用しない。分野（商業/工業）で絞り込む。
+    shouldUseDefaultExamAccounts = false;
+    const track = options.level2Track ?? 'all';
+    if (track === 'commercial') {
+      availableTemplates = availableTemplates.filter(t =>
+        resolveProblemScope(t).tag === ProblemScopeTag.LEVEL2_COMMERCIAL
+      );
+    } else if (track === 'industrial') {
+      availableTemplates = availableTemplates.filter(t =>
+        resolveProblemScope(t).tag === ProblemScopeTag.LEVEL2_INDUSTRIAL
+      );
+    }
+
+    // 2級の論点フィルタ（level2Topic）。該当なしなら絞り込まない（安全側）。
+    if (options.level2Topic) {
+      const filtered = availableTemplates.filter(t => t.level2Topic === options.level2Topic);
+      if (filtered.length > 0) {
+        availableTemplates = filtered;
+      }
+    }
+  } else {
+    // 3級（既存の挙動を維持）
+    const allowedScopeTags = options.scopeTags ?? DEFAULT_EXAM_SCOPE_TAGS;
+    shouldUseDefaultExamAccounts = allowedScopeTags.every(tag => DEFAULT_EXAM_SCOPE_TAGS.includes(tag));
+    availableTemplates = availableTemplates.filter(template =>
+      allowedScopeTags.includes(resolveProblemScope(template).tag)
+    );
+  }
+
+  // 1b. Filter templates by topic (if specified) — 3級のみ適用
+  if (topic && level === 'Level3') {
     const tLower = topic.toLowerCase();
     let topicTemplates = availableTemplates;
     const definition = LEARNING_TOPIC_DEFINITIONS.find(item => item.topic === tLower);
@@ -225,10 +304,13 @@ export const generateProblem = async (difficulty: Difficulty, allowedTypes?: Que
   const problem: GeneratedProblem = {
     id: crypto.randomUUID(),
     type: template.type,
+    level: template.level ?? 'Level3',
+    level2Topic: template.level2Topic,
     text: template.textTemplate(amount, targetName),
     explanation: template.explanationTemplate ? template.explanationTemplate(amount, targetName) : template.explanation,
     difficulty: difficulty,
   };
+  problem.scope = resolveProblemScope(template, problem.text, problem.explanation);
 
   // 5. Generate Specific Answer Data based on Type
   switch (template.type) {
@@ -250,7 +332,10 @@ export const generateProblem = async (difficulty: Difficulty, allowedTypes?: Que
         });
         
         // Accounts Selection
-        const otherAccounts = ACCOUNT_TITLES.filter(a => !correctAccounts.has(a));
+        const otherAccounts = ACCOUNT_TITLES.filter(a =>
+          !correctAccounts.has(a) &&
+          (!shouldUseDefaultExamAccounts || isDefaultExamAccountTitle(a))
+        );
         const numCorrect = correctAccounts.size;
         const numDummyNeeded = Math.max(0, 5 - numCorrect);
         const selectedDummyAccounts = shuffleArray(otherAccounts).slice(0, numDummyNeeded);
@@ -292,6 +377,21 @@ export const generateProblem = async (difficulty: Difficulty, allowedTypes?: Que
         const dummyAmounts = generateDistractorAmounts([correctVal], difficulty);
         const finalAmounts = [correctVal, ...dummyAmounts].slice(0, 5);
         problem.amountOptions = shuffleArray(finalAmounts).sort((a, b) => a - b);
+      }
+      break;
+
+    case QuestionType.STATEMENT:
+      if (template.generateStatementData) {
+        problem.statement = template.generateStatementData(amount, targetName);
+        const generatedExplanation = buildStatementExplanation(problem.statement);
+        if (generatedExplanation) {
+          problem.explanation = `${problem.explanation}\n\n${generatedExplanation}`;
+        }
+        const correctValues = Object.values(problem.statement.correctAnswers).map(toYen);
+        const dummyAmounts = generateDistractorAmounts(correctValues, difficulty);
+        problem.amountOptions = shuffleArray([
+          ...new Set([...correctValues, ...dummyAmounts].filter(value => value > 0))
+        ]).sort((a, b) => a - b);
       }
       break;
   }

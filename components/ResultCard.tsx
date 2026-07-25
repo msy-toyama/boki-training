@@ -1,7 +1,9 @@
 
 import React from 'react';
-import { GeneratedProblem, UserAnswer, BattleResult, QuestionType, JournalEntryAnswer } from '../types';
+import { GeneratedProblem, UserAnswer, BattleResult, QuestionType, JournalEntryAnswer, StatementAnswer } from '../types';
 import { XCircle, BookOpen, Swords, ArrowRight, Skull, Flag, AlertTriangle } from 'lucide-react';
+import AdUnit from './AdUnit';
+import { AD_SLOTS } from '../adsConfig';
 
 interface ResultCardProps {
   problem: GeneratedProblem;
@@ -9,13 +11,15 @@ interface ResultCardProps {
   result: BattleResult;
   onNext: () => void;
   isGameOver: boolean;
+  nextLabel?: string;
 }
 
-const ResultCard: React.FC<ResultCardProps> = ({ problem, userAnswer, result, onNext, isGameOver }) => {
+const ResultCard: React.FC<ResultCardProps> = ({ problem, userAnswer, result, onNext, isGameOver, nextLabel }) => {
   let state: 'win' | 'miss' | 'surrender' | 'dead' = 'miss';
   if (result.isCorrect) state = 'win';
-  else if (result.surrendered || userAnswer === null) state = 'surrender';
+  else if (result.surrendered) state = 'surrender';
   else if (result.playerDefeated) state = 'dead';
+  else if (userAnswer === null) state = 'surrender';
 
   // Helper to render User Answer
   const renderUserAnswer = () => {
@@ -46,6 +50,20 @@ const ResultCard: React.FC<ResultCardProps> = ({ problem, userAnswer, result, on
     if (problem.type === QuestionType.NUMERIC) {
       return <div className="text-slate-300 font-mono font-bold text-xl">{(userAnswer as number).toLocaleString()}</div>;
     }
+
+    if (problem.type === QuestionType.STATEMENT) {
+      const ans = userAnswer as StatementAnswer;
+      return (
+        <div className="space-y-1 text-slate-300 font-mono text-xs">
+          {problem.statement?.blanks.map(blank => (
+            <div key={`us-${blank.id}`} className="flex justify-between gap-3 border-b border-slate-800/50 pb-1">
+              <span className="min-w-0 break-words">{blank.label}</span>
+              <span className="shrink-0">¥{(ans.values[blank.id] ?? 0).toLocaleString()}</span>
+            </div>
+          ))}
+        </div>
+      );
+    }
   };
 
   // Helper to render Correct Answer
@@ -73,6 +91,19 @@ const ResultCard: React.FC<ResultCardProps> = ({ problem, userAnswer, result, on
 
     if (problem.type === QuestionType.NUMERIC && problem.correctNumeric !== undefined) {
        return <div className="text-indigo-200 font-mono font-bold text-xl">{problem.correctNumeric.toLocaleString()}</div>;
+    }
+
+    if (problem.type === QuestionType.STATEMENT && problem.statement) {
+      return (
+        <div className="space-y-1 text-indigo-100 font-mono text-xs">
+          {problem.statement.blanks.map(blank => (
+            <div key={`cs-${blank.id}`} className="flex justify-between gap-3 border-b border-indigo-500/20 pb-1">
+              <span className="min-w-0 break-words">{blank.label}</span>
+              <span className="shrink-0">¥{problem.statement!.correctAnswers[blank.id].toLocaleString()}</span>
+            </div>
+          ))}
+        </div>
+      );
     }
   };
 
@@ -159,6 +190,8 @@ const ResultCard: React.FC<ResultCardProps> = ({ problem, userAnswer, result, on
         </div>
       </div>
 
+      <AdUnit slot={AD_SLOTS.result} className="my-2" />
+
       <button
         onClick={onNext}
         className={`w-full py-4 font-bold rounded-xl shadow-lg transition-all hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2 text-lg ${
@@ -167,10 +200,10 @@ const ResultCard: React.FC<ResultCardProps> = ({ problem, userAnswer, result, on
           : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-900/50'
         }`}
       >
-        {isGameOver ? '結果画面へ' : result.monsterDefeated ? '次のモンスターへ' : '次のターンへ'} <ArrowRight size={20} />
+        {nextLabel ?? (isGameOver ? '結果画面へ' : result.monsterDefeated ? '次のモンスターへ' : '次のターンへ')} <ArrowRight size={20} />
       </button>
     </div>
   );
 };
 
-export default ResultCard;
+export default React.memo(ResultCard);

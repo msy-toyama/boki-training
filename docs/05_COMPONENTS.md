@@ -7,8 +7,9 @@
 1. **BattleScene.tsx** (133行): 戦闘画面UI
 2. **JournalEntryForm.tsx** (358行): 問題回答入力フォーム
 3. **QuestionTypeSelector.tsx** (132行): 出題範囲選択画面
-4. **RankingScreen.tsx** (107行): ランキング・履歴表示
-5. **ResultCard.tsx** (166行): 結果カード
+4. **RankingScreen.tsx** (222行): ランキング・履歴表示
+5. **ResultCard.tsx** (177行): 結果カード
+6. **SettingsScreen.tsx** (77行): サウンド設定画面
 
 ---
 
@@ -675,7 +676,7 @@ struct QuestionTypeSelectorView: View {
 ## 4. RankingScreen.tsx - ランキング・履歴表示
 
 ### ファイル情報
-- **行数**: 107行
+- **行数**: 222行
 - **役割**: プレイ履歴とベストスコアの表示
 - **依存**: types.ts, scoreService.ts, lucide-react
 
@@ -897,7 +898,7 @@ struct RankingScreenView: View {
 ## 5. ResultCard.tsx - 結果カード
 
 ### ファイル情報
-- **行数**: 166行
+- **行数**: 177行
 - **役割**: 回答結果の表示・解説・次へ進むボタン
 - **依存**: types.ts, lucide-react
 

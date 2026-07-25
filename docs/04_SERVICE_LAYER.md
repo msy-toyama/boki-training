@@ -2,11 +2,15 @@
 
 ## 概要
 
-サービスレイヤーは、ビジネスロジックを担当する3つのサービスで構成されています：
+サービスレイヤーは、ビジネスロジックを担当する複数のサービスで構成されています：
 
 1. **audioService.ts** (249行): サウンド管理
-2. **problemService.ts** (158行): 問題生成ロジック
-3. **scoreService.ts** (69行): スコア・プロファイル管理
+2. **problemService.ts** (321行): 問題生成ロジック
+3. **problemScopeService.ts** (161行): 現行3級範囲タグ分類
+4. **learningTopicService.ts** (157行): 論点推定・KBリンク
+5. **learningStatsService.ts** (107行): 学習履歴・弱点分析
+6. **wrongAnswerService.ts** (70行): 間違い問題の保存・復習
+7. **scoreService.ts** (67行): スコア・プロファイル管理
 
 ---
 
@@ -284,8 +288,8 @@ public stopBgm() {
 ## 2. problemService.ts - 問題生成サービス
 
 ### ファイル情報
-- **行数**: 158行
-- **依存**: constants.ts, types.ts
+- **行数**: 321行
+- **依存**: constants.ts, types.ts, learningTopicService.ts, problemScopeService.ts
 - **主要関数**: `generateProblem()`
 
 ### 定数
@@ -545,7 +549,7 @@ if let url = Bundle.main.url(forResource: "problems", withExtension: "json") {
 ## 3. scoreService.ts - スコア管理サービス
 
 ### ファイル情報
-- **行数**: 69行
+- **行数**: 67行
 - **依存**: localStorage
 - **純粋関数**: すべての関数はstatic相当
 

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>日商簿記2級 総合原価計算・月末仕掛品の評価｜平均法・先入先出法を完全図解｜簿記トレーニング大戦</title>
+  <meta name="description" content="簿記2級工業簿記の総合原価計算を完全解説。当月製造費用と完成品総合原価の計算式、月末仕掛品の評価（平均法・先入先出法）、材料費は始点投入・加工費は進捗度で換算する換算量の考え方を、ボックス図と数値例の表で図解します。">
+  <meta name="keywords" content="簿記2級,工業簿記,総合原価計算,月末仕掛品,平均法,先入先出法,完成品総合原価,加工進捗度,換算量">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://boki-training.com/kb/level2/industrial/process/">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="簿記トレーニング大戦">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:url" content="https://boki-training.com/kb/level2/industrial/process/">
+  <meta property="og:title" content="日商簿記2級 総合原価計算・月末仕掛品の評価｜平均法・先入先出法を完全図解｜簿記トレーニング大戦">
+  <meta property="og:description" content="簿記2級工業簿記の総合原価計算を完全解説。当月製造費用と完成品総合原価の計算式、月末仕掛品の評価（平均法・先入先出法）、材料費は始点投入・加工費は進捗度で換算する換算量の考え方を、ボックス図と数値例の表で図解します。">
+  <meta property="og:image" content="https://boki-training.com/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@ikasumi_dev">
+  <meta name="twitter:title" content="日商簿記2級 総合原価計算・月末仕掛品の評価｜平均法・先入先出法を完全図解｜簿記トレーニング大戦">
+  <meta name="twitter:description" content="簿記2級工業簿記の総合原価計算を完全解説。当月製造費用と完成品総合原価の計算式、月末仕掛品の評価（平均法・先入先出法）、材料費は始点投入・加工費は進捗度で換算する換算量の考え方を、ボックス図と数値例の表で図解します。">
+  <meta name="twitter:image" content="https://boki-training.com/og-image.png">
+    <meta name="google-adsense-account" content="ca-pub-9435085772156296">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9435085772156296"
+      crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="/kb/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Noto Sans JP', sans-serif; }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "datePublished": "2024-11-21",
+    "dateModified": "2026-07-26",
+    "author": {
+      "@type": "Organization",
+      "name": "Toyama Digital Works",
+      "url": "https://boki-training.com/"
+    },
+    "inLanguage": "ja",
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://boki-training.com/kb/level2/industrial/process/" },
+    "headline": "日商簿記2級 総合原価計算・月末仕掛品の評価 完全ガイド",
+    "description": "当月製造費用と完成品総合原価の計算、平均法・先入先出法による月末仕掛品の評価、加工費の換算量までを図解。",
+    "publisher": { "@type": "Organization", "name": "簿記トレーニング大戦", "logo": { "@type": "ImageObject", "url": "https://boki-training.com/og-image.png" } }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "ホーム",
+        "item": "https://boki-training.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "簿記攻略KB",
+        "item": "https://boki-training.com/kb/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "簿記2級",
+        "item": "https://boki-training.com/kb/level2/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "name": "日商簿記2級 総合原価計算・月末仕掛品の評価",
+        "item": "https://boki-training.com/kb/level2/industrial/process/"
+      }
+    ]
+  }
+  </script>
+</head>
+<body class="bg-slate-900 text-slate-100 flex flex-col min-h-screen">
+
+  <header class="bg-slate-800 border-b border-amber-900 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="/kb/level2/" class="flex items-center gap-2">
+        <span class="text-xl font-bold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-400">← 簿記2級 攻略KB</span>
+      </a>
+      <a href="/" class="bg-amber-600 hover:bg-amber-700 text-white font-bold py-2 px-4 rounded transition-colors text-sm">ゲーム起動</a>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <article class="space-y-8">
+
+      <div class="space-y-3">
+        <span class="inline-block bg-amber-500/20 text-amber-300 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest border border-amber-500/30">工業簿記・第4問／第5問頻出</span>
+        <h1 class="text-3xl md:text-4xl font-black tracking-tight text-white leading-tight">日商簿記2級 総合原価計算・月末仕掛品の評価 完全ガイド</h1>
+        <p class="text-sm text-slate-400">更新日: 2026年7月25日</p>
+      </div>
+
+      <p class="text-slate-300 leading-relaxed text-base md:text-lg">
+        総合原価計算は、同じ製品を大量生産する工場で、<strong>1か月分の製造原価をまとめて集計し、完成品と月末仕掛品に按分する</strong>手法です。個別原価計算のように製造指図書ごとに追いかけるのではなく、「当月にいくらかかったか」を材料費・加工費に分け、それを完成品と月末仕掛品に配分するのが本質です。最大の山場が<strong>月末仕掛品の評価</strong>で、ここで平均法と先入先出法の違い、加工費は進捗度で換算するという2つの論点を正確に処理できるかが得点を分けます。このページでは計算式・ボックス図・数値例を使って体系的に整理します。
+      </p>
+
+      <!-- 広告ユニット（実スロットIDは AdSense 管理画面で発行後に data-ad-slot を差し替えてください） -->
+      <div class="my-8 text-center">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-9435085772156296" data-ad-slot="0000000000" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      </div>
+
+      <section class="space-y-4">
+        <h2 class="text-2xl font-bold text-white border-l-4 border-amber-500 pl-3">1. 基本となる2つの計算式</h2>
+        <p class="text-slate-300 leading-relaxed">総合原価計算は、次の2つの式を骨格として組み立てます。まず当月に発生したコストを集計し、次に完成品と月末仕掛品へ按分します。</p>
+        <div class="bg-amber-950/40 border border-amber-500/30 p-6 rounded-lg my-4 space-y-3">
+          <div class="font-mono text-sm bg-slate-900 p-4 rounded border border-slate-800 text-center">
+            当月製造費用 ＝ 直接材料費 ＋ 直接労務費 ＋ 製造間接費<br><br>
+            完成品総合原価 ＝ 月初仕掛品原価 ＋ 当月製造費用 − 月末仕掛品原価
+          </div>
+        </div>
+        <p class="text-slate-300 leading-relaxed">完成品総合原価を完成品数量で割れば<strong>完成品単位原価</strong>が求まります。ポイントは、当月製造費用を「まるごと完成品にする」のではなく、<strong>月末に作りかけの仕掛品ぶんを差し引く</strong>ところにあります。したがって、月末仕掛品原価をいくらと見積もるかで完成品原価が変わるため、その評価方法が問われるわけです。</p>
+      </section>
+
+      <section class="space-y-4">
+        <h2 class="text-2xl font-bold text-white border-l-4 border-amber-500 pl-3">2. ボックス図で「数量の流れ」をつかむ</h2>
+        <p class="text-slate-300 leading-relaxed">計算の前に、数量の流れをボックス図（仕掛品勘定を数量で表した図）で整理します。左側（借方）に投入、右側（貸方）に産出を書きます。</p>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm text-left border border-slate-700 rounded-lg overflow-hidden">
+            <thead class="bg-slate-800 text-slate-200">
+              <tr>
+                <th class="p-3 border-b border-slate-700">左（投入）</th>
+                <th class="p-3 border-b border-slate-700">右（産出）</th>
+              </tr>
+            </thead>
+            <tbody class="text-slate-300">
+              <tr class="bg-slate-900"><td class="p-3 border-b border-slate-800">月初仕掛品 数量</td><td class="p-3 border-b border-slate-800 font-bold text-amber-300">完成品 数量</td></tr>
+              <tr class="bg-slate-850"><td class="p-3">当月投入 数量</td><td class="p-3 font-bold text-amber-300">月末仕掛品 数量</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-slate-300 leading-relaxed"><strong>当月投入数量 ＝ 完成品数量 ＋ 月末仕掛品数量 − 月初仕掛品数量</strong>という差し引き関係が成り立ちます。材料費と加工費でこのボックスを別々に作り、加工費のほうは数量に進捗度を掛けた「換算量（完成品換算量）」で計算するのが決定的な違いです。</p>
+      </section>
+
+      <section class="space-y-4">
+        <h2 class="text-2xl font-bold text-white border-l-4 border-amber-500 pl-3">3. 材料は始点投入・加工費は進捗度で換算</h2>
+        <p class="text-slate-300 leading-relaxed">総合原価計算では、コストを性質で2つに分けます。<strong>直接材料費</strong>は工程の始点で全量投入されるのが基本なので、月末仕掛品にも完成品と同じ量の材料が入っています。一方<strong>加工費（直接労務費＋製造間接費）</strong>は、作業が進むにつれて少しずつ発生するため、月末仕掛品には進捗度ぶんしか含まれていません。</p>
+        <div class="bg-slate-850 p-6 rounded-lg border border-slate-700 space-y-3">
+          <p class="text-sm text-slate-300">例：月末仕掛品が数量200個・加工進捗度50%のとき</p>
+          <div class="font-mono text-sm bg-slate-900 p-4 rounded border border-slate-800 text-center">
+            材料費の計算に使う数量 ＝ 200個（始点投入なので全量）<br>
+            加工費の計算に使う換算量 ＝ 200個 × 50% ＝ 100個
+          </div>
+        </div>
+        <p class="text-slate-300 leading-relaxed">この「材料は数量そのまま、加工費は換算量」という使い分けを間違えると、月末仕掛品原価が大きくズレます。まずここを固定して覚えましょう。</p>
+      </section>
+
+      <section class="space-y-4">
+        <h2 class="text-2xl font-bold text-white border-l-4 border-amber-500 pl-3">4. 平均法による月末仕掛品原価</h2>
+        <p class="text-slate-300 leading-relaxed">平均法は、<strong>月初仕掛品原価と当月投入原価を合算し、それを平均単価として完成品と月末仕掛品に配分する</strong>方法です。「月初のぶんも当月のぶんも区別せず、まとめて平均する」というイメージです。材料費が始点投入の場合、月末仕掛品の材料費は次のように求めます。</p>
+        <div class="bg-amber-950/40 border border-amber-500/30 p-6 rounded-lg my-4 space-y-3">
+          <div class="font-mono text-sm bg-slate-900 p-4 rounded border border-slate-800 text-center">
+            月末仕掛品材料費<br>
+            ＝ (月初材料費＋当月材料費) × 月末数量 ÷ (完成品数量＋月末数量)
+          </div>
+        </div>
+        <p class="text-slate-300 leading-relaxed">加工費は数量のかわりに換算量を使います。次の数値例で確認しましょう。</p>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm text-left border border-slate-700 rounded-lg overflow-hidden">
+            <thead class="bg-slate-800 text-slate-200">
+              <tr>
+                <th class="p-3 border-b border-slate-700">項目</th>
+                <th class="p-3 border-b border-slate-700">数量・換算量</th>
+                <th class="p-3 border-b border-slate-700">材料費</th>
+                <th class="p-3 border-b border-slate-700">加工費</th>
+              </tr>
+            </thead>
+            <tbody class="text-slate-300 font-mono">
+              <tr class="bg-slate-900"><td class="p-3 border-b border-slate-800">月初仕掛品</td><td class="p-3 border-b border-slate-800">100個</td><td class="p-3 border-b border-slate-800">20,000</td><td class="p-3 border-b border-slate-800">6,000</td></tr>
+              <tr class="bg-slate-850"><td class="p-3 border-b border-slate-800">当月投入</td><td class="p-3 border-b border-slate-800">-</td><td class="p-3 border-b border-slate-800">100,000</td><td class="p-3 border-b border-slate-800">78,000</td></tr>
+              <tr class="bg-slate-900"><td class="p-3 border-b border-slate-800">完成品</td><td class="p-3 border-b border-slate-800">500個</td><td class="p-3 border-b border-slate-800">-</td><td class="p-3 border-b border-slate-800">-</td></tr>
+              <tr class="bg-slate-850"><td class="p-3">月末仕掛品</td><td class="p-3">200個(進捗50%＝100個)</td><td class="p-3">-</td><td class="p-3">-</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="bg-slate-850 p-6 rounded-lg border border-slate-700 space-y-3">
+          <div class="font-mono text-sm bg-slate-900 p-4 rounded border border-slate-800 leading-relaxed">
+            材料費：合計 20,000＋100,000 ＝ 120,000<br>
+            &emsp;月末材料費 ＝ 120,000 × 200 ÷ (500＋200) ＝ 120,000 × 200 ÷ 700 ＝ <strong>34,285</strong>（円未満切捨）<br>
+            &emsp;完成品材料費 ＝ 120,000 − 34,285 ＝ 85,715<br><br>
+            加工費：合計 6,000＋78,000 ＝ 84,000<br>
+            &emsp;月末加工費 ＝ 84,000 × 100 ÷ (500＋100) ＝ 84,000 × 100 ÷ 600 ＝ <strong>14,000</strong><br>
+            &emsp;完成品加工費 ＝ 84,000 − 14,000 ＝ 70,000<br><br>
+            月末仕掛品原価 ＝ 34,285＋14,000 ＝ 48,285<br>
+            完成品総合原価 ＝ 85,715＋70,000 ＝ 155,715
+          </div>
+        </div>
+        <p class="text-slate-300 leading-relaxed">加工費の分母が「完成品500＋月末<strong>換算量</strong>100」になっている点に注目してください。材料費は月末数量200を使うのに対し、加工費は換算量100を使うのが平均法・先入先出法に共通する鉄則です。</p>
+      </section>
+
+      <section class="space-y-4">
+        <h2 class="text-2xl font-bold text-white border-l-4 border-amber-500 pl-3">5. 先入先出法による月末仕掛品原価</h2>
+        <p class="text-slate-300 leading-relaxed">先入先出法（FIFO）は、<strong>先に投入したもの（月初仕掛品）から先に完成する</strong>と仮定します。したがって月末仕掛品には<strong>当月投入ぶんだけが残る</strong>と考え、月末仕掛品原価は当月投入原価のみを使って計算します。月初仕掛品原価は完成品原価にそのまま含めます。</p>
+        <div class="bg-amber-950/40 border border-amber-500/30 p-6 rounded-lg my-4 space-y-3">
+          <div class="font-mono text-sm bg-slate-900 p-4 rounded border border-slate-800 text-center">
+            月末仕掛品材料費<br>
+            ＝ 当月材料費 × 月末数量 ÷ (完成品数量 − 月初数量 ＋ 月末数量)
+          </div>
+        </div>
+        <p class="text-slate-300 leading-relaxed">分母は「当月投入数量（＝完成品−月初＋月末）」です。先ほどの数値例（材料費）で計算すると次のようになります。</p>
+        <div class="bg-slate-850 p-6 rounded-lg border border-slate-700 space-y-3">
+          <div class="font-mono text-sm bg-slate-900 p-4 rounded border border-slate-800 leading-relaxed">
+            当月投入数量(材料) ＝ 500 − 100 ＋ 200 ＝ 600個<br>
+            月末材料費 ＝ 100,000 × 200 ÷ 600 ＝ <strong>33,333</strong>（円未満切捨）<br>
+            完成品材料費 ＝ 20,000＋100,000 − 33,333 ＝ 86,667<br><br>
+            加工費：当月投入換算量 ＝ 500 − (100×進捗) ＋ 100 …（月初進捗も換算）<br>
+            &emsp;※月初進捗が与えられれば、その換算量で同様に計算します。
+          </div>
+        </div>
+        <p class="text-slate-300 leading-relaxed">平均法との違いは、<strong>月末仕掛品に月初原価を混ぜるかどうか</strong>だけです。先入先出法は「古いものから先に出す」ので月末には新しい当月投入ぶんしか残らない、と押さえれば式が自然に導けます。</p>
+      </section>
+
+      <section class="space-y-4">
+        <h2 class="text-2xl font-bold text-white border-l-4 border-amber-500 pl-3">6. 理解度チェック</h2>
+        <details class="bg-slate-850 border border-slate-700 rounded-lg p-4 group">
+          <summary class="cursor-pointer font-bold text-slate-100">Q. 加工費だけ月末仕掛品の数量を減らすのはなぜ？</summary>
+          <p class="mt-3 text-sm text-slate-300 leading-relaxed">A. 加工費は作業の進行にあわせて発生するため、進捗50%の仕掛品には完成品の半分ぶんの加工費しか入っていないからです。そこで数量に進捗度を掛けた「換算量」で計算します。材料費は始点で全量投入されるので、換算せず数量そのままを使います。</p>
+        </details>
+        <details class="bg-slate-850 border border-slate-700 rounded-lg p-4 group">
+          <summary class="cursor-pointer font-bold text-slate-100">Q. 平均法と先入先出法、月初がなければ答えは同じ？</summary>
+          <p class="mt-3 text-sm text-slate-300 leading-relaxed">A. はい。月初仕掛品が存在しなければ、どちらの方法でも当月投入原価だけを配分することになり、月末仕掛品原価・完成品原価は一致します。両者の差は「月初原価をどう扱うか」だけなので、月初がゼロなら差が出ません。</p>
+        </details>
+      </section>
+
+      <!-- 広告ユニット -->
+      <div class="my-8 text-center">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-9435085772156296" data-ad-slot="0000000000" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      </div>
+
+      <section class="bg-amber-950/40 border border-amber-500/30 p-8 rounded-xl space-y-6 text-center">
+        <h2 class="text-2xl font-black text-white">総合原価計算をゲームで得点源に！</h2>
+        <p class="text-slate-300 text-sm max-w-xl mx-auto leading-relaxed">月末仕掛品の評価を、ランダムな数字の計算バトルで繰り返し練習できます。</p>
+        <div class="flex flex-col sm:flex-row justify-center gap-4">
+          <a href="/?level=level2-industrial&level2topic=process&difficulty=practice" class="bg-slate-800 hover:bg-slate-750 text-amber-300 hover:text-white border-2 border-amber-500/50 font-bold py-3 px-6 rounded-lg transition-transform text-sm">じっくり解く「Practice」</a>
+          <a href="/?level=level2-industrial&level2topic=process&difficulty=easy" class="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-bold py-3 px-8 rounded-lg transition-transform hover:-translate-y-0.5 shadow-lg text-sm">総合原価計算バトルに挑戦！</a>
+        </div>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-lg font-bold text-white">関連コラム</h2>
+        <div class="flex flex-wrap gap-3 text-sm">
+          <a href="/kb/level2/industrial/individual/" class="text-amber-300 hover:text-white underline">個別原価計算・完成品と売上原価</a>
+          <a href="/kb/level2/industrial/standard/" class="text-amber-300 hover:text-white underline">標準原価計算と原価差異</a>
+          <a href="/kb/level2/" class="text-amber-300 hover:text-white underline">2級KBトップ</a>
+        </div>
+      </section>
+
+    </article>
+  </main>
+
+  <footer class="bg-slate-950 border-t border-slate-850 py-10 px-4 text-center mt-auto">
+    <div class="max-w-7xl mx-auto space-y-4">
+      <div class="flex flex-wrap justify-center gap-6 text-sm text-slate-400">
+        <a href="/kb/level2/" class="hover:text-amber-400 transition-colors">2級コラムTOP</a>
+        <a href="/kb/" class="hover:text-amber-400 transition-colors">3級コラムTOP</a>
+        <a href="/about/" class="hover:text-amber-400 transition-colors">このサイトについて</a>
+        <a href="/privacy/" class="hover:text-amber-400 transition-colors">プライバシーポリシー</a>
+        <a href="/contact/" class="hover:text-amber-400 transition-colors">お問い合わせ</a>
+      </div>
+      <p class="text-xs text-slate-500">© 2026 簿記トレーニング大戦. All rights reserved.</p>
+    </div>
+  </footer>
+
+</body>
+</html>

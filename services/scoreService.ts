@@ -32,6 +32,10 @@ export const saveScore = (record: ScoreRecord): boolean => {
       return false;
     }
 
+    if (record.difficulty === 'Practice') {
+      return true;
+    }
+
     // Check & Save Best Score per difficulty
     const key = record.difficulty === 'Easy' ? STORAGE_KEY_BEST_EASY : STORAGE_KEY_BEST_HARD;
     const bestStr = safeLocalStorage.getItem(key);
@@ -59,6 +63,9 @@ export const getHistory = (): ScoreRecord[] => {
 
 export const getPersonalBest = (difficulty: Difficulty): number => {
   try {
+    if (difficulty === 'Practice') {
+      return 0;
+    }
     const key = difficulty === 'Easy' ? STORAGE_KEY_BEST_EASY : STORAGE_KEY_BEST_HARD;
     return Number(safeLocalStorage.getItem(key) || 0);
   } catch {

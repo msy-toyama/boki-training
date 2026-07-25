@@ -3,10 +3,28 @@ export enum QuestionType {
   JOURNAL = '仕訳問題',
   SELECTION = '選択問題',
   NUMERIC = '計算問題',
+  STATEMENT = '決算総合問題',
 }
 
 export type Difficulty = 'Easy' | 'Hard' | 'Practice';
 export type BookkeepingLevel = 'Level3' | 'Level2';
+
+export enum ProblemScopeTag {
+  STANDARD = 'standard',
+  ADVANCED = 'advanced',
+  LEGACY = 'legacy',
+  OUT_OF_SCOPE = 'out_of_scope',
+  NEEDS_REVIEW = 'needs_review',
+  LEVEL2_COMMERCIAL = 'level2_commercial',
+  LEVEL2_INDUSTRIAL = 'level2_industrial',
+}
+
+export interface ProblemScopeMetadata {
+  tag: ProblemScopeTag;
+  label: string;
+  reason: string;
+  source?: string;
+}
 
 export enum ProblemTopic {
   GENERAL = 'general',
@@ -19,6 +37,7 @@ export enum ProblemTopic {
   ACCRUALS = 'accruals',
   CLOSING = 'closing',
   TRIAL_BALANCE = 'trial-balance',
+  FINANCIAL_STATEMENTS = 'financial-statements',
   MISTAKES = 'mistakes'
 }
 
@@ -40,14 +59,77 @@ export interface JournalEntryAnswer {
   credits: JournalEntryItem[];
 }
 
+export type StatementProblemMode = 'closing_entries' | 'worksheet' | 'financial_statements';
+
+export interface StatementMaterial {
+  label: string;
+  value: number | string;
+}
+
+export interface StatementTrialBalanceRow {
+  account: string;
+  debit?: number;
+  credit?: number;
+}
+
+export interface StatementAdjustmentItem {
+  label: string;
+  text: string;
+}
+
+export interface StatementBlank {
+  id: string;
+  section: string;
+  label: string;
+  account?: string;
+  hint?: string;
+}
+
+export interface StatementExplanationRow {
+  label: string;
+  formula: string;
+  amount: number;
+}
+
+export interface StatementIntegrityCheck {
+  label: string;
+  left: number;
+  right: number;
+}
+
+export interface StatementProblemData {
+  mode: StatementProblemMode;
+  title: string;
+  description: string;
+  materials: StatementMaterial[];
+  trialBalance?: StatementTrialBalanceRow[];
+  adjustmentItems?: StatementAdjustmentItem[];
+  requirements: string[];
+  blanks: StatementBlank[];
+  correctAnswers: Record<string, number>;
+  closingEntries?: JournalEntryAnswer[];
+  explanationRows?: StatementExplanationRow[];
+  integrityChecks?: StatementIntegrityCheck[];
+}
+
+export interface StatementAnswer {
+  kind: 'statement';
+  values: Record<string, number>;
+}
+
 // Union type for answers
 export type UserAnswer = 
   | JournalEntryAnswer 
+  | StatementAnswer
   | string  // For selection
   | number; // For numeric input
 
 export interface ProblemTemplate {
   type: QuestionType;
+  // 出題級。未指定は3級(Level3)として扱う。
+  level?: BookkeepingLevel;
+  // 2級の論点タグ（フィルタ用。例: 'securities', 'consolidation'）。
+  level2Topic?: string;
   // Text generator
   textTemplate: (amount: number, target?: string) => string;
   // Optional dynamic explanation generator using the same generated amount/context.
@@ -56,20 +138,25 @@ export interface ProblemTemplate {
   generateJournalAnswer?: (amount: number, target?: string) => JournalEntryAnswer;
   generateSelectionAnswer?: () => { correct: string; options: string[] };
   generateNumericAnswer?: (amount: number) => number;
+  generateStatementData?: (amount: number, target?: string) => StatementProblemData;
   explanation: string;
   topic?: ProblemTopic;
   kbLink?: KbLink;
+  scope?: ProblemScopeMetadata;
 }
 
 export interface GeneratedProblem {
   id: string;
   type: QuestionType;
+  level?: BookkeepingLevel;
+  level2Topic?: string;
   text: string;
   
   // Correct answers based on type
   correctJournal?: JournalEntryAnswer;
   correctSelection?: string;
   correctNumeric?: number;
+  statement?: StatementProblemData;
   
   options?: string[]; // For selection type
   selectableAccounts?: string[]; // For Journal type (subset of all accounts)
@@ -79,6 +166,7 @@ export interface GeneratedProblem {
   difficulty: Difficulty;
   topic?: ProblemTopic;
   kbLink?: KbLink;
+  scope?: ProblemScopeMetadata;
 }
 
 export interface Monster {
@@ -156,6 +244,16 @@ export interface AttemptRecord {
   topic: ProblemTopic;
   isCorrect: boolean;
   elapsedSeconds?: number;
+}
+
+export interface WrongAnswerRecord {
+  id: string;
+  date: string;
+  lastTriedAt: string;
+  attempts: number;
+  problem: GeneratedProblem;
+  userAnswer: UserAnswer | null;
+  isResolved: boolean;
 }
 
 export interface TopicAccuracySummary {

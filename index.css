@@ -52,6 +52,30 @@ body {
   isolation: isolate;
 }
 
+.battle-scene::before {
+  content: '';
+  position: absolute;
+  inset: -30%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 25% 35%, rgba(56, 189, 248, 0.16), transparent 28%),
+    radial-gradient(circle at 76% 30%, rgba(250, 204, 21, 0.12), transparent 24%),
+    radial-gradient(circle at 50% 80%, rgba(99, 102, 241, 0.16), transparent 30%);
+  animation: battle-ambient 8s ease-in-out infinite alternate;
+  will-change: transform, opacity;
+}
+
+@keyframes battle-ambient {
+  0% { opacity: 0.55; transform: translate3d(-1%, 0, 0) scale(1); }
+  100% { opacity: 0.85; transform: translate3d(1%, -1%, 0) scale(1.04); }
+}
+
+.battle-monster {
+  transform: translateZ(0);
+  will-change: transform, filter;
+}
+
 .battle-monster-hit {
   animation: monster-impact 0.38s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
@@ -148,8 +172,9 @@ body {
   .battle-monster-hit,
   .battle-hit-ring,
   .battle-player-hit,
-  .battle-screen-flash,
-  .hp-fill::after {
-    animation: none !important;
-  }
+	  .battle-screen-flash,
+	  .battle-scene::before,
+	  .hp-fill::after {
+	    animation: none !important;
+	  }
 }

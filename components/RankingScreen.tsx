@@ -3,17 +3,21 @@ import React, { useEffect, useState } from 'react';
 import { ScoreRecord, Difficulty, LearningStatsSummary } from '../types';
 import { getHistory, getPersonalBest } from '../services/scoreService';
 import { getLearningStatsSummary } from '../services/learningStatsService';
-import { History, ArrowLeft, Filter, Target, Flame, CalendarDays, TrendingDown } from 'lucide-react';
+import { getLearningTopicDefinition } from '../services/learningTopicService';
+import { getPendingWrongAnswerRecords } from '../services/wrongAnswerService';
+import { History, ArrowLeft, Filter, Target, Flame, CalendarDays, TrendingDown, RotateCcw, BookOpen } from 'lucide-react';
 
 interface RankingScreenProps {
   onBack: () => void;
+  onStartWrongReview?: () => void;
 }
 
-const RankingScreen: React.FC<RankingScreenProps> = ({ onBack }) => {
+const RankingScreen: React.FC<RankingScreenProps> = ({ onBack, onStartWrongReview }) => {
   const [history, setHistory] = useState<ScoreRecord[]>([]);
   const [bestEasy, setBestEasy] = useState(0);
   const [bestHard, setBestHard] = useState(0);
   const [stats, setStats] = useState<LearningStatsSummary | null>(null);
+  const [pendingWrongCount, setPendingWrongCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'All' | Difficulty>('All');
 
@@ -23,6 +27,7 @@ const RankingScreen: React.FC<RankingScreenProps> = ({ onBack }) => {
     setBestEasy(getPersonalBest('Easy'));
     setBestHard(getPersonalBest('Hard'));
     setStats(getLearningStatsSummary());
+    setPendingWrongCount(getPendingWrongAnswerRecords().length);
     setLoading(false);
   }, []);
 
@@ -83,6 +88,25 @@ const RankingScreen: React.FC<RankingScreenProps> = ({ onBack }) => {
               </div>
             </div>
 
+            <div className="bg-slate-800 rounded-xl border border-slate-700 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h3 className="text-sm font-bold text-amber-300 flex items-center gap-2">
+                  <RotateCcw size={16} /> 間違えた問題の復習
+                </h3>
+                <p className="text-sm text-slate-400 mt-1">
+                  未解決の問題: <span className="font-mono font-bold text-white">{pendingWrongCount}</span> 件
+                </p>
+              </div>
+              <button
+                onClick={onStartWrongReview}
+                disabled={!onStartWrongReview || pendingWrongCount === 0}
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-amber-600 px-4 py-2 text-sm font-bold text-white hover:bg-amber-500 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-500 transition-colors"
+              >
+                <RotateCcw size={16} />
+                復習を始める
+              </button>
+            </div>
+
             <div className="grid md:grid-cols-2 gap-4">
               <div className="bg-slate-800 rounded-xl border border-slate-700 p-4">
                 <h3 className="text-sm font-bold text-red-300 flex items-center gap-2 mb-3">
@@ -92,20 +116,33 @@ const RankingScreen: React.FC<RankingScreenProps> = ({ onBack }) => {
                   <p className="text-sm text-slate-500">2回以上解いた正答率80%未満の論点が表示されます。</p>
                 ) : (
                   <div className="space-y-3">
-                    {stats.weakestTopics.map(topic => (
-                      <div key={topic.topic} className="space-y-1">
-                        <div className="flex items-center justify-between gap-2 text-sm">
-                          <span className="font-bold text-slate-200">{topic.label}</span>
-                          <span className="font-mono text-red-300">{topic.accuracy}%</span>
+                    {stats.weakestTopics.map(topic => {
+                      const definition = getLearningTopicDefinition(topic.topic);
+                      return (
+                        <div key={topic.topic} className="space-y-1">
+                          <div className="flex items-center justify-between gap-2 text-sm">
+                            <span className="font-bold text-slate-200">{topic.label}</span>
+                            <span className="font-mono text-red-300">{topic.accuracy}%</span>
+                          </div>
+                          <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
+                            <div className="h-full bg-red-500" style={{ width: `${topic.accuracy}%` }} />
+                          </div>
+                          {definition.guidance?.trap && (
+                            <p className="text-xs text-slate-400 leading-relaxed">
+                              <span className="text-amber-300 font-bold">注意: </span>{definition.guidance.trap}
+                            </p>
+                          )}
+                          <div className="flex flex-wrap gap-x-4 gap-y-1">
+                            <a href={`/?topic=${topic.topic}&difficulty=practice`} className="text-xs text-indigo-300 hover:text-indigo-200 underline">
+                              この論点をPracticeで鍛える
+                            </a>
+                            <a href={definition.kbLink.path} className="inline-flex items-center gap-1 text-xs text-emerald-300 hover:text-emerald-200 underline">
+                              <BookOpen size={12} /> {definition.kbLink.label}
+                            </a>
+                          </div>
                         </div>
-                        <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
-                          <div className="h-full bg-red-500" style={{ width: `${topic.accuracy}%` }} />
-                        </div>
-                        <a href={`/?topic=${topic.topic}&difficulty=practice`} className="text-xs text-indigo-300 hover:text-indigo-200 underline">
-                          この論点をPracticeで鍛える
-                        </a>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -196,4 +233,4 @@ const RankingScreen: React.FC<RankingScreenProps> = ({ onBack }) => {
   );
 };
 
-export default RankingScreen;
+export default React.memo(RankingScreen);

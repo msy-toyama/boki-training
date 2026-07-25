@@ -1,7 +1,7 @@
 {
   "name": "簿記トレーニング大戦",
   "short_name": "簿記トレ大戦",
-  "description": "RPG風の簿記学習ゲーム。日商簿記3級を楽しく完全攻略",
+  "description": "RPG風の簿記学習ゲーム。日商簿記3級・2級を楽しく攻略",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0f172a",

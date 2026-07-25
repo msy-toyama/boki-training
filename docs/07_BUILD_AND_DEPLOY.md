@@ -6,7 +6,7 @@
 
 ---
 
-## ビルドツール: Vite 7.2.4
+## ビルドツール: Vite 7.3.3（lockfile基準）
 
 ### vite.config.ts
 
@@ -84,10 +84,17 @@ manualChunks: {
     "@types/node": "^24.10.1",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
     "@vitejs/plugin-react": "^4.0.3",
+    "@vitest/coverage-v8": "^4.1.7",
+    "happy-dom": "^20.9.0",
+    "tailwindcss": "^3.4.17",
     "gh-pages": "^6.1.0",
     "typescript": "^5.0.2",
-    "vite": "^7.2.4"
+    "vite": "^7.2.4",
+    "vitest": "^4.1.7"
   }
 }
 ```
@@ -98,8 +105,13 @@ manualChunks: {
 {
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build:kb-css": "BROWSERSLIST_IGNORE_OLD_DATA=1 tailwindcss -c tailwind.kb.config.cjs -i ./styles/kb.css -o ./public/kb/styles.css --minify",
+    "build": "npm run build:kb-css && tsc && vite build",
     "preview": "vite preview",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "audit:problems": "node scripts/auditProblems.mjs",
     "deploy": "npm run build && gh-pages -d dist"
   }
 }
@@ -108,9 +120,12 @@ manualChunks: {
 | コマンド | 説明 |
 |---|---|
 | `npm run dev` | 開発サーバー起動（http://localhost:5173） |
-| `npm run build` | TypeScriptコンパイル + Viteビルド |
+| `npm run build:kb-css` | ナレッジベース用CSSをTailwindで生成 |
+| `npm run build` | KB CSS生成 + TypeScriptコンパイル + Viteビルド |
 | `npm run preview` | ビルド結果のプレビュー |
-| `npm run deploy` | GitHub Pagesへデプロイ |
+| `npm run test:run` | Vitestを1回実行 |
+| `npm run audit:problems` | 問題テンプレートと通常出題範囲を監査 |
+| `npm run deploy` | GitHub Pagesへデプロイ（本番Cloudflareとは別の補助運用） |
 
 ---
 
@@ -142,7 +157,17 @@ manualChunks: {
 
 ## ビルドプロセス
 
-### 1. TypeScriptコンパイル
+### 1. ナレッジベースCSS生成
+
+```bash
+npm run build:kb-css
+```
+
+**実行内容**:
+- `styles/kb.css` を入力として `public/kb/styles.css` を生成
+- TailwindCSSの設定は `tailwind.kb.config.cjs` を使用
+
+### 2. TypeScriptコンパイル
 
 ```bash
 tsc
@@ -152,7 +177,7 @@ tsc
 - 型チェックのみ（`noEmit: true`）
 - エラーがあればビルド中断
 
-### 2. Viteビルド
+### 3. Viteビルド
 
 ```bash
 vite build
@@ -189,20 +214,18 @@ dist/
 ```bash
 $ npm run build
 
-vite v7.2.4 building for production...
-✓ 45 modules transformed.
-dist/index.html                   0.64 kB │ gzip:  0.38 kB
-dist/assets/index-a1b2c3d4.css    8.92 kB │ gzip:  2.54 kB
-dist/assets/lucide-e5f6g7h8.js  117.34 kB │ gzip: 36.12 kB
-dist/assets/react-vendor-i9j0.js 143.21 kB │ gzip: 46.08 kB
-dist/assets/index-k1l2m3n4.js   152.87 kB │ gzip: 48.23 kB
-✓ built in 609ms
+vite v7.3.3 building client environment for production...
+dist/index.html                         5.72 kB │ gzip:  1.86 kB
+dist/assets/index-ceE4kVWW.css         45.83 kB │ gzip:  8.68 kB
+dist/assets/lucide-CX2aOhr-.js         16.47 kB │ gzip:  6.08 kB
+dist/assets/react-vendor-BUvQ2f46.js  133.82 kB │ gzip: 42.96 kB
+dist/assets/index-D05JYdJG.js         198.69 kB │ gzip: 49.16 kB
 ```
 
 **特徴**:
-- **超高速**: 609ms
-- **Gzip圧縮後**: 合計約133KB
-- **初回ロード**: 約0.5秒
+- **本番前確認**: `npm run audit:problems` と `npm run build` を必ず実行
+- **今回の実測**: 1269 modules transformed / Vite build 970ms
+- **初回ロード**: React vendor / lucide / app chunk を分割
 
 ---
 
@@ -220,13 +243,13 @@ dist/assets/index-k1l2m3n4.js   152.87 kB │ gzip: 48.23 kB
 ```
 git push origin main
     ↓
-GitHub Actions起動
+Cloudflare PagesがGitHub更新を検知
     ↓
 Cloudflare Pages自動ビルド
     ↓
 デプロイ完了（約2分）
     ↓
-https://boki-training.pages.dev/
+https://boki-training.com/
 ```
 
 ---
@@ -274,7 +297,7 @@ Content Security Policyの設定。
   <meta property="og:title" content="簿記トレーニング大戦 - 簿記3級学習ゲーム" />
   <meta property="og:description" content="モンスターを倒しながら簿記を学ぶ！100問ノックで簿記3級をマスター。" />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://boki-training.pages.dev/" />
+  <meta property="og:url" content="https://boki-training.com/" />
   
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
@@ -328,7 +351,7 @@ Content Security Policyの設定。
 User-agent: *
 Allow: /
 
-Sitemap: https://boki-training.pages.dev/sitemap.xml
+Sitemap: https://boki-training.com/sitemap.xml
 ```
 
 **目的**: 検索エンジンのクロール許可
@@ -396,7 +419,7 @@ git push origin main
 ```
 
 **自動実行**:
-1. GitHub Actionsトリガー
+1. Cloudflare PagesがGitHub更新を検知
 2. Cloudflare Pagesビルド
 3. 約2分でデプロイ完了
 
@@ -463,43 +486,50 @@ Refused to load the script because it violates CSP
 
 ---
 
-## CI/CD
+## GitHub Pages補助デプロイ
 
 ### GitHub Actions (.github/workflows/deploy.yml)
 
 ```yaml
-name: Deploy to Cloudflare Pages
+name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: '18'
-      - run: npm ci
+          node-version: 20
+      - run: npm install
       - run: npm run build
-      - uses: cloudflare/pages-action@v1
+        env:
+          VITE_BASE_PATH: /boki-training/
+      - uses: actions/upload-pages-artifact@v3
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: boki-training
-          directory: dist
+          path: ./dist
 ```
+
+本番はCloudflare Pages + 独自ドメイン `boki-training.com` を主系とし、このGitHub ActionsはGitHub Pages向けの補助経路として扱います。
 
 ---
 
 ## まとめ
 
-**ビルド時間**: 609ms（超高速）
-**ビルドサイズ**: 約133KB（Gzip）
-**デプロイ時間**: 約2分
-**URL**: https://boki-training.pages.dev/
+**ビルド時間**: Vite build 970ms（2026-05-26 ローカル実測）
+**ビルドサイズ**: app chunk 198.69 kB / React vendor 133.82 kB / CSS 45.83 kB（gzip合計 約108.74 kB）
+**デプロイ時間**: Cloudflare Pages の実行状況に依存
+**本番URL**: https://boki-training.com/
 
 **最適化ポイント**:
 - コード分割

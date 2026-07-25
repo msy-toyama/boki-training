@@ -1,5 +1,13 @@
 
-import { ProblemTemplate, QuestionType } from './types';
+import { ProblemTemplate, ProblemTopic, QuestionType } from './types';
+import {
+  createClosingWorksheetStatementData,
+  createFinancialStatementsData,
+  createWorksheetStatementData,
+} from './services/statementProblemFactory';
+import { LEVEL2_ACCOUNT_DEFINITIONS, LEVEL2_ACCOUNT_TITLES } from './data/level2/accounts';
+import { LEVEL2_COMMERCIAL_TEMPLATES } from './data/level2/commercial';
+import { LEVEL2_INDUSTRIAL_TEMPLATES } from './data/level2/industrial';
 
 const yen = (amount: number): string => `${Math.round(amount).toLocaleString()}円`;
 
@@ -17,7 +25,7 @@ export const ACCOUNT_DEFINITIONS: { name: string; category: 'Asset' | 'Liability
   { name: '売買目的有価証券', category: 'Asset' },
   { name: '商品', category: 'Asset' }, { name: '貯蔵品', category: 'Asset' }, { name: '消耗品', category: 'Asset' },
   { name: '建物', category: 'Asset' }, { name: '備品', category: 'Asset' }, { name: '車両運搬具', category: 'Asset' }, { name: '土地', category: 'Asset' },
-  { name: '前払費用', category: 'Asset' }, { name: '未収収益', category: 'Asset' }, { name: '仮払法人税等', category: 'Asset' }, { name: '仮払消費税', category: 'Asset' },
+  { name: '前払費用', category: 'Asset' }, { name: '前払保険料', category: 'Asset' }, { name: '未収収益', category: 'Asset' }, { name: '仮払法人税等', category: 'Asset' }, { name: '仮払消費税', category: 'Asset' },
   { name: '繰越商品', category: 'Asset' },
 
   // 負債 (Liabilities)
@@ -62,6 +70,7 @@ export const ACCOUNT_DEFINITIONS: { name: string; category: 'Asset' | 'Liability
 // 単純な文字列リスト（セレクトボックス用）
 export const ACCOUNT_TITLES = [
   ...ACCOUNT_DEFINITIONS.map(d => d.name),
+  ...LEVEL2_ACCOUNT_TITLES,
   '貸倒引当金', '減価償却累計額', '損益'
 ];
 
@@ -144,7 +153,7 @@ export const PROBLEM_TEMPLATES: ProblemTemplate[] = [
       debits: [{ account: '売掛金', amount: a }, { account: '立替金', amount: a * 0.05 }],
       credits: [{ account: '売上', amount: a }, { account: '現金', amount: a * 0.05 }]
     }),
-    explanation: "先方負担の発送費を立て替えた場合、「立替金」または「売掛金」に含めて処理します（ここでは立替金勘定を使用）。"
+    explanation: "先方（得意先）負担の発送費を当社が現金で立て替えた場合は「立替金」（資産）で処理します。問題の指示によっては売掛金に含める方法もありますが、本問では立替金勘定を用います。売上・立替金・現金をそれぞれ区別して記帳します。"
   },
   {
     type: QuestionType.JOURNAL,
@@ -157,12 +166,12 @@ export const PROBLEM_TEMPLATES: ProblemTemplate[] = [
   },
   {
     type: QuestionType.JOURNAL,
-    textTemplate: (a, t) => `当座預金の残高は${Math.floor(a * 0.8).toLocaleString()}円であったが、${t}からの買掛金の支払いとして小切手${a.toLocaleString()}円を振り出した。なお、銀行とは当座借越契約（限度額あり）を結んでいる。`,
+    textTemplate: (a, t) => `当座預金の残高は${Math.floor(a * 0.8).toLocaleString()}円であったが、${t}からの買掛金の支払いとして小切手${a.toLocaleString()}円を振り出した。なお、銀行とは当座借越契約（限度額あり）を結んでおり、一勘定制（当座預金勘定のみ）で処理している。`,
     generateJournalAnswer: (a) => ({
       debits: [{ account: '買掛金', amount: a }],
       credits: [{ account: '当座預金', amount: a }]
     }),
-    explanation: "「当座借越」勘定を用いない場合（一勘定制）や、期中は当座預金勘定をマイナスにする方法があります。3級では貸方を当座預金として処理するのが一般的です。"
+    explanation: "一勘定制では、残高を超えて小切手を振り出した場合も貸方はすべて「当座預金」で処理します（当座預金が一時的にマイナス残高になります）。貸方を「当座預金」と「当座借越」に分けるのは二勘定制の場合です。"
   },
 
   // --- 2. 商品売買 (Merchandise: Returns, Advances, etc.) ---
@@ -309,7 +318,8 @@ export const PROBLEM_TEMPLATES: ProblemTemplate[] = [
       debits: [{ account: '未払費用', amount: a }],
       credits: [{ account: '支払利息', amount: a }]
     }),
-    explanation: "再振替仕訳です。前期末の逆仕訳を行い、当期の費用処理を正常化します。"
+    explanation: "再振替仕訳です。前期末の逆仕訳を行い、当期の費用処理を正常化します。",
+    topic: ProblemTopic.ACCRUALS
   },
   {
     type: QuestionType.JOURNAL,
@@ -319,6 +329,98 @@ export const PROBLEM_TEMPLATES: ProblemTemplate[] = [
       credits: [{ account: '貸倒引当金', amount: Math.floor(a * 0.01) }]
     }),
     explanation: "目標額(2%) - 前期残高(1%) = 繰入額(1%)。差額を繰り入れます。"
+  },
+  // --- 経過勘定（見越・繰延）の独立仕訳 ---
+  {
+    type: QuestionType.JOURNAL,
+    textTemplate: (a) => `決算にあたり、当期に発生しているが決算日までに受け取っていない貸付金の利息${yen(a)}を見越計上する。`,
+    generateJournalAnswer: (a) => ({
+      debits: [{ account: '未収収益', amount: a }],
+      credits: [{ account: '受取利息', amount: a }]
+    }),
+    explanationTemplate: (a) => `当期に発生した収益は、未収であっても当期の収益として計上します（見越し）。まだ受け取っていない利息${yen(a)}を「未収収益」（資産）として計上し、相手勘定を「受取利息」（収益）とします。`,
+    explanation: "当期に発生した収益は、未収であっても当期の収益として計上します（未収収益の見越し）。",
+    topic: ProblemTopic.ACCRUALS
+  },
+  {
+    type: QuestionType.JOURNAL,
+    textTemplate: (a) => `決算にあたり、当期に受け取った受取家賃のうち、次期に対応する${yen(a)}を繰り延べる。`,
+    generateJournalAnswer: (a) => ({
+      debits: [{ account: '受取家賃', amount: a }],
+      credits: [{ account: '前受収益', amount: a }]
+    }),
+    explanationTemplate: (a) => `次期に対応する収益は当期の収益から除きます（繰延）。次期分の家賃${yen(a)}を「受取家賃」（収益）から減らし、「前受収益」（負債）として繰り延べます。`,
+    explanation: "次期に属する収益は当期の収益から除き、「前受収益」（負債）として繰り延べます。",
+    topic: ProblemTopic.ACCRUALS
+  },
+  {
+    type: QuestionType.JOURNAL,
+    textTemplate: (a) => `決算にあたり、支払保険料のうち、次期に対応する${yen(a)}を前払費用として繰り延べる。`,
+    generateJournalAnswer: (a) => ({
+      debits: [{ account: '前払費用', amount: a }],
+      credits: [{ account: '支払保険料', amount: a }]
+    }),
+    explanationTemplate: (a) => `次期に対応する費用は当期の費用から除きます（繰延）。次期分${yen(a)}を「支払保険料」（費用）から減らし、「前払費用」（資産）として繰り延べます。`,
+    explanation: "次期に属する費用は当期の費用から除き、「前払費用」（資産）として繰り延べます。",
+    topic: ProblemTopic.ACCRUALS
+  },
+  {
+    type: QuestionType.JOURNAL,
+    textTemplate: (a) => `決算にあたり、当期に発生しているが未払いの借入金利息${yen(a)}を見越計上する。`,
+    generateJournalAnswer: (a) => ({
+      debits: [{ account: '支払利息', amount: a }],
+      credits: [{ account: '未払費用', amount: a }]
+    }),
+    explanationTemplate: (a) => `当期に発生した費用は、未払いであっても当期の費用として計上します（見越し）。未払いの利息${yen(a)}を「支払利息」（費用）に計上し、相手勘定を「未払費用」（負債）とします。`,
+    explanation: "当期に発生した費用は、未払いであっても当期の費用として計上します（未払費用の見越し）。",
+    topic: ProblemTopic.ACCRUALS
+  },
+  // --- 貸倒引当金（受取手形＋売掛金の両債権に設定） ---
+  {
+    type: QuestionType.JOURNAL,
+    textTemplate: (a) => `決算にあたり、受取手形${yen(a * 0.3)}と売掛金${yen(a * 0.7)}の合計に対して2%の貸倒引当金を差額補充法で設定する。なお、貸倒引当金の決算整理前残高は${yen(a * 0.01)}である。`,
+    generateJournalAnswer: (a) => ({
+      debits: [{ account: '貸倒引当金繰入', amount: Math.round(a * 0.01) }],
+      credits: [{ account: '貸倒引当金', amount: Math.round(a * 0.01) }]
+    }),
+    explanationTemplate: (a) => `受取手形${yen(a * 0.3)}＋売掛金${yen(a * 0.7)}＝${yen(a)}に2%を掛けた${yen(a * 0.02)}が設定目標額です。差額補充法では、目標額${yen(a * 0.02)}から前残高${yen(a * 0.01)}を差し引いた${yen(a * 0.01)}を繰り入れます。`,
+    explanation: "貸倒引当金は受取手形・売掛金などの売上債権全体に設定します。差額補充法では設定目標額と前残高の差額だけを繰り入れます。",
+    topic: ProblemTopic.CLOSING
+  },
+  // --- 貯蔵品（切手・収入印紙の期末未使用） ---
+  {
+    type: QuestionType.JOURNAL,
+    textTemplate: (a) => `決算にあたり、購入時に通信費として費用処理していた郵便切手の未使用高${yen(a)}を貯蔵品勘定に振り替える。`,
+    generateJournalAnswer: (a) => ({
+      debits: [{ account: '貯蔵品', amount: a }],
+      credits: [{ account: '通信費', amount: a }]
+    }),
+    explanationTemplate: (a) => `切手は購入時に「通信費」（費用）として処理しますが、期末に未使用分が残っている場合は、その${yen(a)}を「貯蔵品」（資産）に振り替えて次期に繰り越します。`,
+    explanation: "未使用の切手は資産です。購入時に費用（通信費）処理した分のうち、期末未使用分を「貯蔵品」に振り替えます。",
+    topic: ProblemTopic.CLOSING
+  },
+  {
+    type: QuestionType.JOURNAL,
+    textTemplate: (a) => `決算にあたり、購入時に租税公課として費用処理していた収入印紙の未使用高${yen(a)}を貯蔵品勘定に振り替える。`,
+    generateJournalAnswer: (a) => ({
+      debits: [{ account: '貯蔵品', amount: a }],
+      credits: [{ account: '租税公課', amount: a }]
+    }),
+    explanationTemplate: (a) => `収入印紙は購入時に「租税公課」（費用）として処理しますが、期末の未使用分${yen(a)}は「貯蔵品」（資産）に振り替えます。`,
+    explanation: "未使用の収入印紙は資産です。購入時に費用（租税公課）処理した分のうち、期末未使用分を「貯蔵品」に振り替えます。",
+    topic: ProblemTopic.CLOSING
+  },
+  // --- 法人税等の決算確定（費用化＋未払計上） ---
+  {
+    type: QuestionType.JOURNAL,
+    textTemplate: (a) => `決算にあたり、当期の法人税、住民税及び事業税が${yen(a)}と確定した。なお、中間納付として${yen(a * 0.4)}を仮払法人税等として計上している。`,
+    generateJournalAnswer: (a) => ({
+      debits: [{ account: '法人税、住民税及び事業税', amount: a }],
+      credits: [{ account: '仮払法人税等', amount: Math.round(a * 0.4) }, { account: '未払法人税等', amount: Math.round(a * 0.6) }]
+    }),
+    explanationTemplate: (a) => `確定した税額${yen(a)}を「法人税、住民税及び事業税」（費用）として計上します。中間納付済みの${yen(a * 0.4)}を「仮払法人税等」で取り崩し、残額${yen(a * 0.6)}を「未払法人税等」（負債）として計上します。`,
+    explanation: "決算で確定した税額を費用計上し、中間納付済みの仮払法人税等を取り崩して、差額を未払法人税等とします。",
+    topic: ProblemTopic.CLOSING
   },
   {
     type: QuestionType.JOURNAL,
@@ -502,6 +604,32 @@ export const PROBLEM_TEMPLATES: ProblemTemplate[] = [
     textTemplate: (a) => `貸倒引当金勘定の決算整理前残高は${(a).toLocaleString()}円である。期末売掛金残高${(a*100).toLocaleString()}円に対し3%の貸倒引当金を設定する場合（差額補充法）、貸倒引当金繰入の金額はいくらか。`,
     generateNumericAnswer: (a) => (a*100 * 0.03) - a,
     explanation: "設定目標額（売掛金×3%）と前残高との差額を計算します。"
+  },
+
+  // --- 商品有高帳（先入先出法・移動平均法）---
+  {
+    type: QuestionType.NUMERIC,
+    textTemplate: (a) => `商品有高帳を先入先出法で記帳している。前月繰越は10個（＠${a.toLocaleString()}円）、当月仕入は20個（＠${(a * 1.5).toLocaleString()}円）であった。当月に24個を売り上げたとき、先入先出法による当月の売上原価（払出原価）はいくらか。`,
+    generateNumericAnswer: (a) => a * 10 + a * 1.5 * 14, // 繰越10個@a + 仕入14個@1.5a = 10a + 21a = 31a
+    explanationTemplate: (a) => `先入先出法は古い在庫から先に払い出します。前月繰越10個×＠${a.toLocaleString()}円＝${(a * 10).toLocaleString()}円をすべて払い出し、不足する14個を当月仕入＠${(a * 1.5).toLocaleString()}円×14個＝${(a * 1.5 * 14).toLocaleString()}円で払い出します。合計${(a * 10 + a * 1.5 * 14).toLocaleString()}円が当月の売上原価です。`,
+    explanation: "先入先出法では、先に仕入れた古い在庫から順に払い出したものとして売上原価を計算します。",
+    topic: ProblemTopic.CLOSING
+  },
+  {
+    type: QuestionType.NUMERIC,
+    textTemplate: (a) => `商品有高帳を先入先出法で記帳している。前月繰越は10個（＠${a.toLocaleString()}円）、当月仕入は20個（＠${(a * 1.5).toLocaleString()}円）であった。当月に24個を売り上げたとき、先入先出法による月末商品棚卸高（期末在庫）はいくらか。`,
+    generateNumericAnswer: (a) => a * 1.5 * 6, // 払出24個=繰越10+仕入14。残り6個はすべて当月仕入分@1.5a
+    explanationTemplate: (a) => `払い出した24個の内訳は前月繰越10個＋当月仕入14個です。月末在庫の6個はすべて新しい当月仕入分となるため、6個×＠${(a * 1.5).toLocaleString()}円＝${(a * 1.5 * 6).toLocaleString()}円が月末商品棚卸高です。`,
+    explanation: "先入先出法では、月末在庫は最も新しく仕入れた単価で評価されます。",
+    topic: ProblemTopic.CLOSING
+  },
+  {
+    type: QuestionType.NUMERIC,
+    textTemplate: (a) => `商品有高帳を移動平均法で記帳している。前月繰越は20個（＠${a.toLocaleString()}円）、当月仕入は30個（＠${(a * 1.5).toLocaleString()}円）であった。仕入後の平均単価に基づき当月に40個を売り上げたとき、移動平均法による当月の売上原価（払出原価）はいくらか。`,
+    generateNumericAnswer: (a) => ((a * 20 + a * 1.5 * 30) / 50) * 40, // 平均単価1.3a × 払出40個 = 52a
+    explanationTemplate: (a) => `移動平均法では仕入のたびに平均単価を計算します。(前月繰越${(a * 20).toLocaleString()}円＋当月仕入${(a * 1.5 * 30).toLocaleString()}円)÷(20個＋30個)＝平均＠${(((a * 20 + a * 1.5 * 30) / 50)).toLocaleString()}円。これに払出40個を掛けた${((((a * 20 + a * 1.5 * 30) / 50) * 40)).toLocaleString()}円が当月の売上原価です。`,
+    explanation: "移動平均法では、仕入のたびに(在庫金額＋仕入金額)÷(在庫数量＋仕入数量)で平均単価を求め、その単価で払い出します。",
+    topic: ProblemTopic.CLOSING
   },
 
   // ##########################################
@@ -1083,10 +1211,10 @@ export const PROBLEM_TEMPLATES: ProblemTemplate[] = [
   // --- 36. 伝票会計の応用（仕訳問題） ---
   {
     type: QuestionType.JOURNAL,
-    textTemplate: (a) => `3伝票制において、商品${a.toLocaleString()}円を仕入れ、代金のうち${(a * 0.3).toLocaleString()}円を現金で支払い、残額は掛けとした。この取引を仕訳しなさい。`,
+    textTemplate: (a) => `3伝票制において、商品${a.toLocaleString()}円を仕入れ、代金のうち${Math.floor(a * 0.3).toLocaleString()}円を現金で支払い、残額は掛けとした。この取引を仕訳しなさい。`,
     generateJournalAnswer: (a) => ({
       debits: [{ account: '仕入', amount: a }],
-      credits: [{ account: '現金', amount: Math.floor(a * 0.3) }, { account: '買掛金', amount: Math.floor(a * 0.7) }]
+      credits: [{ account: '現金', amount: Math.floor(a * 0.3) }, { account: '買掛金', amount: a - Math.floor(a * 0.3) }]
     }),
     explanation: "3伝票制でも仕訳は通常通り行います。現金支払分は出金伝票、掛分は振替伝票で起票します。"
   },
@@ -1194,7 +1322,7 @@ export const PROBLEM_TEMPLATES: ProblemTemplate[] = [
     textTemplate: (a, t) => `当座預金に振り込まれていたものの原因が不明であった${a.toLocaleString()}円について調査した結果、${t}に対する売掛金回収分${Math.floor(a * 0.7).toLocaleString()}円と、残額は新規注文に対する手付金であることが判明した。`,
     generateJournalAnswer: (a) => ({
       debits: [{ account: '仮受金', amount: a }],
-      credits: [{ account: '売掛金', amount: Math.floor(a * 0.7) }, { account: '前受金', amount: Math.floor(a * 0.3) }]
+      credits: [{ account: '売掛金', amount: Math.floor(a * 0.7) }, { account: '前受金', amount: a - Math.floor(a * 0.7) }]
     }),
     explanation: "入金時の「仮受金」を借方に振り替えて消去し、原因として判明した売掛金の消去、および新規注文に対する手付金（前受金）に振り替えます。"
   },
@@ -1214,7 +1342,7 @@ export const PROBLEM_TEMPLATES: ProblemTemplate[] = [
     textTemplate: (a) => `新たに事務所を借りる契約を結び、敷金（保証金）として${a.toLocaleString()}円、および当月分家賃として${Math.floor(a * 0.4).toLocaleString()}円を、普通預金から支払った。`,
     generateJournalAnswer: (a) => ({
       debits: [{ account: '差入保証金', amount: a }, { account: '支払家賃', amount: Math.floor(a * 0.4) }],
-      credits: [{ account: '普通預金', amount: Math.floor(a * 1.4) }]
+      credits: [{ account: '普通預金', amount: a + Math.floor(a * 0.4) }]
     }),
     explanation: "将来返還される予定の敷金・保証金は「差入保証金」（資産）、当月の家賃は「支払家賃」（費用）とします。"
   },
@@ -1401,5 +1529,32 @@ export const PROBLEM_TEMPLATES: ProblemTemplate[] = [
     generateNumericAnswer: (a) => Math.round((a * 28) / 0.7), // 売上原価=3+30-5=28a. 売上高 = 28a / (1-0.3) = 40a
     explanation: "売上原価を先に計算し、売上総利益率から売上原価率を求めて売上高を逆算します。",
     explanationTemplate: (a) => `売上原価 = 期首商品${yen(a * 3)} + 当期仕入${yen(a * 30)} - 期末商品${yen(a * 5)} = ${yen(a * 28)}です。売上総利益率30%なので売上原価率は70%。売上高 = ${yen(a * 28)} ÷ 0.7 = ${yen(a * 40)}です。`
-  }
+  },
+
+  // --- 41. 決算整理・精算表・財務諸表作成（第3問形式の統合問題） ---
+  {
+    type: QuestionType.STATEMENT,
+    topic: ProblemTopic.CLOSING,
+    textTemplate: () => '次の決算整理前残高試算表と決算整理事項等にもとづいて、決算整理仕訳を行い、精算表の主要空欄を作成しなさい。',
+    generateStatementData: createClosingWorksheetStatementData,
+    explanation: '決算整理問題では、整理事項を個別の仕訳に直し、その金額を整理後の損益計算書欄・貸借対照表欄へ連動させます。'
+  },
+  {
+    type: QuestionType.STATEMENT,
+    topic: ProblemTopic.TRIAL_BALANCE,
+    textTemplate: () => '次の決算整理前残高試算表と決算整理事項等にもとづいて、答案用紙の精算表を作成しなさい。',
+    generateStatementData: createWorksheetStatementData,
+    explanation: '精算表では、決算整理仕訳の借方・貸方が各勘定に与える影響を追い、整理後の収益・費用を損益計算書欄へ、資産・負債・純資産を貸借対照表欄へ振り分けます。'
+  },
+  {
+    type: QuestionType.STATEMENT,
+    topic: ProblemTopic.FINANCIAL_STATEMENTS,
+    textTemplate: () => '次の決算整理前残高試算表と決算整理事項等にもとづいて、損益計算書および貸借対照表を作成しなさい。',
+    generateStatementData: createFinancialStatementsData,
+    explanation: '財務諸表作成では、決算整理仕訳を反映して損益計算書で当期純利益を求め、その利益を貸借対照表の純資産へつなげます。'
+  },
+
+  // === 簿記2級（商業簿記・工業簿記） ===
+  ...LEVEL2_COMMERCIAL_TEMPLATES,
+  ...LEVEL2_INDUSTRIAL_TEMPLATES,
 ];

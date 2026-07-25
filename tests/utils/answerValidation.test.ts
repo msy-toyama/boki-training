@@ -94,4 +94,29 @@ describe('checkAnswer', () => {
     expect(checkAnswer(1350.1, problem)).toBe(false);
     expect(checkAnswer('1350', problem)).toBe(false);
   });
+
+  it('決算総合問題はすべての空欄が一致した場合だけ正解にする', () => {
+    const problem: GeneratedProblem = {
+      ...baseProblem,
+      type: QuestionType.STATEMENT,
+      statement: {
+        mode: 'worksheet',
+        title: '精算表',
+        description: 'テスト',
+        materials: [{ label: '売上高', value: 80000 }],
+        requirements: ['空欄を埋める'],
+        blanks: [
+          { id: 'sales', section: '損益計算書', label: '売上高' },
+          { id: 'income', section: '損益計算書', label: '当期純利益' }
+        ],
+        correctAnswers: {
+          sales: 80000,
+          income: 47000
+        }
+      }
+    };
+
+    expect(checkAnswer({ kind: 'statement', values: { sales: 80000, income: 47000 } }, problem)).toBe(true);
+    expect(checkAnswer({ kind: 'statement', values: { sales: 80000, income: 46000 } }, problem)).toBe(false);
+  });
 });

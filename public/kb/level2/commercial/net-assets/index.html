@@ -121,7 +121,13 @@
         <p class="text-slate-300 leading-relaxed">増資の場合、会社法では払込金額のうち<strong>2分の1を超えない額を資本金としないことができ</strong>、資本金としなかった分は<strong>資本準備金</strong>に計上します。「最低限度額（＝払込額の1/2）を資本金とし、残額を資本準備金とする」という指示が定番です。</p>
         <div class="bg-emerald-950/40 border border-emerald-500/30 p-6 rounded-lg my-4 space-y-3">
           <p class="text-sm text-slate-300">例：増資のため株式を発行し、払込金額1,000,000円を当座預金に受け入れた。会社法が認める最低限度額を資本金とする。資本金 = 1,000,000 × 1/2 = 500,000円、残り500,000円は資本準備金。</p>
-          <div class="font-mono text-sm bg-slate-900 p-4 rounded border border-slate-800 text-center">(借) 当座預金 1,000,000 ／ (貸) 資本金 500,000<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; (貸) 資本準備金 500,000</div>
+          <table class="je-table">
+            <thead><tr><th>借方の勘定科目</th><th>金額</th><th>貸方の勘定科目</th><th>金額</th></tr></thead>
+            <tbody>
+              <tr><td>当座預金</td><td class="je-amount">1,000,000</td><td>資本金</td><td class="je-amount">500,000</td></tr>
+              <tr><td></td><td class="je-amount"></td><td>資本準備金</td><td class="je-amount">500,000</td></tr>
+            </tbody>
+          </table>
         </div>
       </section>
 
@@ -130,7 +136,13 @@
         <p class="text-slate-300 leading-relaxed">株主総会で配当が決議されると、その原資である<strong>繰越利益剰余金</strong>を減らします。配当はこの時点ではまだ支払っていないため、<strong>未払配当金</strong>（負債）で計上します。さらに会社法により、配当額の10分の1などを<strong>利益準備金</strong>として積み立てる必要があります。</p>
         <div class="bg-emerald-950/40 border border-emerald-500/30 p-6 rounded-lg my-4 space-y-3">
           <p class="text-sm text-slate-300">例：株主総会で配当金300,000円を決議し、利益準備金30,000円を積み立てた。繰越利益剰余金を取り崩す。借方合計 = 貸方合計 = 330,000円。</p>
-          <div class="font-mono text-sm bg-slate-900 p-4 rounded border border-slate-800 text-center">(借) 繰越利益剰余金 330,000 ／ (貸) 未払配当金 300,000<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; (貸) 利益準備金 30,000</div>
+          <table class="je-table">
+            <thead><tr><th>借方の勘定科目</th><th>金額</th><th>貸方の勘定科目</th><th>金額</th></tr></thead>
+            <tbody>
+              <tr><td>繰越利益剰余金</td><td class="je-amount">330,000</td><td>未払配当金</td><td class="je-amount">300,000</td></tr>
+              <tr><td></td><td class="je-amount"></td><td>利益準備金</td><td class="je-amount">30,000</td></tr>
+            </tbody>
+          </table>
         </div>
         <p class="text-slate-300 leading-relaxed">後日、実際に配当金を支払ったときは「(借) 未払配当金 ／ (貸) 当座預金」で負債を消し込みます。</p>
       </section>

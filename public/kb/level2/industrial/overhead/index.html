@@ -135,7 +135,14 @@
         <p class="text-slate-300 leading-relaxed">月末には、間接材料費・間接労務費・間接経費の<strong>実際発生額</strong>を製造間接費勘定の借方に集計します。材料・賃金・現金などから振り替えるイメージです。</p>
         <div class="bg-slate-850 p-6 rounded-lg border border-slate-700 space-y-3">
           <p class="text-sm text-slate-300">例：当月の間接材料費150,000円、間接労務費250,000円、間接経費100,000円を製造間接費に集計した。</p>
-          <div class="font-mono text-sm bg-slate-900 p-4 rounded border border-slate-800 text-center">(借) 製造間接費 500,000 ／ (貸) 材料 150,000<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; (貸) 賃金 250,000<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; (貸) 現金 100,000</div>
+          <table class="je-table">
+            <thead><tr><th>借方の勘定科目</th><th>金額</th><th>貸方の勘定科目</th><th>金額</th></tr></thead>
+            <tbody>
+              <tr><td>製造間接費</td><td class="je-amount">500,000</td><td>材料</td><td class="je-amount">150,000</td></tr>
+              <tr><td></td><td class="je-amount"></td><td>賃金</td><td class="je-amount">250,000</td></tr>
+              <tr><td></td><td class="je-amount"></td><td>現金</td><td class="je-amount">100,000</td></tr>
+            </tbody>
+          </table>
         </div>
         <p class="text-slate-300 leading-relaxed">これで製造間接費勘定は、借方に実際発生額500,000円、貸方に予定配賦額490,000円が並びます。差額の10,000円が配賦差異です。なお、間接材料費は材料勘定から、間接労務費は賃金勘定から、間接経費は現金・当座預金・減価償却累計額などから振り替えられます。これらの間接費をもれなく集めることが、正しい実際発生額を把握する前提になります。</p>
       </section>

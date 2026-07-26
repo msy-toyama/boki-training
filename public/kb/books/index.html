@@ -177,9 +177,12 @@
         </p>
         <div class="bg-violet-950/20 border border-slate-750 p-5 rounded-lg space-y-3">
           <p class="text-sm text-slate-300">例：商品を掛けで仕入れ、引取運賃を現金で支払った。</p>
-          <div class="font-mono text-xs bg-slate-900 p-3 rounded border border-slate-800">
-            (借) 仕入 ✕✕ / (貸) 買掛金 ✕✕・現金 △△
-          </div>
+          <table class="je-table">
+            <tbody>
+              <tr><td>仕入</td><td class="je-amount">✕✕</td><td>買掛金</td><td class="je-amount">✕✕</td></tr>
+              <tr><td></td><td class="je-amount"></td><td>現金</td><td class="je-amount">△△</td></tr>
+            </tbody>
+          </table>
           <ul class="list-disc list-inside text-sm text-slate-300 space-y-1">
             <li>「仕入」→ <strong>仕入帳</strong>に記入</li>
             <li>「買掛金」→ <strong>買掛金元帳</strong>に記入</li>

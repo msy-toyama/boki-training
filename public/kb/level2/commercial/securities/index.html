@@ -146,7 +146,13 @@
         <p class="text-slate-300 leading-relaxed">売却価額が帳簿価額を上回れば<strong>有価証券売却益</strong>（収益）、下回れば<strong>有価証券売却損</strong>（費用）を計上します。</p>
         <div class="bg-slate-850 p-6 rounded-lg border border-slate-700 space-y-3">
           <p class="text-sm text-slate-300">例：帳簿価額100,000円の売買目的有価証券を110,000円で売却し当座預金へ。</p>
-          <div class="font-mono text-sm bg-slate-900 p-4 rounded border border-slate-800 text-center">(借) 当座預金 110,000 ／ (貸) 売買目的有価証券 100,000<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; (貸) 有価証券売却益 10,000</div>
+          <table class="je-table">
+            <thead><tr><th>借方の勘定科目</th><th>金額</th><th>貸方の勘定科目</th><th>金額</th></tr></thead>
+            <tbody>
+              <tr><td>当座預金</td><td class="je-amount">110,000</td><td>売買目的有価証券</td><td class="je-amount">100,000</td></tr>
+              <tr><td></td><td class="je-amount"></td><td>有価証券売却益</td><td class="je-amount">10,000</td></tr>
+            </tbody>
+          </table>
         </div>
       </section>
 

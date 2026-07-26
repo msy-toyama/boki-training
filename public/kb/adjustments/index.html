@@ -149,12 +149,15 @@
         
         <div class="bg-indigo-950/40 border border-indigo-500/30 p-6 rounded-lg my-6 space-y-4">
           <p class="text-center text-xl font-bold text-yellow-300">売上原価の仕訳テンプレート</p>
-          <div class="grid grid-cols-2 gap-4 text-center font-mono text-base font-bold bg-slate-900 p-4 rounded border border-slate-800">
-            <div>① (借) 仕入 ✕✕ (期首繰越)</div>
-            <div>① (貸) 繰越商品 ✕✕</div>
-            <div>② (借) 繰越商品 △△ (期末残高)</div>
-            <div>② (貸) 仕入 △△</div>
-          </div>
+          <table class="je-table">
+            <thead>
+              <tr><th>借方の勘定科目</th><th>金額</th><th>貸方の勘定科目</th><th>金額</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>① 仕入<span class="je-note">（期首繰越）</span></td><td class="je-amount">✕✕</td><td>① 繰越商品</td><td class="je-amount">✕✕</td></tr>
+              <tr><td>② 繰越商品<span class="je-note">（期末残高）</span></td><td class="je-amount">△△</td><td>② 仕入</td><td class="je-amount">△△</td></tr>
+            </tbody>
+          </table>
           <p class="text-xs text-slate-350 leading-relaxed">
             これが「仕（しー）・繰（くり）・繰（くり）・仕（しー）」です。最初（①）に「去年売れ残った（期首）商品」を仕入れに加え、最後に「今年売れ残った（期末）商品（②）」を引くことで、実際に今年売れた分のコスト（仕入）を算出します。
           </p>
@@ -179,10 +182,14 @@
             ※期中に購入・売却した場合は、「何ヶ月間使用したか」を数えて「日割・月割（月数 ÷ 12）」計算をする点に超注意が必要です。
           </p>
           <span class="font-bold text-yellow-400 block pt-3">■ 間接法の記帳仕訳</span>
-          <div class="grid grid-cols-2 gap-4 text-center font-mono bg-slate-900 p-3 rounded">
-            <div>(借) 減価償却費 ✕✕</div>
-            <div>(貸) 減価償却累計額 ✕✕</div>
-          </div>
+          <table class="je-table">
+            <thead>
+              <tr><th>借方の勘定科目</th><th>金額</th><th>貸方の勘定科目</th><th>金額</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>減価償却費</td><td class="je-amount">✕✕</td><td>減価償却累計額</td><td class="je-amount">✕✕</td></tr>
+            </tbody>
+          </table>
         </div>
       </section>
 
@@ -198,18 +205,20 @@
           <div class="bg-indigo-950/20 border border-slate-750 p-5 rounded-lg space-y-2">
             <span class="font-bold text-indigo-400 block">① 費用の繰延（前払費用）</span>
             <p class="text-xs text-slate-300 italic">「来年分の家賃や保険料をあらかじめ支払った」</p>
-            <div class="grid grid-cols-2 gap-2 text-center font-mono text-xs bg-slate-900 p-2 rounded">
-              <div>(借) 前払保険料 ✕✕</div>
-              <div>(貸) 支払保険料 ✕✕</div>
-            </div>
+            <table class="je-table">
+              <tbody>
+                <tr><td>前払保険料</td><td class="je-amount">✕✕</td><td>支払保険料</td><td class="je-amount">✕✕</td></tr>
+              </tbody>
+            </table>
           </div>
           <div class="bg-purple-950/20 border border-slate-750 p-5 rounded-lg space-y-2">
             <span class="font-bold text-purple-400 block">② 費用の見越（未払費用）</span>
             <p class="text-xs text-slate-300 italic">「今年分なのに支払日が来月なのでまだ支払っていない」</p>
-            <div class="grid grid-cols-2 gap-2 text-center font-mono text-xs bg-slate-900 p-2 rounded">
-              <div>(借) 支払利息 ✕✕</div>
-              <div>(貸) 未払利息 ✕✕</div>
-            </div>
+            <table class="je-table">
+              <tbody>
+                <tr><td>支払利息</td><td class="je-amount">✕✕</td><td>未払利息</td><td class="je-amount">✕✕</td></tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </section>

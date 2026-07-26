@@ -168,7 +168,13 @@
         <p class="text-slate-300 leading-relaxed">満期日に支払人が手形代金を支払えないことを<strong>不渡り</strong>といいます。所持していた受取手形は通常の債権と区別するため<strong>不渡手形</strong>勘定へ振り替え、償還請求（遡求）に要した費用も不渡手形に含めます。</p>
         <div class="bg-slate-850 p-6 rounded-lg border border-slate-700 space-y-3">
           <p class="text-sm text-slate-300">例：所有する受取手形200,000円が不渡りとなり、償還請求費用2,000円を現金で支払った。</p>
-          <div class="font-mono text-sm bg-slate-900 p-4 rounded border border-slate-800 text-center">(借) 不渡手形 202,000 ／ (貸) 受取手形 200,000<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; (貸) 現金 2,000</div>
+          <table class="je-table">
+            <thead><tr><th>借方の勘定科目</th><th>金額</th><th>貸方の勘定科目</th><th>金額</th></tr></thead>
+            <tbody>
+              <tr><td>不渡手形</td><td class="je-amount">202,000</td><td>受取手形</td><td class="je-amount">200,000</td></tr>
+              <tr><td></td><td class="je-amount"></td><td>現金</td><td class="je-amount">2,000</td></tr>
+            </tbody>
+          </table>
         </div>
         <p class="text-slate-300 leading-relaxed">不渡手形は回収が不確実な債権であり、決算で回収不能と判断されれば貸倒れとして処理します。「不渡り＝受取手形＋諸費用を不渡手形へまとめる」と覚えましょう。</p>
       </section>

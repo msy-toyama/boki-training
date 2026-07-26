@@ -1,3 +1,28 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  /* 仕訳例テーブル: KB内の仕訳例を借方／貸方で見やすく整形する共通スタイル */
+  .je-table {
+    @apply w-full my-3 text-sm border border-slate-700 rounded-lg overflow-hidden;
+    border-collapse: collapse;
+  }
+  .je-table caption {
+    @apply text-left text-xs text-slate-400 mb-1 px-1;
+    caption-side: top;
+  }
+  .je-table th {
+    @apply bg-slate-800 text-slate-200 font-bold p-2 text-center border border-slate-700;
+  }
+  .je-table td {
+    @apply p-2 border border-slate-800 bg-slate-900 align-top text-slate-100;
+  }
+  .je-table .je-amount {
+    @apply text-right font-mono whitespace-nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .je-table .je-note {
+    @apply text-xs text-slate-400;
+  }
+}

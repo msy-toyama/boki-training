@@ -43,3 +43,27 @@ const ALL_LEVEL2_TOPICS = [...LEVEL2_COMMERCIAL_TOPICS, ...LEVEL2_INDUSTRIAL_TOP
 
 export const getLevel2TopicLabel = (key: string | undefined): string | undefined =>
   key ? ALL_LEVEL2_TOPICS.find(t => t.key === key)?.label : undefined;
+
+// level2Topic の key から、対応する簿記2級のトラック（商業/工業）を判定する。
+export const getLevel2TrackForTopic = (
+  key: string | undefined,
+): 'commercial' | 'industrial' | undefined => {
+  if (!key) return undefined;
+  if (LEVEL2_COMMERCIAL_TOPICS.some(t => t.key === key)) return 'commercial';
+  if (LEVEL2_INDUSTRIAL_TOPICS.some(t => t.key === key)) return 'industrial';
+  return undefined;
+};
+
+// level2Topic の key から、該当する 2級KB ページへのリンクを組み立てる。
+// key と KB のフォルダ名は一致しているため、track と key からパスを生成する。
+export const buildLevel2KbLink = (
+  key: string | undefined,
+): { path: string; label: string } | undefined => {
+  const track = getLevel2TrackForTopic(key);
+  if (!track || !key) return undefined;
+  const label = getLevel2TopicLabel(key);
+  return {
+    path: `/kb/level2/${track}/${key}/`,
+    label: label ? `${label}のKBで復習する` : '簿記2級KBで復習する',
+  };
+};

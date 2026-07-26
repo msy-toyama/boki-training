@@ -136,7 +136,13 @@
         <p class="text-slate-300 leading-relaxed">輸入で生じた買掛金は、取引時の相場で記帳した円建て金額が帳簿に載っています。決済日に円高（1ドルあたりの円が小さくなる）になると、支払う円が帳簿額より少なくて済み、その差額は<strong>為替差益</strong>（貸方）になります。</p>
         <div class="bg-emerald-950/40 border border-emerald-500/30 p-6 rounded-lg my-4 space-y-3">
           <p class="text-sm text-slate-300">例：買掛金 1,000ドル（取引時1ドル110円＝110,000円で記帳）を、決済日1ドル105円のときに当座預金から支払った。支払額 = 1,000 × 105 = 105,000円。差額5,000円は為替差益。</p>
-          <div class="font-mono text-sm bg-slate-900 p-4 rounded border border-slate-800 text-center">(借) 買掛金 110,000 ／ (貸) 当座預金 105,000<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; (貸) 為替差損益 5,000</div>
+          <table class="je-table">
+            <thead><tr><th>借方の勘定科目</th><th>金額</th><th>貸方の勘定科目</th><th>金額</th></tr></thead>
+            <tbody>
+              <tr><td>買掛金</td><td class="je-amount">110,000</td><td>当座預金</td><td class="je-amount">105,000</td></tr>
+              <tr><td></td><td class="je-amount"></td><td>為替差損益</td><td class="je-amount">5,000</td></tr>
+            </tbody>
+          </table>
         </div>
         <p class="text-slate-300 leading-relaxed">帳簿の買掛金110,000円を全額消し、実際の支払額105,000円との差5,000円を貸方の為替差損益（＝差益）として計上します。貸借はともに110,000円で一致します。</p>
       </section>

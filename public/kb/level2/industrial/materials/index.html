@@ -116,7 +116,13 @@
         <p class="text-slate-300 leading-relaxed">材料を購入したときの取得原価（購入原価）は、<strong>購入代価に引取運賃・購入手数料などの付随費用（材料副費）を加えた金額</strong>です。有価証券や固定資産と同じく「付随費用は取得原価に含める」という原則が貫かれています。</p>
         <div class="bg-slate-850 p-6 rounded-lg border border-slate-700 space-y-3">
           <p class="text-sm text-slate-300">例：材料500,000円を掛けで購入し、引取運賃20,000円を現金で支払った。</p>
-          <div class="font-mono text-sm bg-slate-900 p-4 rounded border border-slate-800 text-center">(借) 材料 520,000 ／ (貸) 買掛金 500,000<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; (貸) 現金 20,000</div>
+          <table class="je-table">
+            <thead><tr><th>借方の勘定科目</th><th>金額</th><th>貸方の勘定科目</th><th>金額</th></tr></thead>
+            <tbody>
+              <tr><td>材料</td><td class="je-amount">520,000</td><td>買掛金</td><td class="je-amount">500,000</td></tr>
+              <tr><td></td><td class="je-amount"></td><td>現金</td><td class="je-amount">20,000</td></tr>
+            </tbody>
+          </table>
         </div>
         <p class="text-slate-300 leading-relaxed">材料勘定には<strong>購入代価500,000円＋引取運賃20,000円＝520,000円</strong>が計上されます。引取運賃という付随費用を材料の原価に取り込むのがコツです。</p>
       </section>
@@ -126,7 +132,13 @@
         <p class="text-slate-300 leading-relaxed">引取運賃・保管料・検収費などの<strong>材料副費</strong>は、実際額が後から判明することが多いため、あらかじめ<strong>予定配賦率</strong>で材料の原価に上乗せしておく方法がとられます。予定配賦額は「材料副費」勘定を経由して材料に加算します。</p>
         <div class="bg-slate-850 p-6 rounded-lg border border-slate-700 space-y-3">
           <p class="text-sm text-slate-300">例：材料800,000円を掛けで購入。材料副費を購入代価の5％で予定配賦する。</p>
-          <div class="font-mono text-sm bg-slate-900 p-4 rounded border border-slate-800 text-center">(借) 材料 840,000 ／ (貸) 買掛金 800,000<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; (貸) 材料副費 40,000</div>
+          <table class="je-table">
+            <thead><tr><th>借方の勘定科目</th><th>金額</th><th>貸方の勘定科目</th><th>金額</th></tr></thead>
+            <tbody>
+              <tr><td>材料</td><td class="je-amount">840,000</td><td>買掛金</td><td class="je-amount">800,000</td></tr>
+              <tr><td></td><td class="je-amount"></td><td>材料副費</td><td class="je-amount">40,000</td></tr>
+            </tbody>
+          </table>
         </div>
         <p class="text-slate-300 leading-relaxed">材料副費の予定配賦額は<strong>800,000円×5％＝40,000円</strong>。後日、材料副費の実際発生額が確定したら、予定額との差を「材料副費差異」として処理します。</p>
       </section>

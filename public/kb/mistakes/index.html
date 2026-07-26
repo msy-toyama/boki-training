@@ -183,10 +183,11 @@
         <div class="bg-indigo-950/20 border border-slate-750 p-5 rounded-lg space-y-2">
           <span class="font-bold text-indigo-400 block">■ 二勘定制での決算処理</span>
           <p class="text-xs text-slate-300">期末に当座預金がマイナスの状態にある場合、その借り越した金額（借金分）は「当座借越」という負債科目に振り替える必要があります。</p>
-          <div class="grid grid-cols-2 gap-2 text-center font-mono text-xs bg-slate-900 p-2 rounded">
-            <div>(借) 当座預金 ✕✕</div>
-            <div>(貸) 当座借越 ✕✕</div>
-          </div>
+          <table class="je-table">
+            <tbody>
+              <tr><td>当座預金</td><td class="je-amount">✕✕</td><td>当座借越</td><td class="je-amount">✕✕</td></tr>
+            </tbody>
+          </table>
         </div>
       </section>
 
@@ -250,10 +251,14 @@
         <p class="text-slate-300 leading-relaxed">
           設定額をそのまま費用計上すると二重計上になります。3級では原則<strong>差額補充法</strong>を用い、「設定すべき金額 − 現在の残高」の差額のみを繰り入れます。
         </p>
-        <div class="bg-slate-850 p-5 rounded border border-slate-700 font-mono text-xs text-slate-200 leading-relaxed">
-          売掛金 500,000 × 2% = 10,000（設定額）<br>
-          引当金の残高 3,000 → 繰入額 = 10,000 − 3,000 = <strong class="text-yellow-450">7,000円</strong><br>
-          (借) 貸倒引当金繰入 7,000 / (貸) 貸倒引当金 7,000
+        <div class="bg-slate-850 p-5 rounded border border-slate-700 space-y-2">
+          <p class="font-mono text-xs text-slate-200 leading-relaxed">売掛金 500,000 × 2% = 10,000（設定額）<br>
+          引当金の残高 3,000 → 繰入額 = 10,000 − 3,000 = <strong class="text-yellow-450">7,000円</strong></p>
+          <table class="je-table">
+            <tbody>
+              <tr><td>貸倒引当金繰入</td><td class="je-amount">7,000</td><td>貸倒引当金</td><td class="je-amount">7,000</td></tr>
+            </tbody>
+          </table>
         </div>
       </section>
 
@@ -265,10 +270,14 @@
         <p class="text-slate-300 leading-relaxed">
           税抜方式では、仕入時に払った消費税は<strong>仮払消費税（資産）</strong>、売上時に預かった消費税は<strong>仮受消費税（負債）</strong>。決算で相殺し差額を未払計上します。本体価格に含めてしまうミスに注意。
         </p>
-        <div class="bg-slate-850 p-5 rounded border border-slate-700 font-mono text-xs text-slate-200 leading-relaxed">
-          決算：仮受消費税 40,000 − 仮払消費税 25,000 = 未払 15,000<br>
-          (借) 仮受消費税 40,000 / (貸) 仮払消費税 25,000<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; / (貸) 未払消費税 <strong class="text-yellow-450">15,000</strong>
+        <div class="bg-slate-850 p-5 rounded border border-slate-700 space-y-2">
+          <p class="font-mono text-xs text-slate-200 leading-relaxed">決算：仮受消費税 40,000 − 仮払消費税 25,000 = 未払 15,000</p>
+          <table class="je-table">
+            <tbody>
+              <tr><td>仮受消費税</td><td class="je-amount">40,000</td><td>仮払消費税</td><td class="je-amount">25,000</td></tr>
+              <tr><td></td><td class="je-amount"></td><td>未払消費税</td><td class="je-amount"><strong class="text-yellow-450">15,000</strong></td></tr>
+            </tbody>
+          </table>
         </div>
       </section>
 
@@ -294,9 +303,11 @@
         <p class="text-slate-300 leading-relaxed">
           自治体や他社が発行した商品券を売上代金として受け取った場合、後で発行元へ請求して換金する債権のため <strong>受取商品券（資産）</strong> で処理します。現金で受け取ったと勘違いしないこと。
         </p>
-        <div class="bg-slate-850 p-5 rounded border border-slate-700 font-mono text-xs text-slate-200">
-          (借) 受取商品券 ✕✕ / (貸) 売上 ✕✕
-        </div>
+        <table class="je-table">
+          <tbody>
+            <tr><td>受取商品券</td><td class="je-amount">✕✕</td><td>売上</td><td class="je-amount">✕✕</td></tr>
+          </tbody>
+        </table>
       </section>
 
       <!-- Section 11 -->
@@ -307,9 +318,14 @@
         <p class="text-slate-300 leading-relaxed">
           受け取った約束手形を他社へ渡す（裏書）・銀行で現金化する（割引）と、<strong>受取手形（資産）が減少</strong>します。割引時の割引料は <strong>手形売却損（費用）</strong> で計上します。
         </p>
-        <div class="bg-slate-850 p-5 rounded border border-slate-700 font-mono text-xs text-slate-200 leading-relaxed">
-          割引例：手形 100,000 を割引、割引料 2,000、手取 98,000<br>
-          (借) 当座預金 98,000／(借) 手形売却損 2,000 / (貸) 受取手形 100,000
+        <div class="bg-slate-850 p-5 rounded border border-slate-700 space-y-2">
+          <p class="font-mono text-xs text-slate-200 leading-relaxed">割引例：手形 100,000 を割引、割引料 2,000、手取 98,000</p>
+          <table class="je-table">
+            <tbody>
+              <tr><td>当座預金</td><td class="je-amount">98,000</td><td>受取手形</td><td class="je-amount">100,000</td></tr>
+              <tr><td>手形売却損</td><td class="je-amount">2,000</td><td></td><td class="je-amount"></td></tr>
+            </tbody>
+          </table>
         </div>
       </section>
 
@@ -321,9 +337,13 @@
         <p class="text-slate-300 leading-relaxed">
           期中に計上した現金過不足のうち、決算日まで原因が判明しなかった残高は、<strong>不足なら雑損（費用）、超過なら雑益（収益）</strong>に振り替えて精算します。過不足のまま残さないのがルール。
         </p>
-        <div class="bg-slate-850 p-5 rounded border border-slate-700 font-mono text-xs text-slate-200 leading-relaxed">
-          借方に現金過不足（不足）残高 800 が残った場合<br>
-          (借) 雑損 800 / (貸) 現金過不足 800
+        <div class="bg-slate-850 p-5 rounded border border-slate-700 space-y-2">
+          <p class="font-mono text-xs text-slate-200 leading-relaxed">借方に現金過不足（不足）残高 800 が残った場合</p>
+          <table class="je-table">
+            <tbody>
+              <tr><td>雑損</td><td class="je-amount">800</td><td>現金過不足</td><td class="je-amount">800</td></tr>
+            </tbody>
+          </table>
         </div>
       </section>
 
@@ -335,9 +355,13 @@
         <p class="text-slate-300 leading-relaxed">
           郵便切手（通信費）や収入印紙（租税公課）を購入時に費用処理していても、<strong>期末に未使用分が残っていれば「貯蔵品（資産）」に振り替え</strong>、費用を減額します。翌期首に再振替します。
         </p>
-        <div class="bg-slate-850 p-5 rounded border border-slate-700 font-mono text-xs text-slate-200 leading-relaxed">
-          未使用の切手 1,200 が残った場合<br>
-          (借) 貯蔵品 1,200 / (貸) 通信費 1,200
+        <div class="bg-slate-850 p-5 rounded border border-slate-700 space-y-2">
+          <p class="font-mono text-xs text-slate-200 leading-relaxed">未使用の切手 1,200 が残った場合</p>
+          <table class="je-table">
+            <tbody>
+              <tr><td>貯蔵品</td><td class="je-amount">1,200</td><td>通信費</td><td class="je-amount">1,200</td></tr>
+            </tbody>
+          </table>
         </div>
       </section>
 
@@ -365,10 +389,14 @@
         <p class="text-slate-300 leading-relaxed">
           期中の中間納付は <strong>仮払法人税等（資産）</strong> で処理します。決算で税額が確定したら、仮払分を差し引いた残額を <strong>未払法人税等（負債）</strong> として計上します。中間分の相殺忘れに注意。
         </p>
-        <div class="bg-slate-850 p-5 rounded border border-slate-700 font-mono text-xs text-slate-200 leading-relaxed">
-          確定税額 50,000、中間納付（仮払）20,000<br>
-          (借) 法人税等 50,000 / (貸) 仮払法人税等 20,000<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; / (貸) 未払法人税等 <strong class="text-yellow-450">30,000</strong>
+        <div class="bg-slate-850 p-5 rounded border border-slate-700 space-y-2">
+          <p class="font-mono text-xs text-slate-200 leading-relaxed">確定税額 50,000、中間納付（仮払）20,000</p>
+          <table class="je-table">
+            <tbody>
+              <tr><td>法人税等</td><td class="je-amount">50,000</td><td>仮払法人税等</td><td class="je-amount">20,000</td></tr>
+              <tr><td></td><td class="je-amount"></td><td>未払法人税等</td><td class="je-amount"><strong class="text-yellow-450">30,000</strong></td></tr>
+            </tbody>
+          </table>
         </div>
       </section>
 

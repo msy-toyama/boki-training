@@ -188,10 +188,14 @@
                 取引先から商品 50,000円を仕入れ、代金は当座預金口座から支払った。
               </blockquote>
               <p class="text-emerald-400 font-bold">【正しい仕訳解答】</p>
-              <div class="grid grid-cols-2 gap-4 bg-slate-900 p-3 rounded text-center font-mono text-base font-bold">
-                <div>(借) 仕入 50,000</div>
-                <div>(貸) 当座預金 50,000</div>
-              </div>
+              <table class="je-table">
+                <thead>
+                  <tr><th>借方の勘定科目</th><th>金額</th><th>貸方の勘定科目</th><th>金額</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>仕入</td><td class="je-amount">50,000</td><td>当座預金</td><td class="je-amount">50,000</td></tr>
+                </tbody>
+              </table>
               <p class="text-slate-300 leading-relaxed">
                 <strong class="text-yellow-400">【解説】</strong><br>
                 仕入は「費用」の増加なので左（借方）に記入。当座預金は「資産」の減少なので右（貸方）に記入します。
@@ -211,10 +215,14 @@
                 売掛金 30,000円の回収として、得意先振出しの約束手形を受け取った。
               </blockquote>
               <p class="text-emerald-400 font-bold">【正しい仕訳解答】</p>
-              <div class="grid grid-cols-2 gap-4 bg-slate-900 p-3 rounded text-center font-mono text-base font-bold">
-                <div>(借) 受取手形 30,000</div>
-                <div>(貸) 売掛金 30,000</div>
-              </div>
+              <table class="je-table">
+                <thead>
+                  <tr><th>借方の勘定科目</th><th>金額</th><th>貸方の勘定科目</th><th>金額</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>受取手形</td><td class="je-amount">30,000</td><td>売掛金</td><td class="je-amount">30,000</td></tr>
+                </tbody>
+              </table>
               <p class="text-slate-300 leading-relaxed">
                 <strong class="text-yellow-400">【解説】</strong><br>
                 手形を受け取った場合は「受取手形（資産）」の増加として左（借方）に、同時に「売掛金（資産）」が減少したため右（貸方）に記入します。
@@ -234,10 +242,14 @@
                 不要になった備品 15,000円を売却し、代金は来月末に受け取ることとした。（帳簿価格と同額で売却）
               </blockquote>
               <p class="text-emerald-400 font-bold">【正しい仕訳解答】</p>
-              <div class="grid grid-cols-2 gap-4 bg-slate-900 p-3 rounded text-center font-mono text-base font-bold">
-                <div>(借) 未収入金 15,000</div>
-                <div>(貸) 備品 15,000</div>
-              </div>
+              <table class="je-table">
+                <thead>
+                  <tr><th>借方の勘定科目</th><th>金額</th><th>貸方の勘定科目</th><th>金額</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>未収入金</td><td class="je-amount">15,000</td><td>備品</td><td class="je-amount">15,000</td></tr>
+                </tbody>
+              </table>
               <p class="text-slate-300 leading-relaxed">
                 <strong class="text-yellow-400">【解説】</strong><br>
                 お仕事の本業である商品売買以外のものを売却して後で代金を受け取る場合は、「売掛金」ではなく「未収入金（資産）」を使います。備品（資産）の減少を貸方に、未収入金の増加を借方に記帳。

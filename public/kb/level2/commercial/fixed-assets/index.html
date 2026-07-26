@@ -126,7 +126,13 @@
         <p class="text-slate-300 leading-relaxed">工事が完成して引渡しを受けたら、それまで積み上げてきた<strong>建設仮勘定を正式な「建物」勘定へ振り替え</strong>ます。残りの工事代金を支払う場合は、その分も加えて建物を計上します。</p>
         <div class="bg-slate-850 p-6 rounded-lg border border-slate-700 space-y-3">
           <p class="text-sm text-slate-300">例：建物が完成して引渡しを受けた。建設仮勘定3,000,000円に加え、残金5,000,000円を当座預金から支払った。</p>
-          <div class="font-mono text-sm bg-slate-900 p-4 rounded border border-slate-800 text-center">(借) 建物 8,000,000 ／ (貸) 建設仮勘定 3,000,000<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; (貸) 当座預金 5,000,000</div>
+          <table class="je-table">
+            <thead><tr><th>借方の勘定科目</th><th>金額</th><th>貸方の勘定科目</th><th>金額</th></tr></thead>
+            <tbody>
+              <tr><td>建物</td><td class="je-amount">8,000,000</td><td>建設仮勘定</td><td class="je-amount">3,000,000</td></tr>
+              <tr><td></td><td class="je-amount"></td><td>当座預金</td><td class="je-amount">5,000,000</td></tr>
+            </tbody>
+          </table>
         </div>
         <p class="text-slate-300 leading-relaxed">建設仮勘定はここでゼロになり、完成した建物8,000,000円が資産として計上されます。「仮勘定は完成時に本勘定へ振り替える」という流れを押さえましょう。</p>
       </section>
@@ -157,7 +163,13 @@
         <p class="text-slate-300 leading-relaxed">後日、受け取れる保険金額が確定したら、未決算を取り崩します。確定した保険金が未決算（帳簿価額）を<strong>上回る</strong>ときは、その差額を<strong>保険差益</strong>（収益）として計上します。</p>
         <div class="bg-emerald-950/40 border border-emerald-500/30 p-6 rounded-lg my-4 space-y-3">
           <p class="text-sm text-slate-300">例：焼失した建物について、保険金3,500,000円を後日受け取れることが確定した（未決算は3,000,000円）。</p>
-          <div class="font-mono text-sm bg-slate-900 p-4 rounded border border-slate-800 text-center">(借) 未収金 3,500,000 ／ (貸) 未決算 3,000,000<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; (貸) 保険差益 500,000</div>
+          <table class="je-table">
+            <thead><tr><th>借方の勘定科目</th><th>金額</th><th>貸方の勘定科目</th><th>金額</th></tr></thead>
+            <tbody>
+              <tr><td>未収金</td><td class="je-amount">3,500,000</td><td>未決算</td><td class="je-amount">3,000,000</td></tr>
+              <tr><td></td><td class="je-amount"></td><td>保険差益</td><td class="je-amount">500,000</td></tr>
+            </tbody>
+          </table>
         </div>
         <p class="text-slate-300 leading-relaxed">逆に、確定した保険金が未決算を下回るときは、差額を「火災損失」（費用）として計上します。「保険金＞帳簿価額なら保険差益、保険金＜帳簿価額なら火災損失」と対比して覚えましょう。</p>
       </section>

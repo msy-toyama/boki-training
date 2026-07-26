@@ -1,4 +1,5 @@
 import { KbLink, ProblemTemplate, ProblemTopic } from '../types';
+import { buildLevel2KbLink } from './level2TopicService';
 
 export interface LearningTopicDefinition {
   topic: ProblemTopic;
@@ -152,9 +153,17 @@ export const resolveLearningTopic = (template: ProblemTemplate, text: string, ex
   return getLearningTopicDefinition(ProblemTopic.GENERAL);
 };
 
-export const createKbLink = (definition: LearningTopicDefinition, template?: ProblemTemplate): KbLink => (
-  template?.kbLink ?? definition.kbLink
-);
+export const createKbLink = (definition: LearningTopicDefinition, template?: ProblemTemplate): KbLink => {
+  if (template?.kbLink) {
+    return template.kbLink;
+  }
+  // 2級のテンプレートは level2Topic から直接 2級KB ページへリンクさせる。
+  const level2Link = buildLevel2KbLink(template?.level2Topic);
+  if (level2Link) {
+    return level2Link;
+  }
+  return definition.kbLink;
+};
 
 export const enrichExplanation = (explanation: string, definition: LearningTopicDefinition): string => {
   if (!definition.guidance || explanation.includes('復習ポイント：')) {

@@ -148,7 +148,13 @@
         <p class="text-slate-300 leading-relaxed">その他有価証券を時価評価して<strong>評価差益</strong>が出たとき、全部純資産直入法ではその差額を損益に通しません。ただし税効果会計を適用する場合は、評価差益にかかる税金相当額を<strong>繰延税金負債</strong>とし、残りを<strong>その他有価証券評価差額金</strong>（純資産）に計上します。</p>
         <div class="bg-emerald-950/40 border border-emerald-500/30 p-6 rounded-lg my-4 space-y-4">
           <p class="text-sm text-slate-300">例：その他有価証券に評価差益50,000円が生じた（実効税率30%）。<br>繰延税金負債 ＝ 50,000円 × 30% ＝ 15,000円／評価差額金 ＝ 50,000円 − 15,000円 ＝ 35,000円</p>
-          <div class="font-mono text-sm bg-slate-900 p-4 rounded border border-slate-800 text-center">(借) その他有価証券 50,000 ／ (貸) 繰延税金負債 15,000<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; (貸) その他有価証券評価差額金 35,000</div>
+          <table class="je-table">
+            <thead><tr><th>借方の勘定科目</th><th>金額</th><th>貸方の勘定科目</th><th>金額</th></tr></thead>
+            <tbody>
+              <tr><td>その他有価証券</td><td class="je-amount">50,000</td><td>繰延税金負債</td><td class="je-amount">15,000</td></tr>
+              <tr><td></td><td class="je-amount"></td><td>その他有価証券評価差額金</td><td class="je-amount">35,000</td></tr>
+            </tbody>
+          </table>
         </div>
         <p class="text-slate-300 leading-relaxed">借方合計50,000円＝貸方合計（15,000＋35,000）50,000円で貸借は一致します。評価差損の場合は借方に繰延税金資産・その他有価証券評価差額金、貸方にその他有価証券を計上する逆の形になります。</p>
       </section>
@@ -158,7 +164,13 @@
         <p class="text-slate-300 leading-relaxed">2級では消費税は<strong>税抜方式</strong>で処理します。売上や仕入の「本体価格」と「消費税」を分け、支払った消費税は<strong>仮払消費税</strong>（資産）、預かった消費税は<strong>仮受消費税</strong>（負債）で記録します。ここでは消費税率10%で計算します。</p>
         <div class="bg-slate-850 p-6 rounded-lg border border-slate-700 space-y-3">
           <p class="text-sm text-slate-300">売上の例：商品を本体100,000円（消費税10,000円）で掛け販売した。</p>
-          <div class="font-mono text-sm bg-slate-900 p-4 rounded border border-slate-800 text-center">(借) 売掛金 110,000 ／ (貸) 売上 100,000<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; (貸) 仮受消費税 10,000</div>
+          <table class="je-table">
+            <thead><tr><th>借方の勘定科目</th><th>金額</th><th>貸方の勘定科目</th><th>金額</th></tr></thead>
+            <tbody>
+              <tr><td>売掛金</td><td class="je-amount">110,000</td><td>売上</td><td class="je-amount">100,000</td></tr>
+              <tr><td></td><td class="je-amount"></td><td>仮受消費税</td><td class="je-amount">10,000</td></tr>
+            </tbody>
+          </table>
         </div>
         <div class="bg-slate-850 p-6 rounded-lg border border-slate-700 space-y-3">
           <p class="text-sm text-slate-300">仕入の例：商品を本体60,000円（消費税6,000円）で掛け仕入した。</p>

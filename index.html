@@ -43,7 +43,7 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://boki-training.com/" />
     <meta name="twitter:title" content="簿記トレーニング大戦 - 簿記ゲームで日商簿記3級・2級を攻略" />
-    <meta name="twitter:description" content="無料の簿記ゲームで日商簿記3級・2級を楽しく学習。実質無限の問題で仕訳力を鍰えられます。" />
+    <meta name="twitter:description" content="無料の簿記ゲームで日商簿記3級・2級を楽しく学習。実質無限の問題で仕訳力を鉛えられます。" />
     <meta name="twitter:image" content="https://boki-training.com/og-image.png" />
     
     <!-- Structured Data (JSON-LD) -->
@@ -119,9 +119,61 @@
     </script>
     
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://adservice.google.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://*.googlesyndication.com https://*.adtrafficquality.google https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://pagead2.googlesyndication.com https://adservice.google.com https://googleads.g.doubleclick.net https://*.googlesyndication.com https://*.adtrafficquality.google https://*.google.com https://csi.gstatic.com https://static.cloudflareinsights.com; frame-src 'self' https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://*.googlesyndication.com https://*.adtrafficquality.google https://www.google.com; img-src 'self' data: https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://*.googlesyndication.com https://*.adtrafficquality.google https://*.google.com https://*.gstatic.com; media-src 'self' data:;">
+
+    <!-- 初回ロード中のフラッシュ防止: SEOフォールバック記事はDOMに残したまま、上にブランドスプラッシュを重ねて表示。Reactマウントで #root ごと置換され消える。 -->
+    <style>
+      #boot-splash {
+        position: fixed;
+        inset: 0;
+        z-index: 2147483000;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        background: #0f172a;
+        color: #e2e8f0;
+        font-family: 'Noto Sans JP', system-ui, sans-serif;
+        text-align: center;
+        padding: 24px;
+      }
+      #boot-splash .boot-title {
+        font-size: 1.5rem;
+        font-weight: 900;
+        letter-spacing: 0.02em;
+        background: linear-gradient(90deg, #a5b4fc, #818cf8);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      #boot-splash .boot-sub {
+        font-size: 0.85rem;
+        color: #94a3b8;
+      }
+      #boot-splash .boot-spinner {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: 4px solid rgba(148, 163, 184, 0.25);
+        border-top-color: #818cf8;
+        animation: boot-spin 0.8s linear infinite;
+      }
+      @keyframes boot-spin {
+        to { transform: rotate(360deg); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #boot-splash .boot-spinner { animation-duration: 2s; }
+      }
+    </style>
 </head>
   <body class="bg-slate-900 text-slate-100 antialiased overflow-x-hidden selection:bg-indigo-500 selection:text-white">
     <div id="root">
+      <!-- 初回ロード中に表示するブランドスプラッシュ（下のSEO記事を覚える間覛い隠す）。Reactマウントで #root ごと置換される。 -->
+      <div id="boot-splash" role="status" aria-live="polite" aria-label="読み込み中">
+        <div class="boot-spinner"></div>
+        <div class="boot-title">簿記トレーニング大戦</div>
+        <div class="boot-sub">学習ゲームを読み込んでいます…</div>
+      </div>
       <!-- クローラー可視 & 初回ロード中に表示される導入コンテンツ。ReactマウントでこのHTMLは置換されます。 -->
       <div style="max-width:960px;margin:0 auto;padding:32px 20px;line-height:1.9;color:#e2e8f0;font-family:'Noto Sans JP',system-ui,sans-serif;">
         <h1 style="font-size:1.8rem;font-weight:900;margin-bottom:16px;">簿記トレーニング大戦 ｜ 日商簿記3級・2級を無料で学べる学習ゲーム</h1>

@@ -4,6 +4,7 @@ import { GeneratedProblem, UserAnswer, BattleResult, QuestionType, JournalEntryA
 import { XCircle, BookOpen, Swords, ArrowRight, Skull, Flag, AlertTriangle } from 'lucide-react';
 import AdUnit from './AdUnit';
 import { AD_SLOTS } from '../adsConfig';
+import ExplanationBody from '../utils/explanationFormatter';
 
 interface ResultCardProps {
   problem: GeneratedProblem;
@@ -160,9 +161,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ problem, userAnswer, result, on
         <h4 className="flex items-center gap-2 font-bold text-slate-300 mb-3 border-b border-slate-700 pb-2">
           <BookOpen size={18} /> 解説
         </h4>
-        <p className="text-slate-300 text-sm leading-relaxed whitespace-pre-line break-words">
-          {problem.explanation}
-        </p>
+        <ExplanationBody text={problem.explanation} />
         {problem.kbLink && (
           <a
             href={problem.kbLink.path}

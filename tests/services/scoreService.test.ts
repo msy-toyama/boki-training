@@ -19,7 +19,7 @@ describe('scoreService', () => {
     vi.spyOn(console, 'warn').mockImplementation(() => undefined);
   });
 
-  it('プロフィールを保存して読み戻せる', () => {
+  it('プロフィールを保存して読み戻せる（サウンド設定は正規化される）', () => {
     const profile: UserProfile = {
       name: '簿記太郎',
       prefecture: '東京都',
@@ -28,7 +28,11 @@ describe('scoreService', () => {
 
     saveUserProfile(profile);
 
-    expect(getUserProfile()).toEqual(profile);
+    expect(getUserProfile()).toEqual({
+      name: '簿記太郎',
+      prefecture: '東京都',
+      soundSettings: { bgm: true, sfx: false, bgmVolume: 0.6, sfxVolume: 0.8, theme: 'retro' }
+    });
   });
 
   it('破損したプロフィールJSONはnullにフォールバックする', () => {

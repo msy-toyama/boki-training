@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { generateProblem } from './services/problemService';
-import { saveScore, getUserProfile, getPersonalBest, saveUserProfile } from './services/scoreService';
-import { GeneratedProblem, UserAnswer, Difficulty, Monster, BattleResult, PlayerState, QuestionType, ScoreRecord, UserProfile, SoundType, WrongAnswerRecord, BookkeepingLevel } from './types';
+import { saveScore, getUserProfile, getPersonalBest, saveUserProfile, DEFAULT_SOUND_SETTINGS, normalizeSoundSettings } from './services/scoreService';
+import { GeneratedProblem, UserAnswer, Difficulty, Monster, BattleResult, PlayerState, QuestionType, ScoreRecord, UserProfile, SoundType, WrongAnswerRecord, BookkeepingLevel, SoundSettings, SoundTheme } from './types';
 import { MAX_QUESTIONS, GAME_SETTINGS } from './constants';
 import { audioService } from './services/audioService';
 import { checkAnswer } from './utils/answerValidation';
@@ -25,7 +25,7 @@ const App: React.FC = () => {
   // Game Flow State
   const [screen, setScreen] = useState<'title' | 'settings' | 'question-type-select' | 'battle' | 'result' | 'gameover' | 'clear' | 'ranking' | 'privacy'>('title');
   const [infoTab, setInfoTab] = useState<'about' | 'terms' | 'privacy' | 'contact'>('about');
-  const [soundSettings, setSoundSettings] = useState({ bgm: false, sfx: true });
+  const [soundSettings, setSoundSettings] = useState<SoundSettings>({ ...DEFAULT_SOUND_SETTINGS });
   const [difficulty, setDifficulty] = useState<Difficulty>('Easy');
   const [selectedQuestionTypes, setSelectedQuestionTypes] = useState<QuestionType[]>([
     QuestionType.JOURNAL,
@@ -128,14 +128,9 @@ const App: React.FC = () => {
   // --- Initialize Audio Settings ---
   useEffect(() => {
     const profile = getUserProfile();
-    if (profile) {
-      const settings = { bgm: profile.soundSettings.bgm, sfx: profile.soundSettings.sfx };
-      setSoundSettings(settings);
-      audioService.setSettings(settings.bgm, settings.sfx);
-    } else {
-      // Default settings for new users
-      audioService.setSettings(false, true);
-    }
+    const settings = normalizeSoundSettings(profile?.soundSettings);
+    setSoundSettings(settings);
+    audioService.applySettings(settings);
   }, []);
 
   useEffect(() => {
@@ -547,13 +542,17 @@ const App: React.FC = () => {
       } else {
         audioService.playSfx(SoundType.SFX_ATTACK);
       }
+      const newCombo = playerState.combo + 1;
+      if (newCombo >= 3) {
+        audioService.playSfx(SoundType.SFX_COMBO);
+      }
       setPlayerState(prev => ({
         ...prev,
         score: prev.score + damageDealt * 10 + timeBonus + (prev.combo * 50),
         combo: prev.combo + 1
       }));
     } else {
-      audioService.playSfx(SoundType.SFX_DAMAGE);
+      audioService.playSfx(SoundType.SFX_WRONG);
       damageTaken = 15;
       setPlayerState(prev => ({
         ...prev,
@@ -671,28 +670,47 @@ const App: React.FC = () => {
     loadNextProblem(difficulty, nextQIndex, selectedQuestionTypes);
   };
 
-  const toggleBgm = () => {
-    const newBgm = !soundSettings.bgm;
-    const newSettings = { ...soundSettings, bgm: newBgm };
-    setSoundSettings(newSettings);
-    audioService.setSettings(newSettings.bgm, newSettings.sfx);
-    audioService.playSfx(SoundType.SFX_SELECT);
-
-    const profile: UserProfile = getUserProfile() || { name: 'プレイヤー', prefecture: '未設定', soundSettings: { bgm: false, sfx: true } };
-    profile.soundSettings.bgm = newBgm;
+  // サウンド設定を反映・永続化する共通処理
+  const persistSoundSettings = (next: SoundSettings) => {
+    setSoundSettings(next);
+    audioService.applySettings(next);
+    const profile: UserProfile = getUserProfile() || { name: 'プレイヤー', prefecture: '未設定', soundSettings: { ...DEFAULT_SOUND_SETTINGS } };
+    profile.soundSettings = next;
     saveUserProfile(profile);
   };
 
-  const toggleSfx = () => {
-    const newSfx = !soundSettings.sfx;
-    const newSettings = { ...soundSettings, sfx: newSfx };
-    setSoundSettings(newSettings);
-    audioService.setSettings(newSettings.bgm, newSettings.sfx);
-    if (newSfx) audioService.playSfx(SoundType.SFX_SELECT);
+  const toggleBgm = () => {
+    const next = { ...soundSettings, bgm: !soundSettings.bgm };
+    persistSoundSettings(next);
+    audioService.playSfx(SoundType.SFX_SELECT);
+  };
 
-    const profile: UserProfile = getUserProfile() || { name: 'プレイヤー', prefecture: '未設定', soundSettings: { bgm: false, sfx: true } };
-    profile.soundSettings.sfx = newSfx;
-    saveUserProfile(profile);
+  const toggleSfx = () => {
+    const next = { ...soundSettings, sfx: !soundSettings.sfx };
+    persistSoundSettings(next);
+    if (next.sfx) audioService.playSfx(SoundType.SFX_SELECT);
+  };
+
+  const handleBgmVolume = (value: number) => {
+    persistSoundSettings({ ...soundSettings, bgmVolume: value });
+  };
+
+  const handleSfxVolume = (value: number) => {
+    persistSoundSettings({ ...soundSettings, sfxVolume: value });
+  };
+
+  const handleSoundTheme = (theme: SoundTheme) => {
+    persistSoundSettings({ ...soundSettings, theme });
+    audioService.playSfx(SoundType.SFX_DECISION);
+  };
+
+  // 試聴（プレビュー）
+  const handlePreviewSfx = () => {
+    audioService.playSfx(SoundType.SFX_CRITICAL);
+  };
+
+  const handlePreviewBgm = () => {
+    audioService.playSfx(SoundType.SFX_CLEAR);
   };
 
   // --- RENDER ---
@@ -942,6 +960,11 @@ const App: React.FC = () => {
         soundSettings={soundSettings}
         onToggleBgm={toggleBgm}
         onToggleSfx={toggleSfx}
+        onBgmVolume={handleBgmVolume}
+        onSfxVolume={handleSfxVolume}
+        onSelectTheme={handleSoundTheme}
+        onPreviewBgm={handlePreviewBgm}
+        onPreviewSfx={handlePreviewSfx}
         onBack={() => {
           audioService.playSfx(SoundType.SFX_CANCEL);
           setScreen('title');

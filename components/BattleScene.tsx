@@ -28,6 +28,19 @@ const BattleScene: React.FC<BattleSceneProps> = ({ monster, playerState, timeRat
   if (timeRatio > 0.7) timeColor = 'bg-gradient-to-r from-yellow-500 to-orange-300';
   if (timeRatio > 0.9) timeColor = 'bg-gradient-to-r from-red-700 to-red-400 animate-pulse';
 
+  // --- Monster Motion State ---
+  const monsterDefeated = monster.currentHp <= 0;
+  // 攻撃ゲージが溜まってきたら「ため（予兆）」モーション
+  const charging = !isPracticeMode && !isShaking && !monsterHit && !monsterDefeated && timeRatio > 0.7;
+  // モンスターごとに待機モーションを変えて単調さを解消
+  const idleVariants = ['battle-idle-float', 'battle-idle-sway', 'battle-idle-pulse'];
+  const idleSeed = monster.id.split('').reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
+  const idleClass = idleVariants[idleSeed % idleVariants.length];
+  let monsterMotionClass = idleClass;
+  if (monsterDefeated) monsterMotionClass = 'battle-monster-defeat';
+  else if (isShaking) monsterMotionClass = 'animate-shake';
+  else if (charging) monsterMotionClass = 'battle-monster-charge';
+
   return (
     <div className={`battle-scene relative w-full bg-slate-800 rounded-lg p-3 mb-3 border-4 border-slate-700 shadow-2xl overflow-hidden min-h-[210px] sm:min-h-[230px] md:min-h-[250px] lg:min-h-[280px] flex flex-col justify-between ${playerHit ? 'battle-player-hit' : ''}`}>
       {/* Background Elements */}
@@ -60,9 +73,17 @@ const BattleScene: React.FC<BattleSceneProps> = ({ monster, playerState, timeRat
       {/* Battle Area */}
       <div className="flex-1 flex flex-col items-center justify-center relative min-h-[100px]">
         {/* Monster Emoji */}
-        <div className={`battle-monster relative text-6xl sm:text-7xl md:text-8xl lg:text-9xl transition-transform duration-100 cursor-default select-none drop-shadow-[0_18px_20px_rgba(0,0,0,0.45)] ${isShaking ? 'animate-shake' : 'animate-bounce-slow'} ${monsterHit ? 'battle-monster-hit' : ''}`}>
+        <div key={monster.id} className="battle-monster-enter relative flex items-center justify-center">
+          <div className={`battle-monster relative text-6xl sm:text-7xl md:text-8xl lg:text-9xl transition-transform duration-100 cursor-default select-none drop-shadow-[0_18px_20px_rgba(0,0,0,0.45)] ${monsterMotionClass} ${monsterHit ? 'battle-monster-hit' : ''}`}>
           {monster.emoji}
           {monsterHit && <div className="absolute inset-0 -z-10 rounded-full battle-hit-ring" />}
+          {monsterHit && (
+            <div className="battle-sparks" aria-hidden="true">
+              {[0, 1, 2, 3, 4, 5].map((i) => (
+                <span key={i} className="battle-spark" style={{ ['--spark-angle' as string]: `${i * 60}deg` } as React.CSSProperties} />
+              ))}
+            </div>
+          )}
           
           {/* Damage Popup (Monster) */}
           {damageDisplay && damageDisplay.target === 'monster' && (
@@ -73,6 +94,7 @@ const BattleScene: React.FC<BattleSceneProps> = ({ monster, playerState, timeRat
               </div>
             </div>
           )}
+          </div>
         </div>
 
         {/* Player Damage Overlay (Red Flash) */}

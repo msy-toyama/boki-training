@@ -209,12 +209,31 @@ export enum SoundType {
   SFX_CRITICAL,
   SFX_CLEAR,
   SFX_GAMEOVER,
-  SFX_CANCEL
+  SFX_CANCEL,
+  // --- 追加（末尾に追記して既存の数値を維持） ---
+  SFX_WRONG,
+  SFX_COMBO,
+  SFX_RANKUP,
+  SFX_REWARD,
+  SFX_PAGE,
+  SFX_HOVER,
+  SFX_COUNTDOWN,
+  BGM_BATTLE_NORMAL,
+  BGM_BOSS,
+  BGM_VICTORY
 }
+
+export type SoundTheme = 'retro' | 'soft' | 'cinematic';
 
 export interface SoundSettings {
   bgm: boolean;
   sfx: boolean;
+  /** BGM 音量 0.0〜1.0（未設定なら既定値で補完） */
+  bgmVolume?: number;
+  /** 効果音 音量 0.0〜1.0（未設定なら既定値で補完） */
+  sfxVolume?: number;
+  /** サウンドテーマ（波形パレット） */
+  theme?: SoundTheme;
 }
 
 // --- User & Score Types ---

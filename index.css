@@ -163,6 +163,90 @@ body {
   background: #64748b;
 }
 
+/* ===== モンスター演出（登場・待機バリエーション・ため・撃破・被弾パーティクル） ===== */
+
+/* 登場：スッと現れて着地 */
+.battle-monster-enter {
+  animation: monster-entrance 0.5s cubic-bezier(0.2, 0.9, 0.25, 1.2) both;
+}
+
+@keyframes monster-entrance {
+  0% { opacity: 0; transform: translateY(-32px) scale(0.55); filter: brightness(1.6); }
+  60% { opacity: 1; transform: translateY(4px) scale(1.08); }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: brightness(1); }
+}
+
+/* 待機モーション（モンスターごとに割り当て） */
+.battle-idle-float {
+  animation: idle-float 3s ease-in-out infinite;
+}
+@keyframes idle-float {
+  0%, 100% { transform: translateY(-5%); }
+  50% { transform: translateY(5%); }
+}
+
+.battle-idle-sway {
+  animation: idle-sway 2.6s ease-in-out infinite;
+  transform-origin: 50% 90%;
+}
+@keyframes idle-sway {
+  0%, 100% { transform: rotate(-4deg) translateY(0); }
+  50% { transform: rotate(4deg) translateY(-4%); }
+}
+
+.battle-idle-pulse {
+  animation: idle-pulse 2.2s ease-in-out infinite;
+}
+@keyframes idle-pulse {
+  0%, 100% { transform: scale(0.97); }
+  50% { transform: scale(1.06); }
+}
+
+/* ため（攻撃予兆）：小刻みに震えつつ迫り出す */
+.battle-monster-charge {
+  animation: monster-charge 0.5s ease-in-out infinite;
+  transform-origin: 50% 90%;
+}
+@keyframes monster-charge {
+  0%, 100% { transform: scale(1.02) translateY(0) rotate(0deg); filter: brightness(1.05) saturate(1.15); }
+  25% { transform: scale(1.1) translateY(-6%) rotate(-2deg); filter: brightness(1.25) saturate(1.35); }
+  75% { transform: scale(1.06) translateY(-2%) rotate(2deg); filter: brightness(1.15) saturate(1.25); }
+}
+
+/* 撃破：回転しながら落下してフェード */
+.battle-monster-defeat {
+  animation: monster-defeat 0.7s ease-in forwards;
+}
+@keyframes monster-defeat {
+  0% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); filter: grayscale(0); }
+  30% { opacity: 1; transform: translateY(-10%) scale(1.1) rotate(-8deg); filter: brightness(1.5); }
+  100% { opacity: 0; transform: translateY(60%) scale(0.5) rotate(45deg); filter: grayscale(1) brightness(0.6); }
+}
+
+/* 被弾パーティクル（放射状スパーク） */
+.battle-sparks {
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  pointer-events: none;
+}
+.battle-spark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  border-radius: 9999px;
+  background: radial-gradient(circle, #fde68a, #f59e0b 60%, transparent 70%);
+  transform: rotate(var(--spark-angle, 0deg)) translateY(0);
+  animation: spark-burst 0.5s ease-out forwards;
+}
+@keyframes spark-burst {
+  0% { opacity: 1; transform: rotate(var(--spark-angle, 0deg)) translateY(0) scale(1); }
+  100% { opacity: 0; transform: rotate(var(--spark-angle, 0deg)) translateY(-70px) scale(0.4); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-shake,
   .animate-damage,
@@ -172,6 +256,13 @@ body {
   .battle-monster-hit,
   .battle-hit-ring,
   .battle-player-hit,
+  .battle-monster-enter,
+  .battle-idle-float,
+  .battle-idle-sway,
+  .battle-idle-pulse,
+  .battle-monster-charge,
+  .battle-monster-defeat,
+  .battle-spark,
 	  .battle-screen-flash,
 	  .battle-scene::before,
 	  .hp-fill::after {

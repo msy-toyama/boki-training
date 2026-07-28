@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { GeneratedProblem, UserAnswer, BattleResult, QuestionType, JournalEntryAnswer, StatementAnswer } from '../types';
-import { XCircle, BookOpen, Swords, ArrowRight, Skull, Flag, AlertTriangle } from 'lucide-react';
+import { XCircle, BookOpen, Swords, ArrowRight, Skull, Flag, AlertTriangle, CheckCircle2 } from 'lucide-react';
 import AdUnit from './AdUnit';
 import { AD_SLOTS } from '../adsConfig';
 import ExplanationBody from '../utils/explanationFormatter';
@@ -29,7 +29,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ problem, userAnswer, result, on
     if (problem.type === QuestionType.JOURNAL) {
       const ans = userAnswer as JournalEntryAnswer;
       return (
-        <div className="space-y-1 text-slate-300 font-mono text-xs">
+        <div className="space-y-1 text-slate-200 font-mono text-sm">
           {ans.debits.map((d, i) => (
             <div key={`ud-${i}`} className="flex justify-between gap-3 border-b border-slate-800/50 pb-1">
               <span className="min-w-0 break-words">(借){d.account}</span><span className="shrink-0">¥{d.amount.toLocaleString()}</span>
@@ -55,7 +55,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ problem, userAnswer, result, on
     if (problem.type === QuestionType.STATEMENT) {
       const ans = userAnswer as StatementAnswer;
       return (
-        <div className="space-y-1 text-slate-300 font-mono text-xs">
+        <div className="space-y-1 text-slate-200 font-mono text-sm">
           {problem.statement?.blanks.map(blank => (
             <div key={`us-${blank.id}`} className="flex justify-between gap-3 border-b border-slate-800/50 pb-1">
               <span className="min-w-0 break-words">{blank.label}</span>
@@ -71,7 +71,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ problem, userAnswer, result, on
   const renderCorrectAnswer = () => {
     if (problem.type === QuestionType.JOURNAL && problem.correctJournal) {
       return (
-        <div className="space-y-1 text-indigo-100 font-mono text-xs">
+        <div className="space-y-1 text-indigo-50 font-mono text-sm">
           {problem.correctJournal.debits.map((d, i) => (
             <div key={`cd-${i}`} className="flex justify-between gap-3 border-b border-indigo-500/20 pb-1">
               <span className="min-w-0 break-words">(借){d.account}</span><span className="shrink-0">¥{d.amount.toLocaleString()}</span>
@@ -96,7 +96,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ problem, userAnswer, result, on
 
     if (problem.type === QuestionType.STATEMENT && problem.statement) {
       return (
-        <div className="space-y-1 text-indigo-100 font-mono text-xs">
+        <div className="space-y-1 text-indigo-50 font-mono text-sm">
           {problem.statement.blanks.map(blank => (
             <div key={`cs-${blank.id}`} className="flex justify-between gap-3 border-b border-indigo-500/20 pb-1">
               <span className="min-w-0 break-words">{blank.label}</span>
@@ -178,13 +178,16 @@ const ResultCard: React.FC<ResultCardProps> = ({ problem, userAnswer, result, on
       {/* Comparison Grid - Hide if surrendered (unless you want to show what you missed) */}
       {/* User asked to see answer even after surrender or death */}
       <div className="grid md:grid-cols-2 gap-4 text-sm">
-        <div className="bg-slate-950/50 p-4 rounded-lg border border-slate-800 min-w-0">
-          <h4 className="font-bold text-slate-500 mb-3 text-xs uppercase">あなたの回答</h4>
+        <div className={`p-4 rounded-lg border min-w-0 ${state === 'win' ? 'bg-emerald-950/30 border-emerald-500/30' : 'bg-red-950/30 border-red-500/30'}`}>
+          <h4 className={`flex items-center gap-1.5 font-bold mb-3 text-xs uppercase ${state === 'win' ? 'text-emerald-300' : 'text-red-300'}`}>
+            {state === 'win' ? <CheckCircle2 size={14} aria-hidden="true" /> : <XCircle size={14} aria-hidden="true" />}
+            あなたの回答
+          </h4>
           {renderUserAnswer()}
         </div>
 
         <div className="bg-indigo-900/20 p-4 rounded-lg border border-indigo-500/20 min-w-0">
-          <h4 className="font-bold text-indigo-400 mb-3 text-xs uppercase">正解</h4>
+          <h4 className="flex items-center gap-1.5 font-bold text-indigo-300 mb-3 text-xs uppercase"><CheckCircle2 size={14} aria-hidden="true" />正解</h4>
           {renderCorrectAnswer()}
         </div>
       </div>

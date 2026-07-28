@@ -17,7 +17,7 @@ import RankingScreen from './components/RankingScreen';
 import QuestionTypeSelector from './components/QuestionTypeSelector';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import SettingsScreen from './screens/SettingsScreen';
-import { Sword, Shield, Trophy, AlertTriangle, BookOpen, Flag, BarChart3, History, Crown, Settings, Share2, Twitter, Target, X, RefreshCw } from 'lucide-react';
+import { Sword, Shield, Trophy, AlertTriangle, BookOpen, Flag, BarChart3, History, Crown, Settings, Share2, Twitter, Target, X, RefreshCw, Flame } from 'lucide-react';
 
 const ONBOARDING_STORAGE_KEY = 'boki_onboarding_seen_v1';
 
@@ -1076,6 +1076,16 @@ const App: React.FC = () => {
           </div>
           
           <div className="flex items-center gap-2 sm:gap-4 shrink-0">
+             {playerState.combo >= 2 && (
+               <div
+                 className="flex items-center gap-1 text-orange-200 font-mono font-black bg-orange-900/40 border border-orange-500/50 px-2 py-1 rounded animate-pulse"
+                 aria-live="polite"
+                 aria-label={`${playerState.combo}連続正解中`}
+               >
+                 <Flame size={14} className="text-orange-400" aria-hidden="true" />
+                 <span className="text-sm leading-none">{playerState.combo}<span className="text-[10px] ml-0.5">COMBO</span></span>
+               </div>
+             )}
              <div className="flex flex-col items-end">
                <span className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">SCORE</span>
                <span className="text-yellow-400 font-mono font-bold leading-none text-lg sm:text-xl">{playerState.score.toLocaleString()}</span>

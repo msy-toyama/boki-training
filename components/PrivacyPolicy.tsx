@@ -31,9 +31,13 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack, initialTab = 'abo
         </div>
 
         {/* Tab Selector */}
-        <div className="flex border-b border-slate-700 bg-slate-800/30 flex-shrink-0 overflow-x-auto text-xs md:text-sm">
+        <div className="flex border-b border-slate-700 bg-slate-800/30 flex-shrink-0 overflow-x-auto text-xs md:text-sm" role="tablist" aria-label="インフォメーションのカテゴリ">
           <button
             onClick={() => setActiveTab('about')}
+            role="tab"
+            id="info-tab-about"
+            aria-selected={activeTab === 'about'}
+            aria-controls="info-panel-about"
             className={`flex-1 min-w-[80px] py-3 px-2 text-center font-bold flex items-center justify-center gap-1.5 border-b-2 transition-all ${
               activeTab === 'about'
                 ? 'border-indigo-500 text-indigo-400 bg-slate-800'
@@ -45,6 +49,10 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack, initialTab = 'abo
           </button>
           <button
             onClick={() => setActiveTab('terms')}
+            role="tab"
+            id="info-tab-terms"
+            aria-selected={activeTab === 'terms'}
+            aria-controls="info-panel-terms"
             className={`flex-1 min-w-[80px] py-3 px-2 text-center font-bold flex items-center justify-center gap-1.5 border-b-2 transition-all ${
               activeTab === 'terms'
                 ? 'border-indigo-500 text-indigo-400 bg-slate-800'
@@ -56,6 +64,10 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack, initialTab = 'abo
           </button>
           <button
             onClick={() => setActiveTab('privacy')}
+            role="tab"
+            id="info-tab-privacy"
+            aria-selected={activeTab === 'privacy'}
+            aria-controls="info-panel-privacy"
             className={`flex-1 min-w-[80px] py-3 px-2 text-center font-bold flex items-center justify-center gap-1.5 border-b-2 transition-all ${
               activeTab === 'privacy'
                 ? 'border-indigo-500 text-indigo-400 bg-slate-800'
@@ -67,6 +79,10 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack, initialTab = 'abo
           </button>
           <button
             onClick={() => setActiveTab('contact')}
+            role="tab"
+            id="info-tab-contact"
+            aria-selected={activeTab === 'contact'}
+            aria-controls="info-panel-contact"
             className={`flex-1 min-w-[80px] py-3 px-2 text-center font-bold flex items-center justify-center gap-1.5 border-b-2 transition-all ${
               activeTab === 'contact'
                 ? 'border-indigo-500 text-indigo-400 bg-slate-800'
@@ -83,7 +99,7 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack, initialTab = 'abo
           
           {/* TAB 1: ABOUT */}
           {activeTab === 'about' && (
-            <div className="space-y-6 animate-in fade-in duration-200">
+            <div className="space-y-6 animate-in fade-in duration-200" role="tabpanel" id="info-panel-about" aria-labelledby="info-tab-about">
               <section className="space-y-3">
                 <h2 className="text-base md:text-lg font-bold text-white border-l-4 border-indigo-500 pl-3">「簿記トレーニング大戦」とは？</h2>
                 <p>
@@ -126,7 +142,7 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack, initialTab = 'abo
 
           {/* TAB 2: TERMS */}
           {activeTab === 'terms' && (
-            <div className="space-y-6 animate-in fade-in duration-200">
+            <div className="space-y-6 animate-in fade-in duration-200" role="tabpanel" id="info-panel-terms" aria-labelledby="info-tab-terms">
               <p className="text-xs text-slate-500">制定日: 2024年11月21日 / 改訂日: 2026年5月25日</p>
 
               <section className="space-y-2">
@@ -194,7 +210,7 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack, initialTab = 'abo
 
           {/* TAB 3: PRIVACY */}
           {activeTab === 'privacy' && (
-            <div className="space-y-6 animate-in fade-in duration-200">
+            <div className="space-y-6 animate-in fade-in duration-200" role="tabpanel" id="info-panel-privacy" aria-labelledby="info-tab-privacy">
               <p className="text-xs text-slate-500">制定日: 2024年11月21日 / 改訂日: 2026年5月25日</p>
 
               <section className="space-y-2">
@@ -267,7 +283,7 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack, initialTab = 'abo
 
           {/* TAB 4: CONTACT */}
           {activeTab === 'contact' && (
-            <div className="space-y-6 animate-in fade-in duration-200">
+            <div className="space-y-6 animate-in fade-in duration-200" role="tabpanel" id="info-panel-contact" aria-labelledby="info-tab-contact">
               <section className="space-y-3">
                 <h2 className="text-base md:text-lg font-bold text-white border-l-4 border-indigo-500 pl-3">お問い合わせ窓口</h2>
                 <p>

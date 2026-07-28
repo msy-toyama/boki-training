@@ -88,12 +88,24 @@
       <a href="/kb/level2/" class="flex items-center gap-2">
         <span class="text-xl font-bold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">← 簿記2級 攻略KB</span>
       </a>
-      <a href="/" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded transition-colors text-sm">ゲーム起動</a>
+      <a href="/" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-5 rounded-lg transition-colors text-sm">ゲーム起動</a>
     </div>
   </header>
 
   <main class="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <article class="space-y-8">
+      <nav aria-label="パンくずリスト" class="text-xs sm:text-sm text-slate-400">
+        <ol class="flex flex-wrap items-center gap-x-1.5 gap-y-1">
+          <li><a href="/" class="hover:text-white underline-offset-2 hover:underline transition-colors">ホーム</a></li>
+          <li aria-hidden="true" class="text-slate-600">/</li>
+          <li><a href="/kb/" class="hover:text-white underline-offset-2 hover:underline transition-colors">簿記攻略KB</a></li>
+          <li aria-hidden="true" class="text-slate-600">/</li>
+          <li><a href="/kb/level2/" class="hover:text-white underline-offset-2 hover:underline transition-colors">簿記2級</a></li>
+          <li aria-hidden="true" class="text-slate-600">/</li>
+          <li><span class="text-slate-200 font-bold" aria-current="page">日商簿記2級 固定資産・圧縮記帳・建設仮勘定の仕訳完全ガイド</span></li>
+        </ol>
+      </nav>
+
 
       <div class="space-y-3">
         <span class="inline-block bg-emerald-500/20 text-emerald-300 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest border border-emerald-500/30">商業簿記・第1問頻出</span>
@@ -197,7 +209,7 @@
         <p class="text-slate-300 text-sm max-w-xl mx-auto leading-relaxed">建設仮勘定・圧縮記帳・未決算を、ランダムな数字のバトル形式で繰り返し練習できます。</p>
         <div class="flex flex-col sm:flex-row justify-center gap-4">
           <a href="/?level=level2-commercial&level2topic=fixed-assets&difficulty=practice" class="bg-slate-800 hover:bg-slate-750 text-emerald-300 hover:text-white border-2 border-emerald-500/50 font-bold py-3 px-6 rounded-lg transition-transform text-sm">じっくり解く「Practice」</a>
-          <a href="/?level=level2-commercial&level2topic=fixed-assets&difficulty=easy" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold py-3 px-8 rounded-lg transition-transform hover:-translate-y-0.5 shadow-lg text-sm">固定資産バトルに挑戦！</a>
+          <a href="/?level=level2-commercial&level2topic=fixed-assets&difficulty=easy" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold py-3 px-8 rounded-lg transition-transform hover:-translate-y-0.5 shadow-lg text-base">固定資産バトルに挑戦！</a>
         </div>
       </section>
 

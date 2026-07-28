@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { JournalEntryAnswer, JournalEntryItem, QuestionType, UserAnswer, GeneratedProblem, SoundType } from '../types';
 import { ACCOUNT_TITLES } from '../constants';
-import { Trash2, Plus, Sword, Calculator, CheckCircle2, ChevronDown } from 'lucide-react';
+import { Trash2, Plus, Sword, Calculator, CheckCircle2, ChevronDown, AlertTriangle } from 'lucide-react';
 import { audioService } from '../services/audioService';
 import StatementProblemForm from './StatementProblemForm';
 
@@ -276,11 +276,11 @@ const JournalEntryForm: React.FC<JournalEntryFormProps> = ({ problem, onSubmit, 
         </div>
 
         {/* Credit Side */}
-        <div className="bg-slate-900/80 backdrop-blur-sm p-4 rounded-xl border-2 border-indigo-500/50 shadow-sm">
-          <h3 className="text-lg font-bold text-slate-200 mb-3 border-b border-slate-600 pb-2 flex justify-between items-center">
+        <div className="bg-slate-900/80 backdrop-blur-sm p-3 rounded-xl border-2 border-indigo-500/50 shadow-sm">
+          <h3 className="text-base font-bold text-slate-200 mb-2 border-b border-slate-600 pb-1.5 flex justify-between items-center">
              <span className="flex items-center gap-2"><span className="w-3 h-3 bg-red-500 rounded-full"></span>貸方 (右)</span>
           </h3>
-          <div className="space-y-3">
+          <div className="space-y-2">
             {credits.map((row, index) => (
               <div key={`credit-${index}`} className="flex gap-2 items-center min-w-0">
                 <div className="flex-1 min-w-0">
@@ -358,9 +358,9 @@ const JournalEntryForm: React.FC<JournalEntryFormProps> = ({ problem, onSubmit, 
         </button>
       </div>
       {(!isBalanced || hasEmptyAccounts) && totalDebit > 0 && totalCredit > 0 && (
-         <div className="text-center space-y-1">
-            {!isBalanced && <p className="text-red-400 text-sm font-bold bg-red-900/20 py-1 rounded animate-pulse">貸借の金額が一致していません！</p>}
-            {hasEmptyAccounts && <p className="text-yellow-400 text-sm font-bold bg-yellow-900/20 py-1 rounded">勘定科目を選択してください！</p>}
+         <div className="flex flex-col items-center gap-1" role="alert" aria-live="assertive">
+            {!isBalanced && <p className="inline-flex items-center gap-1.5 text-red-100 text-sm font-bold bg-red-900/60 border border-red-500/60 px-3 py-1.5 rounded animate-pulse"><AlertTriangle size={16} aria-hidden="true" />貸借の金額が一致していません！</p>}
+            {hasEmptyAccounts && <p className="inline-flex items-center gap-1.5 text-amber-100 text-sm font-bold bg-amber-900/60 border border-amber-500/60 px-3 py-1.5 rounded"><AlertTriangle size={16} aria-hidden="true" />勘定科目を選択してください！</p>}
          </div>
       )}
     </div>

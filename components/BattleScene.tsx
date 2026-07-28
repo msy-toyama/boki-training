@@ -61,7 +61,14 @@ const BattleScene: React.FC<BattleSceneProps> = ({ monster, playerState, timeRat
               <span className="text-xs text-slate-300 bg-slate-900 px-1.5 py-0.5 rounded border border-slate-600">Lv.{monster.level}</span>
             </div>
             {/* Monster HP Bar */}
-            <div className="w-full max-w-[220px] h-3 bg-slate-900 rounded-full border border-slate-600 overflow-hidden relative shadow-inner">
+            <div
+              className="w-full max-w-[220px] h-3 bg-slate-900 rounded-full border border-slate-600 overflow-hidden relative shadow-inner"
+              role="progressbar"
+              aria-label={`${monster.name}のHP`}
+              aria-valuenow={Math.round(monsterHpPercentage)}
+              aria-valuemin={0}
+              aria-valuemax={100}
+            >
               <div 
                 className="hp-fill h-full bg-gradient-to-r from-red-700 via-red-500 to-orange-300 transition-all duration-500 ease-out relative"
                 style={{ width: `${monsterHpPercentage}%` }}
@@ -99,7 +106,9 @@ const BattleScene: React.FC<BattleSceneProps> = ({ monster, playerState, timeRat
 
         {/* Player Damage Overlay (Red Flash) */}
         {damageDisplay && damageDisplay.target === 'player' && (
-             <div className="absolute inset-0 bg-red-500/30 battle-screen-flash z-0 rounded-lg pointer-events-none"></div>
+             <div className="absolute inset-0 bg-red-500/30 battle-screen-flash z-0 rounded-lg pointer-events-none flex items-center justify-center">
+               <span className="font-pixel font-black text-3xl sm:text-4xl text-red-100 drop-shadow-[0_2px_3px_rgba(0,0,0,0.85)] animate-pulse">-{damageDisplay.amount}</span>
+             </div>
         )}
       </div>
 
@@ -113,7 +122,14 @@ const BattleScene: React.FC<BattleSceneProps> = ({ monster, playerState, timeRat
                  <span>PLAYER HP</span>
                  <span className="font-mono text-lg">{playerState.currentHp}/{playerState.maxHp}</span>
                </div>
-               <div className="w-full max-w-[200px] h-3 bg-slate-900 rounded-full border border-slate-600 overflow-hidden relative">
+               <div
+                 className="w-full max-w-[200px] h-3 bg-slate-900 rounded-full border border-slate-600 overflow-hidden relative"
+                 role="progressbar"
+                 aria-label="プレイヤーHP"
+                 aria-valuenow={playerState.currentHp}
+                 aria-valuemin={0}
+                 aria-valuemax={playerState.maxHp}
+               >
                   <div 
                     className={`hp-fill h-full transition-all duration-300 ${playerHpColor}`}
                     style={{ width: `${playerHpPercentage}%` }}
@@ -134,7 +150,14 @@ const BattleScene: React.FC<BattleSceneProps> = ({ monster, playerState, timeRat
                      <Timer size={14} />
                      <span>MONSTER ATTACK</span>
                    </div>
-                   <div className="w-full max-w-[190px] h-2 bg-slate-900 rounded-full overflow-hidden border border-slate-700/70">
+                   <div
+                     className="w-full max-w-[190px] h-2 bg-slate-900 rounded-full overflow-hidden border border-slate-700/70"
+                     role="progressbar"
+                     aria-label="モンスターの攻撃までの残り時間"
+                     aria-valuenow={Math.round(timeRatio * 100)}
+                     aria-valuemin={0}
+                     aria-valuemax={100}
+                   >
                      <div
                       className={`h-full transition-all duration-100 ease-linear ${timeColor}`}
                       style={{ width: `${timeRatio * 100}%` }}

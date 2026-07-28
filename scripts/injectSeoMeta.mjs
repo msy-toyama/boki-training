@@ -14,6 +14,21 @@ const ORIGIN = 'https://boki-training.com';
 const OG_IMAGE = `${ORIGIN}/image.jpg`;
 const TWITTER_SITE = '@ikasumi_dev';
 
+// Curated keywords for 3級 topic pages (2級 pages already ship their own).
+const KEYWORDS_3KYU = {
+  '/kb/shiwake/': '簿記3級,仕訳,仕訳問題,借方,貸方,勘定科目,仕訳の覚え方,第1問,仕訳練習',
+  '/kb/accounts/': '簿記3級,勘定科目,資産,負債,純資産,収益,費用,勘定科目一覧,簿記の5要素',
+  '/kb/adjustments/': '簿記3級,決算整理,決算整理仕訳,減価償却,貸倒引当金,経過勘定,前払費用,未収収益,売上原価の算定',
+  '/kb/books/': '簿記3級,補助簿,主要簿,仕訳帳,総勘定元帳,現金出納帳,売掛金元帳,買掛金元帳,補助記入帳',
+  '/kb/consumption-tax/': '簿記3級,消費税,税抜方式,仮払消費税,仮受消費税,未払消費税,消費税の納付',
+  '/kb/financial-statements/': '簿記3級,財務諸表,貸借対照表,損益計算書,BS,PL,当期純利益,第3問',
+  '/kb/goods/': '簿記3級,商品売買,三分法,売上,仕入,売上原価,繰越商品,クレジット売掛金,前払金',
+  '/kb/mistakes/': '簿記3級,よくある間違い,ケアレスミス,苦手克服,つまずき,勉強法,ミス対策',
+  '/kb/roadmap/': '簿記3級,独学,勉強法,学習ロードマップ,合格,勉強時間,勉強の順番,学習スケジュール',
+  '/kb/trial-balance/': '簿記3級,試算表,合計試算表,残高試算表,合計残高試算表,第2問,貸借一致,検算',
+  '/kb/vouchers/': '簿記3級,伝票,伝票会計,入金伝票,出金伝票,振替伝票,三伝票制,仕訳日計表,起票',
+};
+
 const kbPages = globSync('public/kb/**/index.html', { cwd: ROOT });
 const infoPages = ['about', 'terms', 'privacy', 'contact', 'faq'].map((p) => `public/${p}/index.html`);
 const allPages = [...kbPages, ...infoPages];
@@ -32,7 +47,7 @@ function leafNameFromTitle(title) {
   return title.split(/｜|\|/)[0].trim();
 }
 
-function buildBreadcrumb(pathname, leafName) {
+function breadcrumbItems(pathname, leafName) {
   const items = [{ name: 'ホーム', url: `${ORIGIN}/` }];
   if (pathname === '/kb/') {
     items.push({ name: '簿記攻略KB', url: `${ORIGIN}/kb/` });
@@ -47,6 +62,11 @@ function buildBreadcrumb(pathname, leafName) {
     items.push({ name: '簿記攻略KB', url: `${ORIGIN}/kb/` });
     items.push({ name: leafName, url: `${ORIGIN}${pathname}` });
   }
+  return items;
+}
+
+function buildBreadcrumb(pathname, leafName) {
+  const items = breadcrumbItems(pathname, leafName);
   const itemListElement = items.map((it, i) => ({
     '@type': 'ListItem',
     position: i + 1,
@@ -62,6 +82,33 @@ function buildBreadcrumb(pathname, leafName) {
     .split('\n')
     .map((l) => '  ' + l)
     .join('\n')}\n  </script>\n`;
+}
+
+function htmlEscape(s) {
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+// Visual breadcrumb nav (matches the KB dark theme, works for 3級/2級).
+function buildBreadcrumbHtml(pathname, leafName) {
+  const items = breadcrumbItems(pathname, leafName);
+  const parts = items.map((it, i) => {
+    const isLast = i === items.length - 1;
+    const sep = i > 0 ? '\n          <li aria-hidden="true" class="text-slate-600">/</li>' : '';
+    const label = htmlEscape(it.name);
+    if (isLast) {
+      return `${sep}\n          <li><span class="text-slate-200 font-bold" aria-current="page">${label}</span></li>`;
+    }
+    return `${sep}\n          <li><a href="${it.url.replace(ORIGIN, '') || '/'}" class="hover:text-white underline-offset-2 hover:underline transition-colors">${label}</a></li>`;
+  });
+  return (
+    `\n      <nav aria-label="パンくずリスト" class="text-xs sm:text-sm text-slate-400">` +
+    `\n        <ol class="flex flex-wrap items-center gap-x-1.5 gap-y-1">${parts.join('')}` +
+    `\n        </ol>` +
+    `\n      </nav>\n`
+  );
 }
 
 let changed = 0;
@@ -121,6 +168,27 @@ for (const rel of allPages) {
     const leaf = leafNameFromTitle(title);
     const crumb = buildBreadcrumb(pathname, leaf);
     html = html.replace(/<\/head>/, `${crumb}</head>`);
+  }
+
+  // 4) Visual breadcrumb nav (KB pages only, idempotent)
+  if (isKb && !/aria-label="パンくずリスト"/.test(html)) {
+    const leaf = leafNameFromTitle(title);
+    const navHtml = buildBreadcrumbHtml(pathname, leaf);
+    // Insert right after the opening <article ...> tag, else after <main ...>.
+    if (/<article[^>]*>/.test(html)) {
+      html = html.replace(/(<article[^>]*>)/, `$1${navHtml}`);
+    } else if (/<main[^>]*>/.test(html)) {
+      html = html.replace(/(<main[^>]*>)/, `$1${navHtml}`);
+    }
+  }
+
+  // 5) keywords meta for 3級 topic pages (2級 pages already have their own)
+  if (KEYWORDS_3KYU[pathname] && !/name="keywords"/.test(html)) {
+    const kw = attrEscape(KEYWORDS_3KYU[pathname]);
+    const kwTag = `\n  <meta name="keywords" content="${kw}">`;
+    if (/<meta name="description"[^>]*>/.test(html)) {
+      html = html.replace(/(<meta name="description"[^>]*>)/, `$1${kwTag}`);
+    }
   }
 
   if (html !== before) {

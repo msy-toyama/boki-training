@@ -70,7 +70,14 @@ const StatementProblemForm: React.FC<StatementProblemFormProps> = ({ problem, on
             <div className="text-lg font-black text-white font-mono">{answeredCount}/{statement.blanks.length}</div>
           </div>
         </div>
-        <div className="mt-4 h-2 rounded-full bg-slate-800 overflow-hidden">
+        <div
+          className="mt-4 h-2 rounded-full bg-slate-800 overflow-hidden"
+          role="progressbar"
+          aria-label="入力進捗"
+          aria-valuenow={answeredCount}
+          aria-valuemin={0}
+          aria-valuemax={statement.blanks.length}
+        >
           <div
             className="h-full rounded-full bg-gradient-to-r from-indigo-500 via-sky-400 to-emerald-400 transition-all duration-300"
             style={{ width: `${progress}%` }}
@@ -103,17 +110,18 @@ const StatementProblemForm: React.FC<StatementProblemFormProps> = ({ problem, on
               </h3>
               <div className="overflow-x-auto rounded-lg border border-slate-700">
                 <table className="min-w-[340px] sm:min-w-[420px] w-full text-xs sm:text-sm">
+                  <caption className="sr-only">決算整理前残高試算表</caption>
                   <thead className="bg-slate-950 text-xs text-slate-500">
                     <tr>
-                      <th className="px-2 sm:px-3 py-2 text-left font-bold">勘定科目</th>
-                      <th className="px-2 sm:px-3 py-2 text-right font-bold">借方</th>
-                      <th className="px-2 sm:px-3 py-2 text-right font-bold">貸方</th>
+                      <th scope="col" className="px-2 sm:px-3 py-2 text-left font-bold">勘定科目</th>
+                      <th scope="col" className="px-2 sm:px-3 py-2 text-right font-bold">借方</th>
+                      <th scope="col" className="px-2 sm:px-3 py-2 text-right font-bold">貸方</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-800">
                     {statement.trialBalance.map(row => (
                       <tr key={row.account} className="bg-slate-900/70">
-                        <td className="px-2 sm:px-3 py-2 text-slate-200 font-bold whitespace-nowrap">{row.account}</td>
+                        <th scope="row" className="px-2 sm:px-3 py-2 text-left text-slate-200 font-bold whitespace-nowrap">{row.account}</th>
                         <td className="px-2 sm:px-3 py-2 text-right font-mono text-slate-100 whitespace-nowrap">{formatAmount(row.debit)}</td>
                         <td className="px-2 sm:px-3 py-2 text-right font-mono text-slate-100 whitespace-nowrap">{formatAmount(row.credit)}</td>
                       </tr>

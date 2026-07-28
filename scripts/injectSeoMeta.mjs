@@ -1,6 +1,6 @@
 // Idempotent SEO meta injector for static KB + info pages.
 // - Adds Open Graph / Twitter Card tags (after <link rel="canonical">).
-// - Fixes Article schema logo.url (index.html -> og-image.png) and adds datePublished/dateModified/author.
+// - Fixes Article schema logo.url (index.html -> image.jpg) and adds datePublished/dateModified/author.
 // - Adds BreadcrumbList JSON-LD to KB pages (before </head>).
 // Safe to run multiple times: each injection is skipped when already present.
 
@@ -11,7 +11,7 @@ import path from 'node:path';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const ORIGIN = 'https://boki-training.com';
-const OG_IMAGE = `${ORIGIN}/og-image.png`;
+const OG_IMAGE = `${ORIGIN}/image.jpg`;
 const TWITTER_SITE = '@ikasumi_dev';
 
 const kbPages = globSync('public/kb/**/index.html', { cwd: ROOT });

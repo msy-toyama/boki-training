@@ -17,7 +17,7 @@ import RankingScreen from './components/RankingScreen';
 import QuestionTypeSelector from './components/QuestionTypeSelector';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import SettingsScreen from './screens/SettingsScreen';
-import { Sword, Shield, Trophy, AlertTriangle, BookOpen, Flag, BarChart3, History, Crown, Settings, Share2, Twitter, Target, X, RefreshCw, Flame } from 'lucide-react';
+import { Sword, Shield, Trophy, AlertTriangle, BookOpen, Flag, BarChart3, History, Crown, Settings, Share2, Twitter, Target, X, RefreshCw, Flame, GraduationCap, Clock, HelpCircle, Lightbulb, ArrowRight, ListChecks } from 'lucide-react';
 
 const ONBOARDING_STORAGE_KEY = 'boki_onboarding_seen_v1';
 
@@ -884,6 +884,168 @@ const App: React.FC = () => {
                 2級コラムを読む
               </a>
             </div>
+
+            {/* ===== コンテンツセクション（学習ガイド）：初見のユーザー・検索エンジンに価値ある情報を提供 ===== */}
+            <section className="max-w-3xl mx-auto text-left space-y-12 my-10" aria-labelledby="learn-guide-heading">
+              <div className="space-y-4">
+                <h2 id="learn-guide-heading" className="text-2xl md:text-3xl font-bold text-white">
+                  簿記トレーニング大戦とは？
+                </h2>
+                <p className="text-slate-300 leading-relaxed">
+                  「簿記トレーニング大戦」は、<strong className="text-white">日商簿記3級・2級の仕訳を、RPG風のバトルで楽しく反復学習できる無料の学習ゲーム</strong>です。
+                  出題される取引に対して正しい仕訳を選ぶとモンスターにダメージを与えられ、遊びながら自然と「借方・貸方」の判断力が身につきます。
+                  簿記の合格に最も大切なのは、勘定科目とその増減ルールを<strong className="text-white">反射的に処理できるまで反復すること</strong>。
+                  本アプリは、参考書のインプットと並行して使う「アウトプット特化のトレーニング場」として設計しています。
+                  インストール不要・登録不要で、スマホでもPCでもすぐに始められます。
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <h2 className="text-2xl md:text-3xl font-bold text-white">日商簿記3級・2級とは？試験の概要</h2>
+                <p className="text-slate-300 leading-relaxed">
+                  日商簿記検定は、企業のお金の流れを記録・計算する「簿記」の知識を証明する、社会人・学生に人気の資格です。
+                  経理・会計の実務だけでなく、決算書を読む力が身につくため、あらゆるビジネスパーソンの基礎教養として役立ちます。
+                  3級・2級の主な違いは次のとおりです。
+                </p>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="bg-slate-800/70 border border-indigo-500/40 rounded-xl p-5">
+                    <div className="flex items-center gap-2 mb-3">
+                      <GraduationCap size={22} className="text-indigo-300" />
+                      <h3 className="text-lg font-bold text-white">日商簿記3級</h3>
+                    </div>
+                    <ul className="text-slate-300 text-sm space-y-2">
+                      <li className="flex gap-2"><span className="text-indigo-300 shrink-0">出題:</span>商業簿記（基礎）</li>
+                      <li className="flex gap-2"><span className="text-indigo-300 shrink-0">合格率:</span>おおむね40〜50%前後</li>
+                      <li className="flex gap-2"><span className="text-indigo-300 shrink-0">学習時間:</span>目安80〜100時間</li>
+                      <li className="flex gap-2"><span className="text-indigo-300 shrink-0">試験:</span>60分・100点満点中70点で合格</li>
+                    </ul>
+                    <p className="text-slate-400 text-xs mt-3 leading-relaxed">
+                      第1問の仕訳（15問）が配点の中心。まずは仕訳を確実に得点できるようにするのが合格の近道です。
+                    </p>
+                  </div>
+                  <div className="bg-slate-800/70 border border-emerald-500/40 rounded-xl p-5">
+                    <div className="flex items-center gap-2 mb-3">
+                      <GraduationCap size={22} className="text-emerald-300" />
+                      <h3 className="text-lg font-bold text-white">日商簿記2級</h3>
+                    </div>
+                    <ul className="text-slate-300 text-sm space-y-2">
+                      <li className="flex gap-2"><span className="text-emerald-300 shrink-0">出題:</span>商業簿記＋工業簿記</li>
+                      <li className="flex gap-2"><span className="text-emerald-300 shrink-0">合格率:</span>おおむね15〜30%前後</li>
+                      <li className="flex gap-2"><span className="text-emerald-300 shrink-0">学習時間:</span>目安200〜350時間</li>
+                      <li className="flex gap-2"><span className="text-emerald-300 shrink-0">試験:</span>90分・100点満点中70点で合格</li>
+                    </ul>
+                    <p className="text-slate-400 text-xs mt-3 leading-relaxed">
+                      連結会計・税効果会計・原価計算など範囲が大幅に拡大。3級の仕訳力を土台に、論点を一つずつ攻略します。
+                    </p>
+                  </div>
+                </div>
+                <p className="text-slate-400 text-xs leading-relaxed flex items-start gap-2">
+                  <Clock size={14} className="text-slate-500 mt-0.5 shrink-0" />
+                  合格率・学習時間はあくまで一般的な目安です。試験日程・出題範囲・受験料などの最新情報は、必ず日本商工会議所の公式サイトでご確認ください。
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <h2 className="text-2xl md:text-3xl font-bold text-white">合格までの学習の進め方（3ステップ）</h2>
+                <ol className="space-y-3">
+                  <li className="bg-slate-800/70 border border-slate-700 rounded-xl p-5 flex gap-4">
+                    <span className="w-8 h-8 shrink-0 rounded-full bg-blue-600/30 border border-blue-400/40 text-blue-200 font-bold flex items-center justify-center">1</span>
+                    <div>
+                      <h3 className="text-white font-bold mb-1">インプット：勘定科目とホームポジションを理解する</h3>
+                      <p className="text-slate-300 text-sm leading-relaxed">
+                        資産・負債・純資産・収益・費用という5つのグループと、それぞれ増えたときに借方・貸方どちらに書くか（ホームポジション）を押さえます。
+                        個別に丸暗記せず、グループ単位でルールを理解するのが挫折しないコツです。
+                      </p>
+                    </div>
+                  </li>
+                  <li className="bg-slate-800/70 border border-slate-700 rounded-xl p-5 flex gap-4">
+                    <span className="w-8 h-8 shrink-0 rounded-full bg-green-600/30 border border-green-400/40 text-green-200 font-bold flex items-center justify-center">2</span>
+                    <div>
+                      <h3 className="text-white font-bold mb-1">アウトプット：仕訳を反復して反射的に解けるようにする</h3>
+                      <p className="text-slate-300 text-sm leading-relaxed">
+                        理解した内容は、実際に手を動かして仕訳を繰り返すことで初めて定着します。
+                        本アプリの対戦ノックで、取引文を読んだ瞬間に借方・貸方が浮かぶレベルを目指しましょう。間違えた論点は履歴から復習できます。
+                      </p>
+                    </div>
+                  </li>
+                  <li className="bg-slate-800/70 border border-slate-700 rounded-xl p-5 flex gap-4">
+                    <span className="w-8 h-8 shrink-0 rounded-full bg-red-600/30 border border-red-400/40 text-red-200 font-bold flex items-center justify-center">3</span>
+                    <div>
+                      <h3 className="text-white font-bold mb-1">総合問題：決算整理から精算表・財務諸表へ</h3>
+                      <p className="text-slate-300 text-sm leading-relaxed">
+                        仕訳が固まったら、決算整理・試算表・精算表・財務諸表といった総合問題に進みます。
+                        本番形式の問題演習で時間配分に慣れれば、合格がぐっと近づきます。
+                      </p>
+                    </div>
+                  </li>
+                </ol>
+              </div>
+
+              <div className="space-y-4">
+                <h2 className="text-2xl md:text-3xl font-bold text-white">注目の攻略コラム</h2>
+                <p className="text-slate-300 leading-relaxed">
+                  つまずきやすい論点は、無料のナレッジベース（攻略コラム）でくわしく解説しています。ゲームと合わせて読むと理解が定着します。
+                </p>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <a href="/kb/shiwake/" onClick={() => audioService.playSfx(SoundType.SFX_SELECT)} className="group bg-slate-800/70 border border-slate-700 hover:border-indigo-400 rounded-xl p-5 transition-colors">
+                    <div className="flex items-center gap-2 mb-1"><ListChecks size={18} className="text-indigo-300" /><h3 className="text-white font-bold">仕訳の基本とルール</h3></div>
+                    <p className="text-slate-400 text-sm">借方・貸方の決め方から、頻出パターンまで。仕訳が苦手な人はまずここから。</p>
+                    <span className="text-indigo-300 text-xs inline-flex items-center gap-1 mt-2 group-hover:gap-2 transition-all">読む <ArrowRight size={12} /></span>
+                  </a>
+                  <a href="/kb/accounts/" onClick={() => audioService.playSfx(SoundType.SFX_SELECT)} className="group bg-slate-800/70 border border-slate-700 hover:border-indigo-400 rounded-xl p-5 transition-colors">
+                    <div className="flex items-center gap-2 mb-1"><BookOpen size={18} className="text-indigo-300" /><h3 className="text-white font-bold">勘定科目 完全一覧</h3></div>
+                    <p className="text-slate-400 text-sm">5大グループ別に全科目を整理。増減の向きが一目でわかる対比表つき。</p>
+                    <span className="text-indigo-300 text-xs inline-flex items-center gap-1 mt-2 group-hover:gap-2 transition-all">読む <ArrowRight size={12} /></span>
+                  </a>
+                  <a href="/kb/adjustments/" onClick={() => audioService.playSfx(SoundType.SFX_SELECT)} className="group bg-slate-800/70 border border-slate-700 hover:border-indigo-400 rounded-xl p-5 transition-colors">
+                    <div className="flex items-center gap-2 mb-1"><RefreshCw size={18} className="text-indigo-300" /><h3 className="text-white font-bold">決算整理仕訳</h3></div>
+                    <p className="text-slate-400 text-sm">減価償却・貸倒引当金・経過勘定など、決算で必ず問われる論点を解説。</p>
+                    <span className="text-indigo-300 text-xs inline-flex items-center gap-1 mt-2 group-hover:gap-2 transition-all">読む <ArrowRight size={12} /></span>
+                  </a>
+                  <a href="/kb/mistakes/" onClick={() => audioService.playSfx(SoundType.SFX_SELECT)} className="group bg-slate-800/70 border border-slate-700 hover:border-indigo-400 rounded-xl p-5 transition-colors">
+                    <div className="flex items-center gap-2 mb-1"><AlertTriangle size={18} className="text-indigo-300" /><h3 className="text-white font-bold">よくある間違い</h3></div>
+                    <p className="text-slate-400 text-sm">受験生がつまずきやすいポイントを集約。同じミスを繰り返さないために。</p>
+                    <span className="text-indigo-300 text-xs inline-flex items-center gap-1 mt-2 group-hover:gap-2 transition-all">読む <ArrowRight size={12} /></span>
+                  </a>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <h2 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-2">
+                  <HelpCircle size={26} className="text-indigo-300" /> よくある質問
+                </h2>
+                <div className="space-y-2">
+                  <details className="group bg-slate-800/70 border border-slate-700 rounded-xl px-5 py-3">
+                    <summary className="cursor-pointer text-white font-semibold list-none flex items-center justify-between gap-2">簿記の勉強は何から始めればいいですか？<span className="text-indigo-300 group-open:rotate-45 transition-transform text-xl leading-none">+</span></summary>
+                    <p className="text-slate-300 text-sm leading-relaxed mt-3">まずは「勘定科目が資産・負債・純資産・収益・費用のどのグループに属するか」を理解することから始めましょう。そのうえで仕訳を繰り返し練習すると、簿記の全体像がつかめます。本アプリはこの仕訳練習を効率よく行うためのツールです。</p>
+                  </details>
+                  <details className="group bg-slate-800/70 border border-slate-700 rounded-xl px-5 py-3">
+                    <summary className="cursor-pointer text-white font-semibold list-none flex items-center justify-between gap-2">簿記3級はどのくらいの勉強時間で合格できますか？<span className="text-indigo-300 group-open:rotate-45 transition-transform text-xl leading-none">+</span></summary>
+                    <p className="text-slate-300 text-sm leading-relaxed mt-3">一般的な目安は80〜100時間程度とされています。1日1時間なら約3か月が目安です。ただし個人差が大きいため、時間よりも「仕訳を反射的に解けるか」「決算整理まで一通り解けるか」を到達度の基準にすると良いでしょう。</p>
+                  </details>
+                  <details className="group bg-slate-800/70 border border-slate-700 rounded-xl px-5 py-3">
+                    <summary className="cursor-pointer text-white font-semibold list-none flex items-center justify-between gap-2">このアプリだけで合格できますか？<span className="text-indigo-300 group-open:rotate-45 transition-transform text-xl leading-none">+</span></summary>
+                    <p className="text-slate-300 text-sm leading-relaxed mt-3">本アプリは「仕訳のアウトプット練習」に特化しています。体系的な理解のためには参考書やテキストでのインプットを併用し、総合問題は問題集で演習することをおすすめします。攻略コラムも理解の補助としてご活用ください。</p>
+                  </details>
+                  <details className="group bg-slate-800/70 border border-slate-700 rounded-xl px-5 py-3">
+                    <summary className="cursor-pointer text-white font-semibold list-none flex items-center justify-between gap-2">2級にも対応していますか？<span className="text-indigo-300 group-open:rotate-45 transition-transform text-xl leading-none">+</span></summary>
+                    <p className="text-slate-300 text-sm leading-relaxed mt-3">はい。日商簿記2級の商業簿記（有価証券・連結・税効果など）と工業簿記（標準原価・直接原価計算・CVP分析など）の論点に対応しています。2級の攻略コラムも論点別に用意しています。</p>
+                  </details>
+                  <details className="group bg-slate-800/70 border border-slate-700 rounded-xl px-5 py-3">
+                    <summary className="cursor-pointer text-white font-semibold list-none flex items-center justify-between gap-2">利用は無料ですか？会員登録は必要ですか？<span className="text-indigo-300 group-open:rotate-45 transition-transform text-xl leading-none">+</span></summary>
+                    <p className="text-slate-300 text-sm leading-relaxed mt-3">すべての機能を無料でご利用いただけます。会員登録やアプリのインストールも不要で、ブラウザですぐに始められます。学習履歴はお使いの端末内に保存されます。</p>
+                  </details>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-r from-indigo-600/20 to-purple-600/20 border border-indigo-500/40 rounded-xl p-6 text-center">
+                <Lightbulb size={28} className="text-yellow-300 mx-auto mb-2" />
+                <p className="text-slate-200 leading-relaxed">
+                  さあ、上のモードを選んで<strong className="text-white">最初の1問</strong>に挑戦してみましょう。<br className="hidden sm:block" />
+                  楽しく反復するうちに、仕訳が自然と身についていきます。
+                </p>
+              </div>
+            </section>
 
             <div className="grid grid-cols-2 md:flex md:justify-center gap-4">
               <button 

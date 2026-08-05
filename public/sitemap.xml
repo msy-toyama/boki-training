@@ -43,6 +43,24 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://boki-training.com/kb/glossary/</loc>
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://boki-training.com/kb/exam-guide/</loc>
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://boki-training.com/kb/study-method/</loc>
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://boki-training.com/kb/shiwake/</loc>
     <lastmod>2026-07-26</lastmod>
     <changefreq>weekly</changefreq>

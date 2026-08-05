@@ -168,7 +168,7 @@
 </head>
   <body class="bg-slate-900 text-slate-100 antialiased overflow-x-hidden selection:bg-indigo-500 selection:text-white">
     <div id="root">
-      <!-- 初回ロード中に表示するブランドスプラッシュ（下のSEO記事を覚える間覛い隠す）。Reactマウントで #root ごと置換される。 -->
+      <!-- 初回ロード中に表示するブランドスプラッシュ（下のSEO記事を覆い隠す間表示）。Reactマウントで #root ごと置換される。 -->
       <div id="boot-splash" role="status" aria-live="polite" aria-label="読み込み中">
         <div class="boot-spinner"></div>
         <div class="boot-title">簿記トレーニング大戦</div>
@@ -187,6 +187,15 @@
           初めての方は、まず下記の攻略ナレッジベースで簿記3級の基礎（借方・貸方のルール、勘定科目の5大グループ、
           決算整理仕訳、よくある間違い）を確認してから、ゲームで実戦練習するのがおすすめです。
         </p>
+        <h2 style="font-size:1.3rem;font-weight:700;margin:24px 0 12px;">日商簿記3級・2級とは？</h2>
+        <p style="margin-bottom:16px;">
+          日商簿記検定は、企業のお金の流れを記録・計算する簿記の知識を証明する人気の資格です。
+          3級は商業簿記の基礎（合格率おおむね40〜50%、学習時間の目安80〜100時間）、
+          2級は商業簿記に工業簿記が加わり範囲が拡大します（合格率おおむね15〜30%、学習時間の目安200〜350時間）。
+          いずれも100点満点中70点で合格です。合格の鍵は、仕訳を反射的に処理できるまで反復すること。
+          本アプリはそのアウトプット練習に特化しています。
+          ※合格率・学習時間・試験日程などの最新情報は日本商工会議所の公式サイトでご確認ください。
+        </p>
         <h2 style="font-size:1.3rem;font-weight:700;margin:24px 0 12px;">簿記3級 最短合格ナレッジベース（解説記事）</h2>
         <ul style="padding-left:1.2em;margin-bottom:24px;">
           <li><a href="/kb/shiwake/" style="color:#a5b4fc;">仕訳の攻略ガイド</a> — 借方・貸方の覚え方と仕訳を組み立てる3ステップ</li>
@@ -195,6 +204,14 @@
           <li><a href="/kb/mistakes/" style="color:#a5b4fc;">よくある間違い15選</a> — 小切手・当座借越・消費税などのひっかけ対策</li>
           <li><a href="/kb/trial-balance/" style="color:#a5b4fc;">試算表の最速の解き方</a> — 残高試算表・合計試算表のコツ</li>
           <li><a href="/kb/roadmap/" style="color:#a5b4fc;">独学ロードマップ</a> — 1ヶ月合格計画とネット試験対策</li>
+        </ul>
+        <h2 style="font-size:1.3rem;font-weight:700;margin:24px 0 12px;">簿記2級 攻略ナレッジベース（商業簿記・工業簿記）</h2>
+        <ul style="padding-left:1.2em;margin-bottom:24px;">
+          <li><a href="/kb/level2/" style="color:#a5b4fc;">簿記2級 攻略ナレッジベース トップ</a> — 商業・工業の全論点まとめ</li>
+          <li><a href="/kb/level2/commercial/securities/" style="color:#a5b4fc;">有価証券の会計処理</a> — 売買目的・満期保有・その他有価証券の評価</li>
+          <li><a href="/kb/level2/commercial/consolidation/" style="color:#a5b4fc;">連結会計の基礎</a> — 投資と資本の相殺・のれん・非支配株主持分</li>
+          <li><a href="/kb/level2/industrial/standard/" style="color:#a5b4fc;">標準原価計算</a> — 原価差異分析の考え方</li>
+          <li><a href="/kb/level2/industrial/direct-costing/" style="color:#a5b4fc;">直接原価計算とCVP分析</a> — 損益分岐点の求め方</li>
         </ul>
         <p style="color:#94a3b8;font-size:0.9rem;">
           読み込みが完了すると、学習ゲームが自動的に起動します。表示されない場合は JavaScript を有効にしてください。

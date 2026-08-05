@@ -26,26 +26,3 @@
     @apply text-xs text-slate-400;
   }
 }
-
-/*
- * AdSense 空枠の余白対策
- * 審査前のダミースロット(data-ad-slot="0000000000")や、広告が配信されない(unfilled)
- * 場合、adsbygoogle が予約した高さ(約280px)がそのまま空白として残り、ページ内に
- * 大きな空欄が見えてしまう。実際に広告が配信された(data-ad-status="filled")ときだけ
- * 表示し、それ以外は高さを潰して余白を作らないようにする。
- * 幅は保持されるため、承認後の広告配信サイズ判定には影響しない。
- */
-ins.adsbygoogle {
-  height: 0 !important;
-  min-height: 0 !important;
-  overflow: hidden;
-}
-ins.adsbygoogle[data-ad-status="filled"] {
-  height: auto !important;
-  overflow: visible;
-}
-/* 広告が配信されるまでは枠の上下マージンも詰めて空白を最小化する */
-div:has(> ins.adsbygoogle):not(:has(> ins.adsbygoogle[data-ad-status="filled"])) {
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
-}

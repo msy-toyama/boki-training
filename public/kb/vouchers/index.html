@@ -37,7 +37,7 @@
     "@context": "https://schema.org",
     "@type": "Article",
     "datePublished": "2024-11-21",
-    "dateModified": "2026-07-26",
+    "dateModified": "2026-08-05",
     "author": {
       "@type": "Organization",
       "name": "Toyama Digital Works",
@@ -124,7 +124,7 @@
         <h1 class="text-3xl md:text-4xl font-black tracking-tight text-white leading-tight">
           日商簿記3級 伝票制の完全攻略｜3伝票制・一部現金取引・仕訳日計表
         </h1>
-        <p class="text-sm text-slate-400">更新日: 2026年7月26日</p>
+        <p class="text-sm text-slate-400">更新日: 2026年8月5日</p>
       </div>
 
       <p class="text-slate-300 leading-relaxed text-base md:text-lg">
@@ -232,10 +232,95 @@
         </p>
       </section>
 
+      <!-- Section 3.5 比較表 -->
+      <section class="space-y-4">
+        <h2 class="text-2xl font-bold text-white border-l-4 border-teal-500 pl-3">
+          4. 分解法と擬制法の比較
+        </h2>
+        <p class="text-slate-300 leading-relaxed">
+          一部現金取引の2つの起票方法は、入金伝票の<strong>貸方科目</strong>で見分けます。表で整理しておきましょう。
+        </p>
+        <div class="overflow-x-auto">
+          <table class="je-table">
+            <caption>一部現金取引：分解法 vs 擬制法</caption>
+            <thead>
+              <tr><th>比較項目</th><th>① 分解法</th><th>② 擬制法（全額掛け）</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>考え方</td><td>現金分と掛け分を別取引に分ける</td><td>全額を掛け→直後に現金回収</td></tr>
+              <tr><td>入金伝票の貸方</td><td><strong class="text-white">売上</strong></td><td><strong class="text-white">売掛金</strong></td></tr>
+              <tr><td>振替伝票の金額</td><td>掛け分のみ（7,000）</td><td>全額（10,000）</td></tr>
+              <tr><td>見分け方</td><td>入金伝票の貸方が売上なら分解法</td><td>入金伝票の貸方が売掛金なら擬制法</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 1日の通し例 -->
+      <section class="space-y-4">
+        <h2 class="text-2xl font-bold text-white border-l-4 border-teal-500 pl-3">
+          5. 通し例：1日の伝票→仕訳日計表
+        </h2>
+        <p class="text-slate-300 leading-relaxed">
+          ある日の伝票が次の3枚だったとします。科目ごとに集計してみましょう。
+        </p>
+        <ul class="list-disc list-inside text-slate-300 space-y-1 bg-slate-850 p-5 rounded border border-slate-700 text-sm">
+          <li>入金伝票：(借)現金 3,000 /(貸)売上 3,000</li>
+          <li>出金伝票：(借)仕入 2,000 /(貸)現金 2,000</li>
+          <li>振替伝票：(借)売掛金 7,000 /(貸)売上 7,000</li>
+        </ul>
+        <div class="overflow-x-auto">
+          <table class="je-table">
+            <caption>仕訳日計表（集計後）</caption>
+            <thead><tr><th>借方合計</th><th>勘定科目</th><th>貸方合計</th></tr></thead>
+            <tbody>
+              <tr><td class="je-amount">3,000</td><td>現金</td><td class="je-amount">2,000</td></tr>
+              <tr><td class="je-amount">7,000</td><td>売掛金</td><td class="je-amount"></td></tr>
+              <tr><td class="je-amount">2,000</td><td>仕入</td><td class="je-amount"></td></tr>
+              <tr><td class="je-amount"></td><td>売上</td><td class="je-amount">10,000</td></tr>
+              <tr><td class="je-amount"><strong class="text-white">12,000</strong></td><td><strong class="text-white">合計</strong></td><td class="je-amount"><strong class="text-white">12,000</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="je-note">借方合計12,000＝貸方合計12,000で一致。ここが合っていれば集計は正しく、あとは科目ごとに合計転記します。</p>
+      </section>
+
+      <!-- つまずき -->
+      <section class="space-y-4">
+        <h2 class="text-2xl font-bold text-white border-l-4 border-teal-500 pl-3">
+          6. つまずきポイント
+        </h2>
+        <div class="overflow-x-auto">
+          <table class="je-table">
+            <caption>伝票会計のよくあるミス</caption>
+            <thead><tr><th>ありがちなミス</th><th>正しい処理</th></tr></thead>
+            <tbody>
+              <tr><td>入金伝票に現金を書いてしまう</td><td>借方の現金は固定。相手科目だけ記入</td></tr>
+              <tr><td>分解法と擬制法を取り違える</td><td>入金伝票の貸方で判断（売上／売掛金）</td></tr>
+              <tr><td>伝票を1枚ずつ元帳へ個別転記</td><td>日計表で集計→<strong class="text-white">合計転記</strong></td></tr>
+              <tr><td>日計表の貸借不一致を放置</td><td>合計欄で貸借一致を必ず検算</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- まとめ -->
+      <section class="space-y-4">
+        <h2 class="text-2xl font-bold text-white border-l-4 border-teal-500 pl-3">
+          まとめ
+        </h2>
+        <ul class="list-disc list-inside text-slate-300 space-y-2 bg-slate-850 p-5 rounded border border-slate-700 text-sm">
+          <li>3伝票制＝入金・出金・振替。入金は借方現金、出金は貸方現金で固定。</li>
+          <li>一部現金取引は<strong class="text-white">入金伝票の貸方</strong>で分解法／擬制法を見分ける。</li>
+          <li>仕訳日計表で集計し、科目ごとに合計転記する。</li>
+          <li>日計表は借方合計＝貸方合計を必ず検算。</li>
+        </ul>
+      </section>
+
       <!-- Section 4 (Quiz) -->
       <section class="space-y-4">
         <h2 class="text-2xl font-bold text-white border-l-4 border-teal-500 pl-3">
-          4. 理解度チェック
+          7. 理解度チェック
         </h2>
         <details class="bg-slate-850 border border-slate-700 rounded-lg p-4 group">
           <summary class="cursor-pointer font-bold text-slate-100">Q. 備品を購入し、代金を現金で支払った。どの伝票を使う？</summary>

@@ -38,7 +38,7 @@
     "@context": "https://schema.org",
     "@type": "Article",
     "datePublished": "2024-11-21",
-    "dateModified": "2026-07-26",
+    "dateModified": "2026-08-05",
     "author": {
       "@type": "Organization",
       "name": "Toyama Digital Works",
@@ -125,7 +125,7 @@
         <h1 class="text-3xl md:text-4xl font-black tracking-tight text-white leading-tight">
           日商簿記3級 試算表（残高試算表等）の書き方と最速の解き方テクニック
         </h1>
-        <p class="text-sm text-slate-400">更新日: 2026年7月26日</p>
+        <p class="text-sm text-slate-400">更新日: 2026年8月5日</p>
       </div>
 
       <p class="text-slate-300 leading-relaxed text-base md:text-lg">
@@ -200,6 +200,127 @@
         </div>
       </section>
 
+      <!-- Section 4 -->
+      <section class="space-y-4">
+        <h2 class="text-2xl font-bold text-white border-l-4 border-indigo-500 pl-3">
+          4. 3つの試算表を1枚の表で徹底比較
+        </h2>
+        <p class="text-slate-300 leading-relaxed">
+          「合計試算表」「残高試算表」「合計残高試算表」は、<strong class="text-white">同じ元帳データを、どの数字で載せるか</strong>が違うだけです。目的と載せる金額をセットで覚えると、問題文の指示を読み違えなくなります。
+        </p>
+        <div class="overflow-x-auto">
+          <table class="je-table">
+            <caption>3種類の試算表の違い</caption>
+            <thead>
+              <tr><th>種類</th><th>載せる金額</th><th>主な目的</th><th>出題頻度</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="font-bold text-indigo-300">合計試算表</td><td>各科目の借方合計・貸方合計</td><td>1か月の取引総額を把握</td><td class="text-center">中</td></tr>
+              <tr><td class="font-bold text-indigo-300">残高試算表</td><td>借方・貸方を相殺した差額残高</td><td>各科目の現在残高を確認</td><td class="text-center">高</td></tr>
+              <tr><td class="font-bold text-indigo-300">合計残高試算表</td><td>合計と残高の両方</td><td>合計と残高を同時に検証</td><td class="text-center">高</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-slate-300 leading-relaxed">
+          どの試算表でも、<strong class="text-white">借方の総合計と貸方の総合計は必ず一致</strong>します。これは「1つの仕訳は必ず借方＝貸方で作られる（貸借平均の原理）」ためで、一致しなければどこかに転記・集計ミスがあるサインです。
+        </p>
+      </section>
+
+      <!-- Section 5 -->
+      <section class="space-y-4">
+        <h2 class="text-2xl font-bold text-white border-l-4 border-indigo-500 pl-3">
+          5. 実践：仕訳 → T字勘定 → 残高試算表の通し例
+        </h2>
+        <p class="text-slate-300 leading-relaxed">
+          次の6つの取引から、残高試算表を完成させてみましょう。手順は「①仕訳 → ②T字勘定へ転記 → ③残高を集計」の3ステップです。
+        </p>
+        <div class="bg-slate-850 p-6 rounded-lg border border-slate-700 space-y-3">
+          <p class="text-sm font-bold text-slate-100">当月の取引</p>
+          <ol class="list-decimal list-inside text-sm text-slate-300 space-y-1">
+            <li>現金500,000円を元入れして開業した（資本金）。</li>
+            <li>商品300,000円を掛けで仕入れた。</li>
+            <li>商品を450,000円で掛け販売した。</li>
+            <li>買掛金200,000円を現金で支払った。</li>
+            <li>売掛金250,000円を現金で回収した。</li>
+            <li>給料100,000円を現金で支払った。</li>
+          </ol>
+        </div>
+        <div class="bg-slate-850 p-6 rounded-lg border border-slate-700 space-y-3">
+          <p class="text-sm font-bold text-slate-100">① 仕訳</p>
+          <table class="je-table">
+            <thead>
+              <tr><th>借方の勘定科目</th><th>金額</th><th>貸方の勘定科目</th><th>金額</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>現金</td><td class="je-amount">500,000</td><td>資本金</td><td class="je-amount">500,000</td></tr>
+              <tr><td>仕入</td><td class="je-amount">300,000</td><td>買掛金</td><td class="je-amount">300,000</td></tr>
+              <tr><td>売掛金</td><td class="je-amount">450,000</td><td>売上</td><td class="je-amount">450,000</td></tr>
+              <tr><td>買掛金</td><td class="je-amount">200,000</td><td>現金</td><td class="je-amount">200,000</td></tr>
+              <tr><td>現金</td><td class="je-amount">250,000</td><td>売掛金</td><td class="je-amount">250,000</td></tr>
+              <tr><td>給料</td><td class="je-amount">100,000</td><td>現金</td><td class="je-amount">100,000</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-slate-300 leading-relaxed text-sm">
+          ② 各科目のT字勘定に転記して残高を出すと、たとえば現金は<strong class="text-white">借方 500,000＋250,000＝750,000</strong>、<strong class="text-white">貸方 200,000＋100,000＝300,000</strong>なので、差額の<strong class="text-white">借方残高450,000円</strong>になります。同様に全科目の残高を集計すると、次の残高試算表が完成します。
+        </p>
+        <div class="bg-indigo-950/40 border border-indigo-500/30 p-6 rounded-lg space-y-3">
+          <p class="text-sm font-bold text-indigo-200">③ 完成した残高試算表</p>
+          <table class="je-table">
+            <thead>
+              <tr><th>借方残高</th><th>金額</th><th>勘定科目</th><th>貸方残高</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="je-amount">450,000</td><td class="text-center text-slate-400 text-xs">←</td><td class="text-center font-bold">現金</td><td class="je-amount"></td></tr>
+              <tr><td class="je-amount">200,000</td><td class="text-center text-slate-400 text-xs">←</td><td class="text-center font-bold">売掛金</td><td class="je-amount"></td></tr>
+              <tr><td class="je-amount"></td><td class="text-center text-slate-400 text-xs">→</td><td class="text-center font-bold">買掛金</td><td class="je-amount">100,000</td></tr>
+              <tr><td class="je-amount"></td><td class="text-center text-slate-400 text-xs">→</td><td class="text-center font-bold">資本金</td><td class="je-amount">500,000</td></tr>
+              <tr><td class="je-amount"></td><td class="text-center text-slate-400 text-xs">→</td><td class="text-center font-bold">売上</td><td class="je-amount">450,000</td></tr>
+              <tr><td class="je-amount">300,000</td><td class="text-center text-slate-400 text-xs">←</td><td class="text-center font-bold">仕入</td><td class="je-amount"></td></tr>
+              <tr><td class="je-amount">100,000</td><td class="text-center text-slate-400 text-xs">←</td><td class="text-center font-bold">給料</td><td class="je-amount"></td></tr>
+              <tr class="font-bold"><td class="je-amount text-yellow-300">1,050,000</td><td class="text-center">合計</td><td class="text-center"></td><td class="je-amount text-yellow-300">1,050,000</td></tr>
+            </tbody>
+          </table>
+          <p class="text-xs text-slate-300">借方合計1,050,000円＝貸方合計1,050,000円で一致。これで転記・集計にミスがないと確認できます。</p>
+        </div>
+      </section>
+
+      <!-- Section 6 -->
+      <section class="space-y-4">
+        <h2 class="text-2xl font-bold text-white border-l-4 border-indigo-500 pl-3">
+          6. 合計が一致しないときの検証フロー
+        </h2>
+        <p class="text-slate-300 leading-relaxed">
+          借方と貸方の合計が合わない――試験で最も焦る瞬間です。やみくもに全部見直すのではなく、<strong class="text-white">差額の金額から原因を推測する</strong>のがプロの手順です。
+        </p>
+        <ul class="list-disc list-inside text-slate-300 space-y-2 bg-slate-850 p-5 rounded border border-slate-700 text-sm">
+          <li><strong class="text-white">差額が「ある仕訳の金額」と一致</strong> → その仕訳を片側だけ転記した（貸借どちらか漏れ）可能性大。</li>
+          <li><strong class="text-white">差額が「2で割り切れる」</strong> → 借方に書くべき金額を貸方に書いた（逆記入）疑い。差額÷2の金額を探す。</li>
+          <li><strong class="text-white">差額が「9で割り切れる」</strong> → 桁違い・数字の入れ替え（例: 5,400を4,500）の典型パターン。</li>
+          <li><strong class="text-white">差額が0が並ぶ端数</strong> → 集計時の桁（千円単位メモ）の読み違い。</li>
+        </ul>
+        <div class="bg-rose-950/30 border border-rose-500/30 p-6 rounded-lg space-y-2">
+          <p class="font-bold text-rose-300">つまずきポイント</p>
+          <p class="text-sm text-slate-300 leading-relaxed">
+            残高試算表では、<strong class="text-white">各科目を「借方残高」と「貸方残高」のどちらか一方だけ</strong>に書きます。資産・費用は借方、負債・純資産・収益は貸方が定位置。ここで「現金」を貸方に書いてしまうミスが頻発します。T字勘定で残高が出た側にそのまま置く、と覚えれば防げます。
+          </p>
+        </div>
+      </section>
+
+      <!-- まとめ -->
+      <section class="space-y-4">
+        <h2 class="text-2xl font-bold text-white border-l-4 border-indigo-500 pl-3">
+          まとめ：試算表を得点源にする5つのポイント
+        </h2>
+        <ul class="list-disc list-inside text-slate-300 space-y-2 bg-slate-850 p-5 rounded border border-slate-700 text-sm">
+          <li>試算表は3種類。<strong class="text-white">残高試算表と合計残高試算表が頻出</strong>。</li>
+          <li>借方合計＝貸方合計は<strong class="text-white">貸借平均の原理</strong>により必ず成立する。</li>
+          <li>解く順番は「①仕訳 → ②T字勘定へ転記 → ③残高を集計」の3ステップを固定する。</li>
+          <li>下書きは<strong class="text-white">千円単位のざっくりT字</strong>で集計ミスを減らす。</li>
+          <li>合計が合わないときは<strong class="text-white">差額から原因を逆算</strong>（同額・÷2・÷9）する。</li>
+        </ul>
+      </section>
+
 
       <!-- Section 4 (CTA) -->
       <section class="bg-indigo-950/40 border border-indigo-500/30 p-8 rounded-xl space-y-6 text-center">
@@ -217,6 +338,17 @@
           <a href="/?topic=trial-balance&difficulty=easy" class="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold py-3 px-8 rounded-lg transition-transform hover:-translate-y-0.5 shadow-lg text-base">
             試算表攻略バトル
           </a>
+        </div>
+      </section>
+
+      <!-- Related -->
+      <section class="space-y-3">
+        <h2 class="text-lg font-bold text-white">関連コラム</h2>
+        <div class="flex flex-wrap gap-3 text-sm">
+          <a href="/kb/shiwake/" class="text-indigo-300 hover:text-white underline">仕訳の基本とコツ</a>
+          <a href="/kb/adjustments/" class="text-indigo-300 hover:text-white underline">決算整理仕訳の完全攻略</a>
+          <a href="/kb/financial-statements/" class="text-indigo-300 hover:text-white underline">財務諸表の作成</a>
+          <a href="/kb/books/" class="text-indigo-300 hover:text-white underline">補助簿のしくみ</a>
         </div>
       </section>
 

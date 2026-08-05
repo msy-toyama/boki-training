@@ -37,7 +37,7 @@
     "@context": "https://schema.org",
     "@type": "Article",
     "datePublished": "2024-11-21",
-    "dateModified": "2026-07-26",
+    "dateModified": "2026-08-05",
     "author": {
       "@type": "Organization",
       "name": "Toyama Digital Works",
@@ -124,7 +124,7 @@
         <h1 class="text-3xl md:text-4xl font-black tracking-tight text-white leading-tight">
           日商簿記3級 補助簿の完全ガイド｜種類・書き方・判定のコツ
         </h1>
-        <p class="text-sm text-slate-400">更新日: 2026年7月26日</p>
+        <p class="text-sm text-slate-400">更新日: 2026年8月5日</p>
       </div>
 
       <p class="text-slate-300 leading-relaxed text-base md:text-lg">
@@ -237,10 +237,89 @@
         </p>
       </section>
 
+      <!-- Section 3.5 worked example -->
+      <section class="space-y-4">
+        <h2 class="text-2xl font-bold text-white border-l-4 border-violet-500 pl-3">
+          4. 通し計算例：先入先出法 vs 移動平均法
+        </h2>
+        <p class="text-slate-300 leading-relaxed">
+          同じ取引を2つの方法で計算し、月末在庫の金額がどう変わるかを比べてみましょう。次の取引を想定します。
+        </p>
+        <ul class="list-disc list-inside text-slate-300 space-y-1 bg-slate-850 p-5 rounded border border-slate-700 text-sm">
+          <li>前月繰越：10個 ＠100円（1,000円）</li>
+          <li>5日 仕入：20個 ＠130円（2,600円）</li>
+          <li>18日 売上（払出）：24個</li>
+        </ul>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div class="space-y-2">
+            <p class="font-bold text-violet-300 text-sm">① 先入先出法（FIFO）</p>
+            <div class="overflow-x-auto">
+              <table class="je-table">
+                <thead><tr><th>払出の内訳</th><th>金額</th></tr></thead>
+                <tbody>
+                  <tr><td>古い在庫 10個 ＠100</td><td class="je-amount">1,000</td></tr>
+                  <tr><td>新しい在庫 14個 ＠130</td><td class="je-amount">1,820</td></tr>
+                  <tr><td><strong class="text-white">払出合計 24個</strong></td><td class="je-amount"><strong class="text-white">2,820</strong></td></tr>
+                  <tr><td>月末在庫 6個 ＠130</td><td class="je-amount">780</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <p class="font-bold text-violet-300 text-sm">② 移動平均法</p>
+            <div class="overflow-x-auto">
+              <table class="je-table">
+                <thead><tr><th>計算</th><th>金額</th></tr></thead>
+                <tbody>
+                  <tr><td>平均単価 (1,000+2,600)÷30</td><td class="je-amount">＠120</td></tr>
+                  <tr><td>払出 24個 ＠120</td><td class="je-amount">2,880</td></tr>
+                  <tr><td><strong class="text-white">月末在庫 6個 ＠120</strong></td><td class="je-amount"><strong class="text-white">720</strong></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <p class="text-xs text-slate-350 leading-relaxed">
+          同じ取引でも、先入先出法の月末在庫は780円、移動平均法は720円と<strong class="text-white">金額が変わります</strong>。方法の指示を必ず確認しましょう。どちらも払出は原価で計算します。
+        </p>
+      </section>
+
+      <!-- つまずき -->
+      <section class="space-y-4">
+        <h2 class="text-2xl font-bold text-white border-l-4 border-violet-500 pl-3">
+          5. つまずきポイント
+        </h2>
+        <div class="overflow-x-auto">
+          <table class="je-table">
+            <caption>補助簿・商品有高帳のよくあるミス</caption>
+            <thead><tr><th>ありがちなミス</th><th>正しい考え方</th></tr></thead>
+            <tbody>
+              <tr><td>払出欄に売価を書く</td><td>払出・残高はすべて<strong class="text-white">原価</strong></td></tr>
+              <tr><td>移動平均で単価を更新し忘れる</td><td>仕入のたびに平均単価を計算し直す</td></tr>
+              <tr><td>主要簿と補助簿を混同する</td><td>主要簿は仕訳帳・総勘定元帳の2つだけ</td></tr>
+              <tr><td>1取引＝1補助簿と思い込む</td><td>1取引が複数の補助簿にまたがる</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- まとめ -->
+      <section class="space-y-4">
+        <h2 class="text-2xl font-bold text-white border-l-4 border-violet-500 pl-3">
+          まとめ
+        </h2>
+        <ul class="list-disc list-inside text-slate-300 space-y-2 bg-slate-850 p-5 rounded border border-slate-700 text-sm">
+          <li>必ず作る主要簿＝仕訳帳・総勘定元帳。補助簿は補助記入帳と補助元帳の2系統。</li>
+          <li>判定は「仕訳の各科目＝対応する補助簿」で機械的に。</li>
+          <li>商品有高帳は<strong class="text-white">原価</strong>で記入。売価は登場しない。</li>
+          <li>先入先出法と移動平均法で月末在庫額が変わる。指示を確認。</li>
+        </ul>
+      </section>
+
       <!-- Section 4 (Quiz) -->
       <section class="space-y-4">
         <h2 class="text-2xl font-bold text-white border-l-4 border-violet-500 pl-3">
-          4. 理解度チェック
+          6. 理解度チェック
         </h2>
         <details class="bg-slate-850 border border-slate-700 rounded-lg p-4 group">
           <summary class="cursor-pointer font-bold text-slate-100">Q. 現金出納帳と当座預金出納帳は、主要簿？補助簿？</summary>

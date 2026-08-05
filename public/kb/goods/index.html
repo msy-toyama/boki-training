@@ -37,7 +37,7 @@
     "@context": "https://schema.org",
     "@type": "Article",
     "datePublished": "2024-11-21",
-    "dateModified": "2026-07-26",
+    "dateModified": "2026-08-05",
     "author": {
       "@type": "Organization",
       "name": "Toyama Digital Works",
@@ -124,7 +124,7 @@
         <h1 class="text-3xl md:text-4xl font-black tracking-tight text-white leading-tight">
           日商簿記3級 商品売買の仕訳マスター｜三分法・返品・諸掛り・クレジット
         </h1>
-        <p class="text-sm text-slate-400">更新日: 2026年7月26日</p>
+        <p class="text-sm text-slate-400">更新日: 2026年8月5日</p>
       </div>
 
       <p class="text-slate-300 leading-relaxed text-base md:text-lg">
@@ -257,10 +257,85 @@
         </div>
       </section>
 
+      <!-- Section 5 統合シナリオ -->
+      <section class="space-y-4">
+        <h2 class="text-2xl font-bold text-white border-l-4 border-emerald-500 pl-3">
+          5. 通し例：仕入→一部返品→売上諸掛り
+        </h2>
+        <p class="text-slate-300 leading-relaxed">
+          複数の論点が1つの流れになった実戦例です。順番に仕訳を切っていきましょう。
+        </p>
+        <div class="space-y-3">
+          <div class="bg-slate-850 p-5 rounded-lg border border-slate-700 space-y-2">
+            <p class="text-sm text-slate-300 font-bold">① 商品30,000円を掛けで仕入れ、引取運賃500円（当社負担）を現金払い</p>
+            <table class="je-table">
+              <thead><tr><th>借方の勘定科目</th><th>金額</th><th>貸方の勘定科目</th><th>金額</th></tr></thead>
+              <tbody>
+                <tr><td>仕入</td><td class="je-amount">30,500</td><td>買掛金</td><td class="je-amount">30,000</td></tr>
+                <tr><td></td><td class="je-amount"></td><td>現金</td><td class="je-amount">500</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="bg-slate-850 p-5 rounded-lg border border-slate-700 space-y-2">
+            <p class="text-sm text-slate-300 font-bold">② 上記のうち5,000円分を品違いで返品（仕入戻し）</p>
+            <table class="je-table">
+              <thead><tr><th>借方の勘定科目</th><th>金額</th><th>貸方の勘定科目</th><th>金額</th></tr></thead>
+              <tbody>
+                <tr><td>買掛金</td><td class="je-amount">5,000</td><td>仕入</td><td class="je-amount">5,000</td></tr>
+              </tbody>
+            </table>
+            <p class="je-note">※諸掛りは戻さず、商品本体だけを逆仕訳します。</p>
+          </div>
+          <div class="bg-slate-850 p-5 rounded-lg border border-slate-700 space-y-2">
+            <p class="text-sm text-slate-300 font-bold">③ 商品を50,000円で掛け販売、発送費600円を現金払い（当社負担）</p>
+            <table class="je-table">
+              <thead><tr><th>借方の勘定科目</th><th>金額</th><th>貸方の勘定科目</th><th>金額</th></tr></thead>
+              <tbody>
+                <tr><td>売掛金</td><td class="je-amount">50,000</td><td>売上</td><td class="je-amount">50,000</td></tr>
+                <tr><td>発送費</td><td class="je-amount">600</td><td>現金</td><td class="je-amount">600</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- つまずき -->
+      <section class="space-y-4">
+        <h2 class="text-2xl font-bold text-white border-l-4 border-emerald-500 pl-3">
+          6. つまずきポイント
+        </h2>
+        <div class="overflow-x-auto">
+          <table class="je-table">
+            <caption>商品売買のよくあるミス</caption>
+            <thead><tr><th>ありがちなミス</th><th>正しい処理</th></tr></thead>
+            <tbody>
+              <tr><td>売上諸掛りを売上に含める</td><td>当社負担の発送費は<strong class="text-white">発送費（費用）</strong></td></tr>
+              <tr><td>仕入諸掛りを別勘定にする</td><td>当社負担の引取運賃は<strong class="text-white">仕入に加算</strong></td></tr>
+              <tr><td>クレジット販売で普通の売掛金を使う</td><td>クレジット売掛金＋支払手数料</td></tr>
+              <tr><td>返品で諸掛りまで戻す</td><td>返品は商品本体のみ逆仕訳</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- まとめ -->
+      <section class="space-y-4">
+        <h2 class="text-2xl font-bold text-white border-l-4 border-emerald-500 pl-3">
+          まとめ：満点を取る5つのルール
+        </h2>
+        <ul class="list-disc list-inside text-slate-300 space-y-2 bg-slate-850 p-5 rounded border border-slate-700 text-sm">
+          <li>基本は三分法（仕入・売上・繰越商品）。</li>
+          <li>掛けは仕入なら買掛金、売上なら売掛金。</li>
+          <li>仕入諸掛り＝仕入に加算／売上諸掛り＝発送費。</li>
+          <li>返品は最初の仕訳の<strong class="text-white">逆仕訳</strong>（本体のみ）。</li>
+          <li>クレジットは「クレジット売掛金＋支払手数料」。</li>
+        </ul>
+      </section>
+
       <!-- Section 5 (Quiz) -->
       <section class="space-y-4">
         <h2 class="text-2xl font-bold text-white border-l-4 border-emerald-500 pl-3">
-          5. 理解度チェック
+          7. 理解度チェック
         </h2>
         <details class="bg-slate-850 border border-slate-700 rounded-lg p-4 group">
           <summary class="cursor-pointer font-bold text-slate-100">Q. 商品を掛けで仕入れ、引取運賃（当社負担）を現金で支払った。運賃はどの勘定で処理する？</summary>

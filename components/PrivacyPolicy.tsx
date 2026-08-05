@@ -112,7 +112,7 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack, initialTab = 'abo
               </section>
 
               <section className="space-y-3">
-                <h2 className="text-base md:text-lg font-bold text-white border-l-4 border-indigo-500 pl-3">本アプリが「日本一」の簿記3級アプリを目指すこだわり</h2>
+                <h2 className="text-base md:text-lg font-bold text-white border-l-4 border-indigo-500 pl-3">本アプリの学習体験へのこだわり</h2>
                 <div className="grid gap-3 bg-slate-800/50 p-4 rounded-lg border border-slate-700">
                   <div className="flex gap-2">
                     <span className="text-yellow-400 font-bold">●</span>

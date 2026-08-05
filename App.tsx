@@ -851,7 +851,7 @@ const App: React.FC = () => {
                 </span>
                 <h3 className="text-xl font-bold text-white mt-2">簿記3級 最短攻略コラム・ナレッジベース</h3>
                 <p className="text-slate-300 text-sm mt-1">
-                  仕訳練習、勘定科目完全一覧、決算整理、試算表、よくあるミスなど、試験によく出る超重要論点の解説を今すぐチェック！
+                  仕訳練習、勘定科目一覧、決算整理、試算表、よくあるミスなど、試験によく出る超重要論点の解説を今すぐチェック！
                 </p>
               </div>
               <a
@@ -872,7 +872,7 @@ const App: React.FC = () => {
                 </span>
                 <h3 className="text-xl font-bold text-white mt-2">簿記2級 商業・工業 攻略ナレッジベース</h3>
                 <p className="text-slate-300 text-sm mt-1">
-                  有価証券・連結・税効果（商業簿記）と、標準原価・直接原価計算・CVP分析（工業簿記）まで、2級の全論点を論点別コラムで完全網羅！
+                  有価証券・連結・税効果（商業簿記）と、標準原価・直接原価計算・CVP分析（工業簿記）まで、2級の主要論点を論点別コラムでくわしく解説！
                 </p>
               </div>
               <a
@@ -993,7 +993,7 @@ const App: React.FC = () => {
                     <span className="text-indigo-300 text-xs inline-flex items-center gap-1 mt-2 group-hover:gap-2 transition-all">読む <ArrowRight size={12} /></span>
                   </a>
                   <a href="/kb/accounts/" onClick={() => audioService.playSfx(SoundType.SFX_SELECT)} className="group bg-slate-800/70 border border-slate-700 hover:border-indigo-400 rounded-xl p-5 transition-colors">
-                    <div className="flex items-center gap-2 mb-1"><BookOpen size={18} className="text-indigo-300" /><h3 className="text-white font-bold">勘定科目 完全一覧</h3></div>
+                    <div className="flex items-center gap-2 mb-1"><BookOpen size={18} className="text-indigo-300" /><h3 className="text-white font-bold">勘定科目 一覧</h3></div>
                     <p className="text-slate-400 text-sm">5大グループ別に全科目を整理。増減の向きが一目でわかる対比表つき。</p>
                     <span className="text-indigo-300 text-xs inline-flex items-center gap-1 mt-2 group-hover:gap-2 transition-all">読む <ArrowRight size={12} /></span>
                   </a>

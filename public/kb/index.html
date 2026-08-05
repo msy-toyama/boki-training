@@ -132,7 +132,7 @@
         簿記3級・2級 最短合格ナレッジベース
       </h1>
       <p class="text-slate-300 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
-        試験に出る「仕訳のコラム」「勘定科目の分類」「決算整理のコツ」「試算表」「間違い防止策」を完全網羅！３級の基礎から２級の商業簿記・工業簿記まで、読んだ論点をそのままゲームで即アウトプットして身につけられる、最強の効率的学習ハブです。
+        試験に出る「仕訳のコラム」「勘定科目の分類」「決算整理のコツ」「試算表」「間違い防止策」をくわしく解説！３級の基礎から２級の商業簿記・工業簿記まで、読んだ論点をそのままゲームで即アウトプットして身につけられる、効率的な学習ハブです。
       </p>
       <div class="pt-2">
         <a href="/kb/level2/" class="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold py-2.5 px-6 rounded-xl transition-all hover:scale-105 shadow-lg text-sm">
@@ -162,22 +162,31 @@
 
   <!-- KB Content Cards Grid -->
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <nav aria-label="パンくずリスト" class="text-xs sm:text-sm text-slate-400 mb-8">
+      <ol class="flex flex-wrap items-center gap-x-1.5 gap-y-1">
+        <li><a href="/" class="hover:text-white underline-offset-2 hover:underline transition-colors">ホーム</a></li>
+        <li aria-hidden="true" class="text-slate-600">/</li>
+        <li><span class="text-slate-200 font-bold" aria-current="page">簿記攻略KB</span></li>
+      </ol>
+    </nav>
     <h2 class="text-2xl font-extrabold text-white mb-10 text-center relative after:content-[''] after:block after:w-16 after:h-1 after:bg-indigo-500 after:mx-auto after:mt-3">
       学習テーマ別 攻略コラム
     </h2>
 
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div class="max-w-xl mx-auto mb-10">
+      <label for="kb-search" class="sr-only">コラムをキーワードで検索</label>
+      <div class="relative">
+        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none" aria-hidden="true">🔍</span>
+        <input id="kb-search" type="search" inputmode="search" autocomplete="off"
+          placeholder="キーワードで検索（例: 減価償却, 手形, 試算表, CVP）"
+          class="w-full bg-slate-800 border border-slate-700 rounded-xl py-3 pl-11 pr-4 text-sm text-slate-100 placeholder-slate-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 outline-none" />
+      </div>
+    </div>
+
+    <div id="kb-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
       
       <!-- 1. 仕訳練習 -->
       <article class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden flex flex-col hover:border-indigo-500/50 transition-all hover:-translate-y-1 hover:shadow-2xl">
-      <nav aria-label="パンくずリスト" class="text-xs sm:text-sm text-slate-400">
-        <ol class="flex flex-wrap items-center gap-x-1.5 gap-y-1">
-          <li><a href="/" class="hover:text-white underline-offset-2 hover:underline transition-colors">ホーム</a></li>
-          <li aria-hidden="true" class="text-slate-600">/</li>
-          <li><span class="text-slate-200 font-bold" aria-current="page">簿記攻略KB</span></li>
-        </ol>
-      </nav>
-
         <div class="p-6 flex-1 flex flex-col justify-between">
           <div class="space-y-3">
             <div class="flex items-center justify-between">
@@ -186,7 +195,7 @@
             </div>
             <h3 class="text-xl font-bold text-white">【無料】仕訳練習・徹底攻略ガイド</h3>
             <p class="text-sm text-slate-300 leading-relaxed">
-              仕訳の脳内配置ルールから、仕入・売上、手形、固定資産、税金など、合格に必要な仕訳パターンを101%網羅して完全解説します。
+              仕訳の脳内配置ルールから、仕入・売上、手形、固定資産、税金など、合格に必要な仕訳パターンを116以上の出題タイプで網羅的に解説します。
             </p>
           </div>
           <div class="mt-6 flex flex-col gap-2">
@@ -514,6 +523,10 @@
 
     </div>
 
+    <p id="kb-search-empty" class="hidden text-center text-slate-400 text-sm mt-10">
+      一致するコラムが見つかりませんでした。別のキーワードでお試しください。
+    </p>
+
     <!-- 簿記2級への導線 -->
     <section class="mt-16 bg-gradient-to-br from-emerald-950/60 to-slate-900 border border-emerald-800/50 rounded-2xl p-8 md:p-10">
       <div class="max-w-3xl mx-auto text-center space-y-5">
@@ -522,7 +535,7 @@
         </span>
         <h2 class="text-2xl md:text-3xl font-black text-white">3級の次は「簿記2級」へ</h2>
         <p class="text-slate-300 text-sm md:text-base leading-relaxed">
-          有価証券・固定資産・引当金・純資産・税効果・外貨・本支店・連結会計（商業簿記）と、材料費・労務費・製造間接費・部門別・総合原価・標準原価・直接原価計算（工業簿記）を論点別コラムで完全網羅。読んだらそのままゲームで練習できます。
+          有価証券・固定資産・引当金・純資産・税効果・外貨・本支店・連結会計（商業簿記）と、材料費・労務費・製造間接費・部門別・総合原価・標準原価・直接原価計算（工業簿記）を論点別コラムでくわしく解説。読んだらそのままゲームで練習できます。
         </p>
         <div class="pt-2">
           <a href="/kb/level2/" class="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold py-3 px-8 rounded-xl transition-all hover:scale-105 shadow-lg text-base">
@@ -537,7 +550,7 @@
   <!-- CTA Banner -->
   <section class="bg-indigo-950/60 border-t border-indigo-900 py-16 px-4">
     <div class="max-w-4xl mx-auto text-center space-y-6">
-      <h2 class="text-3xl font-extrabold text-white">日本一の仕訳学習ゲームで今すぐ実力試し！</h2>
+      <h2 class="text-3xl font-extrabold text-white">ゲーム感覚の仕訳トレーニングで今すぐ実力試し！</h2>
       <p class="text-slate-300 text-sm max-w-xl mx-auto leading-relaxed">
         「簿記トレーニング大戦」は、ゲームのモンスターたちと仕訳のスピード＆正確さでバトルしながら、気がつくと日商簿記3級の仕訳スキルがマスターできる「超能動型」のWeb学習ゲームです。
       </p>
@@ -565,6 +578,26 @@
       </p>
     </div>
   </footer>
+
+  <script>
+    (function () {
+      var input = document.getElementById('kb-search');
+      var grid = document.getElementById('kb-grid');
+      var empty = document.getElementById('kb-search-empty');
+      if (!input || !grid) return;
+      var cards = Array.prototype.slice.call(grid.querySelectorAll('article'));
+      input.addEventListener('input', function () {
+        var q = input.value.trim().toLowerCase();
+        var visible = 0;
+        cards.forEach(function (card) {
+          var match = q === '' || card.textContent.toLowerCase().indexOf(q) !== -1;
+          card.style.display = match ? '' : 'none';
+          if (match) visible++;
+        });
+        if (empty) empty.classList.toggle('hidden', !(visible === 0 && q !== ''));
+      });
+    })();
+  </script>
 
 </body>
 </html>

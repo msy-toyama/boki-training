@@ -259,7 +259,7 @@ const JournalEntryForm: React.FC<JournalEntryFormProps> = ({ problem, onSubmit, 
                 <button
                   onClick={() => handleRemoveRow('debit', index)}
                   aria-label={`借方${index + 1}行目を削除`}
-                  className="p-1.5 text-slate-400 hover:text-red-500 transition-colors"
+                  className="flex items-center justify-center min-h-11 min-w-11 shrink-0 text-slate-400 hover:text-red-500 transition-colors touch-manipulation disabled:opacity-40"
                   disabled={debits.length === 1}
                 >
                   <Trash2 size={18} />
@@ -268,7 +268,7 @@ const JournalEntryForm: React.FC<JournalEntryFormProps> = ({ problem, onSubmit, 
             ))}
             <button
               onClick={() => handleAddRow('debit')}
-              className="flex items-center gap-1 text-sm text-indigo-600 hover:text-indigo-700 font-medium mt-2"
+              className="flex items-center gap-1 text-sm text-indigo-300 hover:text-indigo-200 font-medium mt-2 min-h-11 px-2 -ml-1 rounded-lg touch-manipulation"
             >
               <Plus size={16} /> 行を追加
             </button>
@@ -316,7 +316,7 @@ const JournalEntryForm: React.FC<JournalEntryFormProps> = ({ problem, onSubmit, 
                 <button
                   onClick={() => handleRemoveRow('credit', index)}
                   aria-label={`貸方${index + 1}行目を削除`}
-                  className="p-1.5 text-slate-400 hover:text-red-500 transition-colors"
+                  className="flex items-center justify-center min-h-11 min-w-11 shrink-0 text-slate-400 hover:text-red-500 transition-colors touch-manipulation disabled:opacity-40"
                   disabled={credits.length === 1}
                 >
                   <Trash2 size={18} />
@@ -325,7 +325,7 @@ const JournalEntryForm: React.FC<JournalEntryFormProps> = ({ problem, onSubmit, 
             ))}
             <button
               onClick={() => handleAddRow('credit')}
-              className="flex items-center gap-1 text-sm text-indigo-600 hover:text-indigo-700 font-medium mt-2"
+              className="flex items-center gap-1 text-sm text-indigo-300 hover:text-indigo-200 font-medium mt-2 min-h-11 px-2 -ml-1 rounded-lg touch-manipulation"
             >
               <Plus size={16} /> 行を追加
             </button>
